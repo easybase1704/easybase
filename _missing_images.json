@@ -1,0 +1,67 @@
+[
+  {
+    "name": "E30",
+    "oid": 4,
+    "images": []
+  },
+  {
+    "name": "P23853-6780/6540",
+    "oid": 55,
+    "images": [
+      "http://www.easy-base.com.cn/images/ProImg/2026-02-03%20104054%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20231031174302.jpg",
+      "http://www.easy-base.com.cn/images/ProImg/2026-02-03%20104054%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20231031174308.jpg",
+      "http://www.easy-base.com.cn/images/ProImg/2026-02-03%20104054%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20231031174258.jpg",
+      "http://www.easy-base.com.cn/images/ProImg/2026-02-03%20104054%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20231031174313.jpg"
+    ]
+  },
+  {
+    "name": "P23824-6780/6540",
+    "oid": 57,
+    "images": [
+      "http://www.easy-base.com.cn/images/ProImg/2026-02-03%20115818%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20260203110800_1252_176.png",
+      "http://www.easy-base.com.cn/images/ProImg/2026-02-03%20115818%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20260203110818_1253_176.png",
+      "http://www.easy-base.com.cn/images/ProImg/2026-02-03%20115818%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20260203110639_1251_176.png",
+      "http://www.easy-base.com.cn/images/ProImg/2026-02-03%20115818%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20260203110844_1254_176.png"
+    ]
+  },
+  {
+    "name": "P23853-12/16",
+    "oid": 60,
+    "images": [
+      "http://www.easy-base.com.cn/images/ProImg/2026-02-04%20145652%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20231031174302.jpg",
+      "http://www.easy-base.com.cn/images/ProImg/2026-02-04%20145652%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20231031174308.jpg",
+      "http://www.easy-base.com.cn/images/ProImg/2026-02-04%20145652%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20231031174241.jpg",
+      "http://www.easy-base.com.cn/images/ProImg/2026-02-04%20145652%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20231031174313.jpg"
+    ]
+  },
+  {
+    "name": "B127U",
+    "oid": 69,
+    "images": [
+      "http://www.easy-base.com.cn/images/ProImg/2026-03-25%201512112024-06-26%2014442541.png",
+      "http://www.easy-base.com.cn/images/ProImg/2026-03-25%201512112024-06-26%2014442542.png",
+      "http://www.easy-base.com.cn/images/ProImg/2026-03-25%201512112024-06-26%2014442543.png",
+      "http://www.easy-base.com.cn/images/ProImg/2026-03-25%201512112024-06-26%2014442544.png"
+    ]
+  },
+  {
+    "name": "BP731",
+    "oid": 74,
+    "images": [
+      "http://www.easy-base.com.cn/images/ProImg/2026-05-12%20155730%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20260512155157.jpg",
+      "http://www.easy-base.com.cn/images/ProImg/2026-05-12%20155730%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20260512155217.jpg",
+      "http://www.easy-base.com.cn/images/ProImg/2026-05-12%20155730%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20260512155224.jpg",
+      "http://www.easy-base.com.cn/images/ProImg/2026-05-12%20155730%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20260512155227.jpg"
+    ]
+  },
+  {
+    "name": "GS-R266",
+    "oid": 44,
+    "images": [
+      "http://www.easy-base.com.cn/images/ProImg/2025-09-12%201439401.8.jpg",
+      "http://www.easy-base.com.cn/images/ProImg/2025-09-12%201439401.4.jpg",
+      "http://www.easy-base.com.cn/images/ProImg/2025-09-12%201439401.3.jpg",
+      "http://www.easy-base.com.cn/images/ProImg/2025-09-12%201439401.9.jpg"
+    ]
+  }
+]

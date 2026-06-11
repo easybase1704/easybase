@@ -1,0 +1,78 @@
+---
+layout: layout.njk
+activePage: cases
+pagination:
+  data: langs
+  size: 1
+  alias: lang
+permalink: /{{ lang.prefix }}cases/index.html
+eleventyComputed:
+  title: "{{ 'Solutions' if lang.code == 'en' else '行业方案' }}"
+---
+
+{% set langCode = lang.code %}
+{% set t = i18n[langCode] %}
+
+<div class="page-hero">
+  <img src="{{ site.basePath }}/images/banner-cases.jpg" alt="行业方案" class="page-hero__bg" loading="eager">
+  <div class="page-hero__overlay">
+    <div class="container">
+      <h1 class="page-hero__title">{{ t.cases }}</h1>
+      <p class="page-hero__subtitle">{% if langCode == 'zh' %}覆盖 8 大行业，提供端到端计算解决方案{% else %}8 Industry Solutions — End-to-End Computing Solutions{% endif %}</p>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+
+    <div class="grid grid--3">
+      {% for sol in cases.solutions %}
+      <a href="{{ site.basePath }}/{{ lang.prefix }}cases/{{ sol | caseSlug }}/" class="card case-card product-card" id="case-{{ sol.oid }}">
+        <div class="case-thumb">
+          <img src="{{ site.basePath }}{{ sol.thumb }}" alt="{{ sol.name }}" loading="lazy">
+        </div>
+        <div class="card__body" style="padding:var(--space-lg) var(--space-xl)">
+          <h3 class="card__title" style="margin-top:0;font-size:var(--text-lg)">{{ sol.nameEn if langCode == 'en' else sol.name }}</h3>
+          <p class="card__text" style="margin-top:var(--space-sm);font-size:var(--text-sm);line-height:1.6">
+            {% if langCode == 'en' and sol.duibiEn %}{{ sol.duibiEn }}{% else %}{{ sol.duibi }}{% endif %}
+          </p>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+.case-card {
+  scroll-margin-top: calc(var(--nav-height) + var(--space-lg));
+}
+
+.case-card:hover {
+  border-color: var(--color-primary);
+}
+
+.case-thumb {
+  width: 100%;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+  background: #FFFFFF;
+}
+.case-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+  padding: var(--space-md);
+}
+.case-card:hover .case-thumb img {
+  transform: scale(1.05);
+}
+
+/* Uniform card height */
+.grid .case-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+</style>

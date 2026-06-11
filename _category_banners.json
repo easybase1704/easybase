@@ -1,0 +1,219 @@
+[
+  {
+    "pid": 1,
+    "name": "云终端",
+    "images": [
+      {
+        "src": "http://www.easy-base.com.cn/images/LinkImg/20220915154408Group%20103.png",
+        "w": 3836,
+        "h": 800
+      },
+      {
+        "src": "http://www.easy-base.com.cn/images/LinkImg/202208111909285055m_banner_product.jpg",
+        "w": 375,
+        "h": 280
+      },
+      {
+        "src": "http://www.easy-base.com.cn/images/ProImg/2023-03-161655492%E7%AB%8B-%E6%96%9C45%E5%B0%8F%E5%9B%BE.png",
+        "w": 756,
+        "h": 567
+      },
+      {
+        "src": "http://www.easy-base.com.cn/images/ProImg/2023-04-03142604B25-01.png",
+        "w": 756,
+        "h": 567
+      },
+      {
+        "src": "http://www.easy-base.com.cn/images/ProImg/2022-09-14161433xiao%20DSC_0561.png",
+        "w": 756,
+        "h": 567
+      }
+    ]
+  },
+  {
+    "pid": 27,
+    "name": "台式计算机",
+    "images": [
+      {
+        "src": "http://www.easy-base.com.cn/images/LinkImg/20220915154408Group%20103.png",
+        "w": 3836,
+        "h": 800
+      },
+      {
+        "src": "http://www.easy-base.com.cn/images/LinkImg/202208111909285055m_banner_product.jpg",
+        "w": 375,
+        "h": 280
+      },
+      {
+        "src": "http://www.easy-base.com.cn/images/ProImg/2025-10-17%20154132%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20251014155445_466_176.png",
+        "w": 1702,
+        "h": 1276
+      },
+      {
+        "src": "http://www.easy-base.com.cn/images/ProImg/2025-10-17%20154505%E5%9B%BE%E7%89%871.png",
+        "w": 439,
+        "h": 289
+      },
+      {
+        "src": "http://www.easy-base.com.cn/images/ProImg/2025-10-31%20135450%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20251031135051_530_176.png",
+        "w": 870,
+        "h": 836
+      }
+    ]
+  },
+  {
+    "pid": 21,
+    "name": "一体机",
+    "images": [
+      {
+        "src": "http://www.easy-base.com.cn/images/LinkImg/20220915154408Group%20103.png",
+        "w": 3836,
+        "h": 800
+      },
+      {
+        "src": "http://www.easy-base.com.cn/images/LinkImg/202208111909285055m_banner_product.jpg",
+        "w": 375,
+        "h": 280
+      },
+      {
+        "src": "http://www.easy-base.com.cn/images/ProImg/2026-02-02%201640582025-09-30%20134636%E5%9B%BE%E7%89%871.png",
+        "w": 989,
+        "h": 393
+      },
+      {
+        "src": "http://www.easy-base.com.cn/images/ProImg/2026-02-0393727%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20260203093420_1243_176.png",
+        "w": 1409,
+        "h": 945
+      },
+      {
+        "src": "http://www.easy-base.com.cn/images/ProImg/2026-02-03%20104054%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20231031174302.jpg",
+        "w": 2560,
+        "h": 1440
+      }
+    ]
+  },
+  {
+    "pid": 11,
+    "name": "边缘计算",
+    "images": [
+      {
+        "src": "http://www.easy-base.com.cn/images/LinkImg/20220915154408Group%20103.png",
+        "w": 3836,
+        "h": 800
+      },
+      {
+        "src": "http://www.easy-base.com.cn/images/LinkImg/202208111909285055m_banner_product.jpg",
+        "w": 375,
+        "h": 280
+      },
+      {
+        "src": "http://www.easy-base.com.cn/images/ProImg/2023-04-03%20135327B18-01.png",
+        "w": 756,
+        "h": 567
+      },
+      {
+        "src": "http://www.easy-base.com.cn/images/ProImg/2023-04-12%2010193601.png",
+        "w": 756,
+        "h": 567
+      },
+      {
+        "src": "http://www.easy-base.com.cn/images/ProImg/2023-11-23105154E85-4%E4%BC%A0.png",
+        "w": 800,
+        "h": 600
+      }
+    ]
+  },
+  {
+    "pid": 12,
+    "name": "服务器",
+    "images": [
+      {
+        "src": "http://www.easy-base.com.cn/images/LinkImg/20220915154408Group%20103.png",
+        "w": 3836,
+        "h": 800
+      },
+      {
+        "src": "http://www.easy-base.com.cn/images/LinkImg/202208111909285055m_banner_product.jpg",
+        "w": 375,
+        "h": 280
+      },
+      {
+        "src": "http://www.easy-base.com.cn/images/ProImg/2024-06-26%20953521-1.png",
+        "w": 700,
+        "h": 580
+      },
+      {
+        "src": "http://www.easy-base.com.cn/images/ProImg/2024-06-26%201026501-1.png",
+        "w": 700,
+        "h": 580
+      },
+      {
+        "src": "http://www.easy-base.com.cn/images/ProImg/2024-06-2610493711.png",
+        "w": 700,
+        "h": 580
+      }
+    ]
+  },
+  {
+    "pid": 13,
+    "name": "工业控制",
+    "images": [
+      {
+        "src": "http://www.easy-base.com.cn/images/LinkImg/20220915154408Group%20103.png",
+        "w": 3836,
+        "h": 800
+      },
+      {
+        "src": "http://www.easy-base.com.cn/images/LinkImg/202208111909285055m_banner_product.jpg",
+        "w": 375,
+        "h": 280
+      },
+      {
+        "src": "http://www.easy-base.com.cn/images/ProImg/2022-09-14%20152415%E5%B0%8F%20DSC_0606.png",
+        "w": 756,
+        "h": 567
+      },
+      {
+        "src": "http://www.easy-base.com.cn/images/ProImg/2024-06-25%20153223610-1.png",
+        "w": 800,
+        "h": 600
+      },
+      {
+        "src": "http://www.easy-base.com.cn/images/ProImg/2024-06-25153751610-1.png",
+        "w": 800,
+        "h": 600
+      }
+    ]
+  },
+  {
+    "pid": 10,
+    "name": "迷你主机",
+    "images": [
+      {
+        "src": "http://www.easy-base.com.cn/images/LinkImg/20220915154408Group%20103.png",
+        "w": 3836,
+        "h": 800
+      },
+      {
+        "src": "http://www.easy-base.com.cn/images/LinkImg/202208111909285055m_banner_product.jpg",
+        "w": 375,
+        "h": 280
+      },
+      {
+        "src": "http://www.easy-base.com.cn/images/ProImg/2024-06-25141323M01-1.png",
+        "w": 800,
+        "h": 600
+      },
+      {
+        "src": "http://www.easy-base.com.cn/images/ProImg/2024-06-25142913DSC04188.png",
+        "w": 700,
+        "h": 580
+      },
+      {
+        "src": "http://www.easy-base.com.cn/images/ProImg/2024-06-25%20143609DSC04199.png",
+        "w": 700,
+        "h": 580
+      }
+    ]
+  }
+]

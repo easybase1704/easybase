@@ -1,0 +1,312 @@
+---
+layout: layout.njk
+activePage: about
+pagination:
+  data: langs
+  size: 1
+  alias: lang
+permalink: /{{ lang.prefix }}about/index.html
+eleventyComputed:
+  title: "{{ 'About Us' if lang.code == 'en' else '关于我们' }}"
+---
+
+{% set langCode = lang.code %}
+{% set t = i18n[langCode] %}
+
+<div class="page-hero">
+  <img src="{{ site.basePath }}/images/banner-about.png" alt="关于我们" class="page-hero__bg" loading="eager">
+  <div class="page-hero__overlay">
+    <div class="container">
+      <h1 class="page-hero__title">{{ t.about }}</h1>
+      <p class="page-hero__subtitle">{% if langCode == 'zh' %}公司简介 · 企业荣誉 · 发展历程 · 联系我们{% else %}Profile · Honors · Milestones · Contact{% endif %}</p>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container container--narrow">
+
+    <!-- 公司简介 -->
+    <div class="about-section" id="intro" style="margin-bottom:var(--space-3xl)">
+      <h3>{{ t.companyIntro }}</h3>
+      <div class="about-intro">
+        <div class="about-intro__text">
+          <p style="line-height:1.8">{{ t.aboutText1 }}</p>
+          <p style="line-height:1.8;margin-top:var(--space-md)">{{ t.aboutText2 }}</p>
+        </div>
+        <div class="about-intro__img">
+          <img src="{{ site.basePath }}/images/about/company-photo.png" alt="原基科技" loading="lazy">
+        </div>
+      </div>
+    </div>
+
+    <!-- 企业荣誉 -->
+    <div class="about-section" id="honor" style="margin-bottom:var(--space-3xl);scroll-margin-top:calc(var(--nav-height) + var(--space-lg))">
+      <h3>{{ t.honor }}</h3>
+
+      <h4 class="about-subtitle">{{ t.aboutTitle1 }}</h4>
+      <div class="cert-grid">
+        <div class="cert-card"><img src="{{ site.basePath }}/images/about/about-company.jpg" alt="高新技术企业证书" loading="lazy"></div>
+        <div class="cert-card"><img src="{{ site.basePath }}/images/about/zhuanjingtexin.jpg" alt="专精特新企业" loading="lazy"></div>
+      </div>
+
+      <h4 class="about-subtitle">{{ t.aboutTitle2 }}</h4>
+      <div class="cert-grid">
+        <div class="cert-card"><img src="{{ site.basePath }}/images/about/cert-soft-kaiji.jpg" alt="智能待机系统的计算机联动开机软件" loading="lazy"></div>
+        <div class="cert-card"><img src="{{ site.basePath }}/images/about/cert-soft-geli.jpg" alt="网络系统安全接入隔离软件" loading="lazy"></div>
+        <div class="cert-card"><img src="{{ site.basePath }}/images/about/cert-soft-kongzhi.jpg" alt="网络安全接入控制管理平台" loading="lazy"></div>
+        <div class="cert-card"><img src="{{ site.basePath }}/images/about/cert-soft-xunihua.jpg" alt="虚拟化资源管理系统" loading="lazy"></div>
+        <div class="cert-card"><img src="{{ site.basePath }}/images/about/cert-soft-gongkong.jpg" alt="工控主机边缘计算控制软件" loading="lazy"></div>
+      </div>
+
+      <h4 class="about-subtitle">{{ t.aboutTitle3 }}</h4>
+      <div class="cert-grid">
+        <div class="cert-card"><img src="{{ site.basePath }}/images/about/patent-1.jpg" alt="一种易拆卸的机壳" loading="lazy"></div>
+        <div class="cert-card"><img src="{{ site.basePath }}/images/about/patent-2.jpg" alt="实用新型专利" loading="lazy"></div>
+        <div class="cert-card"><img src="{{ site.basePath }}/images/about/patent-3.jpg" alt="发明专利" loading="lazy"></div>
+        <div class="cert-card"><img src="{{ site.basePath }}/images/about/patent-4.jpg" alt="实用新型专利" loading="lazy"></div>
+        <div class="cert-card"><img src="{{ site.basePath }}/images/about/patent-5.jpg" alt="基于边缘计算工控机的数据智能分发方法" loading="lazy"></div>
+        <div class="cert-card"><img src="{{ site.basePath }}/images/about/patent-6.jpg" alt="电脑机箱外观设计专利" loading="lazy"></div>
+        <div class="cert-card"><img src="{{ site.basePath }}/images/about/patent-7.jpg" alt="基于智慧云终端的数据安全传输方法及系统" loading="lazy"></div>
+      </div>
+
+      <h4 class="about-subtitle">{{ t.aboutTitle4 }}</h4>
+      <div class="cert-grid">
+        <div class="cert-card"><img src="{{ site.basePath }}/images/about/cert-iso-1.jpg" alt="ISO质量管理体系认证" loading="lazy"></div>
+        <div class="cert-card"><img src="{{ site.basePath }}/images/about/cert-iso-2.jpg" alt="ISO质量管理体系认证" loading="lazy"></div>
+      </div>
+    </div>
+
+    <!-- 发展历程 -->
+    <div class="about-section" id="history" style="margin-bottom:var(--space-3xl);scroll-margin-top:calc(var(--nav-height) + var(--space-lg))">
+      <h3>{{ t.history }}</h3>
+      <div class="timeline" style="margin-top:var(--space-lg)">
+        {% for item in t.historyItems %}
+        <div class="timeline-item">
+          <div class="timeline-year">{{ item.year }}</div>
+          <div class="timeline-content">{{ item.text }}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- 商标声明 -->
+    <div class="about-section" id="trademark" style="margin-bottom:var(--space-3xl);scroll-margin-top:calc(var(--nav-height) + var(--space-lg))">
+      <h3>{{ t.trademark }}</h3>
+      <div class="about-trademark">
+        <div class="about-trademark__imgs">
+          <div class="cert-card"><img src="{{ site.basePath }}/images/about/trademark-1.png" alt="商标注册证" loading="lazy"></div>
+          <div class="cert-card"><img src="{{ site.basePath }}/images/about/trademark-2.png" alt="商标注册证" loading="lazy"></div>
+          <div class="cert-card"><img src="{{ site.basePath }}/images/about/trademark-3.png" alt="商标注册证" loading="lazy"></div>
+        </div>
+        <div class="card" style="padding:var(--space-xl);line-height:1.8">
+        <p>
+          {% if langCode == 'zh' %}
+          <strong>原基科技</strong>、<strong>EasyBase</strong> 及其相关标识均为深圳市原基科技有限公司的注册商标或正在申请中的商标。
+          {% else %}
+          <strong>原基科技</strong>, <strong>EasyBase</strong> and related logos are registered trademarks or pending trademarks of Shenzhen EasyBase Technology Co., Ltd.
+          {% endif %}
+        </p>
+        <p style="margin-top:var(--space-md)">{{ t.trademarkText2 }}</p>
+        <p style="margin-top:var(--space-md)">{{ t.trademarkText3 }}</p>
+      </div>
+    </div>
+
+    <!-- 人才招聘 -->
+    <div class="about-section" id="join" style="margin-bottom:var(--space-3xl);scroll-margin-top:calc(var(--nav-height) + var(--space-lg))">
+      <h3>{{ t.join }}</h3>
+      <div class="grid grid--2" style="margin-top:var(--space-lg)">
+        <div class="card" style="padding:var(--space-xl)">
+          <span class="tag">{{ t.hiring }}</span>
+          <h4 style="margin-top:var(--space-sm)">{% if langCode == 'zh' %}FAE工程师{% else %}FAE Engineer{% endif %}</h4>
+          <p class="text-secondary" style="font-size:var(--text-sm);margin-top:var(--space-xs)">{% if langCode == 'zh' %}招聘 2 人{% else %}2 Openings{% endif %}</p>
+        </div>
+        <div class="card" style="padding:var(--space-xl)">
+          <span class="tag">{{ t.hiring }}</span>
+          <h4 style="margin-top:var(--space-sm)">{% if langCode == 'zh' %}FAE销售经理（物联/网安）{% else %}FAE Sales Manager (IoT/Cybersecurity){% endif %}</h4>
+          <p class="text-secondary" style="font-size:var(--text-sm);margin-top:var(--space-xs)">{% if langCode == 'zh' %}招聘 2 人{% else %}2 Openings{% endif %}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 联系我们 -->
+    <div class="about-section" id="contact" style="scroll-margin-top:calc(var(--nav-height) + var(--space-lg))">
+      <h3>{{ t.contact }}</h3>
+      <div class="contact-box">
+        <div class="contact-box__info">
+          <p style="font-size:var(--text-lg);font-weight:var(--font-semibold);margin-bottom:var(--space-md)">{{ site.name }}</p>
+          <p>📍 {{ site.contact.address }}</p>
+          <p style="margin-top:var(--space-md)">📞 {{ t.phoneLabel }}：<strong>{{ site.contact.phone }}</strong></p>
+          {% for s in site.contact.sales %}
+          <p style="padding-left:var(--space-lg)">
+            {% if langCode == 'zh' %}{{ s.title }}{% elif loop.index == 1 %}{{ t.sales1 }}{% elif loop.index == 2 %}{{ t.sales2 }}{% else %}{{ t.sales3 }}{% endif %}：<strong>{{ s.phone }}</strong> {{ s.name }}
+          </p>
+          {% endfor %}
+          <p style="margin-top:var(--space-md)">📧 {{ t.emailBiz }}：<a href="mailto:{{ site.contact.email }}">{{ site.contact.email }}</a></p>
+          <p>📧 {{ t.emailHR }}：<a href="mailto:{{ site.contact.hrEmail }}">{{ site.contact.hrEmail }}</a></p>
+          <p style="margin-top:var(--space-sm);color:var(--color-text-secondary)">🕐 {{ t.hoursLabel }}</p>
+        </div>
+        <div class="contact-box__qr">
+          <img src="{{ site.basePath }}/images/about/qrcode.jpg" alt="公众号二维码" loading="lazy">
+          <p class="text-secondary" style="font-size:var(--text-xs);margin-top:var(--space-xs)">{{ t.qrText }}</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+.about-intro {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: var(--space-2xl);
+  align-items: start;
+  margin-top: var(--space-lg);
+}
+
+.about-intro__img {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.about-intro__img img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.about-subtitle {
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  color: var(--color-text-secondary);
+  margin: var(--space-xl) 0 var(--space-md);
+  padding-left: var(--space-sm);
+  border-left: 3px solid var(--color-primary);
+}
+
+.cert-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--space-md);
+}
+
+.cert-card {
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: #FFFFFF;
+  transition: box-shadow var(--transition-fast);
+  cursor: pointer;
+  aspect-ratio: 3 / 4;
+}
+
+.cert-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.cert-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.about-trademark {
+  margin-top: var(--space-lg);
+}
+
+.about-trademark__imgs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.about-trademark__imgs .cert-card {
+  background: #E5E5E5;
+}
+
+.contact-box {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-2xl);
+  align-items: center;
+  margin-top: var(--space-lg);
+  padding: var(--space-2xl);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+}
+
+.contact-box__info {
+  line-height: 2.5;
+}
+
+.contact-box__qr {
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.contact-box__qr img {
+  width: 120px;
+  height: 120px;
+  border-radius: var(--radius-sm);
+}
+
+.timeline {
+  position: relative;
+  padding-left: var(--space-2xl);
+  border-left: 2px solid var(--color-border-light);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: var(--space-xl);
+  padding-left: var(--space-lg);
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -31px;
+  top: 4px;
+  width: 12px;
+  height: 12px;
+  background: var(--color-primary);
+  border-radius: 50%;
+  border: 2px solid var(--color-bg);
+}
+
+.timeline-year {
+  font-weight: var(--font-bold);
+  color: var(--color-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.timeline-content {
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .about-intro {
+    grid-template-columns: 1fr;
+  }
+  .about-intro__img {
+    max-width: 320px;
+  }
+  .about-trademark__imgs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .cert-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .contact-box {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .contact-box__qr {
+    justify-self: center;
+  }
+}
+</style>

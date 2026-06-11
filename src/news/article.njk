@@ -1,0 +1,92 @@
+---
+layout: layout.njk
+pagination:
+  data: newsEntries
+  size: 1
+  alias: article
+permalink: /{{ article.langPrefix }}news/{{ article | articleSlug }}/index.html
+activePage: news
+eleventyComputed:
+  title: "{{ article.title }}"
+  date: "2026-06-10"
+---
+
+{% set langCode = article.langCode %}
+{% set t = i18n[langCode] %}
+
+<nav class="breadcrumb">
+  <div class="container">
+    <a href="{{ site.basePath }}/{{ article.langPrefix }}">{{ t.home }}</a><span>/</span>
+    <a href="{{ site.basePath }}/{{ article.langPrefix }}news/">{{ t.news }}</a><span>/</span>
+    <span>{{ article.title }}</span>
+  </div>
+</nav>
+
+<section class="section">
+  <div class="container container--narrow">
+    <article class="article-detail">
+      <div class="article-detail__meta">
+        <span class="tag">{{ article.date }}</span>
+        <span style="font-size:var(--text-sm);color:var(--color-text-tertiary)">👁️ {{ article.hits }} {% if langCode == 'zh' %}次阅读{% else %}views{% endif %}</span>
+      </div>
+
+      <h1 class="article-detail__title">{% if langCode == 'en' and article.titleEn %}{{ article.titleEn }}{% else %}{{ article.title }}{% endif %}</h1>
+      <p class="article-detail__desc">{% if langCode == 'en' and article.descriptionEn %}{{ article.descriptionEn }}{% else %}{{ article.description }}{% endif %}</p>
+
+      {% if article.body %}
+      <div class="article-detail__body">
+        {{ article.body | safe }}
+      </div>
+      {% endif %}
+
+      <div class="article-detail__actions">
+        <a href="{{ site.basePath }}/{{ article.langPrefix }}news/" class="btn btn--outline">{{ t.backToNews }}</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<style>
+.article-detail__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.article-detail__title {
+  font-size: var(--text-4xl);
+  font-weight: var(--font-bold);
+  margin-bottom: var(--space-lg);
+  line-height: 1.2;
+}
+
+.article-detail__desc {
+  font-size: var(--text-xl);
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  margin-bottom: var(--space-2xl);
+  padding-bottom: var(--space-2xl);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.article-detail__body {
+  font-size: var(--text-base);
+  line-height: 1.8;
+  color: var(--color-text);
+  margin-bottom: var(--space-2xl);
+}
+
+.article-detail__body p { margin-bottom: var(--space-md); }
+
+.article-detail__actions {
+  margin-top: var(--space-2xl);
+  padding-top: var(--space-2xl);
+  border-top: 1px solid var(--color-border-light);
+}
+
+@media (max-width: 768px) {
+  .article-detail__title { font-size: var(--text-2xl); }
+  .article-detail__desc { font-size: var(--text-lg); }
+}
+</style>

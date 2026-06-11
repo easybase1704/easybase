@@ -1,0 +1,15 @@
+{
+  "name": "easybase",
+  "version": "1.0.0",
+  "description": "原基科技官方网站",
+  "scripts": {
+    "build": "eleventy",
+    "serve": "eleventy --serve"
+  },
+  "dependencies": {
+    "@11ty/eleventy": "^2.0.1",
+    "@vitalets/google-translate-api": "^9.2.1",
+    "puppeteer-core": "^25.1.0",
+    "translate": "^3.0.1"
+  }
+}

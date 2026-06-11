@@ -1,0 +1,155 @@
+---
+layout: layout.njk
+pagination:
+  data: caseEntries
+  size: 1
+  alias: sol
+permalink: /{{ sol.langPrefix }}cases/{{ sol | caseSlug }}/index.html
+activePage: cases
+eleventyComputed:
+  title: "{{ sol.name }}"
+  date: "2026-06-10"
+---
+
+{% set langCode = sol.langCode %}
+{% set t = i18n[langCode] %}
+
+<nav class="breadcrumb">
+  <div class="container">
+    <a href="{{ site.basePath }}/{{ sol.langPrefix }}">{{ t.home }}</a><span>/</span>
+    <a href="{{ site.basePath }}/{{ sol.langPrefix }}cases/">{{ t.cases }}</a><span>/</span>
+    <span>{{ sol.name }}</span>
+  </div>
+</nav>
+
+<section class="section">
+  <div class="container container--narrow">
+    <div class="case-detail">
+      <div class="case-detail__icon">
+        <img src="{{ site.basePath }}{{ sol.thumb }}" alt="{{ sol.name }}">
+      </div>
+      <h1 class="case-detail__title">{{ sol.nameEn if langCode == 'en' else sol.name }}</h1>
+      <p class="case-detail__en">{{ sol.nameEn if langCode == 'en' else sol.nameEn }}</p>
+      <p class="case-detail__desc">{% if langCode == 'en' and sol.duibiEn %}{{ sol.duibiEn }}{% else %}{{ sol.duibi }}{% endif %}</p>
+
+      {% if sol.body %}
+      <div class="case-detail__body">
+        {{ sol.body | safe }}
+      </div>
+      {% endif %}
+
+      {% if sol.relatedProducts %}
+      <div class="case-detail__related">
+        <h2 class="case-detail__related-title">{{ t.relatedProducts }}</h2>
+        <div class="grid grid--3" style="margin-top:var(--space-xl)">
+          {% for rp in sol.relatedProducts %}
+          <a href="{{ site.basePath }}/{{ sol.langPrefix }}products/{{ rp.slug }}/" class="card product-card related-product-card">
+            <div class="card__body" style="padding:var(--space-lg);text-align:center">
+              <h4 style="font-size:var(--text-base);font-weight:var(--font-semibold);margin:0">{{ rp.name }}</h4>
+            </div>
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="case-detail__actions">
+        <a href="{{ site.basePath }}/{{ sol.langPrefix }}about/#contact" class="btn btn--primary">{% if langCode == 'zh' %}咨询该方案{% else %}Inquire About This Solution{% endif %}</a>
+        <a href="{{ site.basePath }}/{{ sol.langPrefix }}cases/" class="btn btn--outline">{{ t.backToCases }}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.case-detail {
+  text-align: center;
+}
+
+.case-detail__icon {
+  margin-bottom: var(--space-xl);
+}
+.case-detail__icon img {
+  max-width: 600px;
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: var(--radius-lg);
+}
+
+.case-detail__title {
+  font-size: var(--text-4xl);
+  font-weight: var(--font-bold);
+  margin-bottom: var(--space-xs);
+}
+
+.case-detail__en {
+  font-size: var(--text-lg);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-xl);
+}
+
+.case-detail__desc {
+  font-size: var(--text-lg);
+  color: var(--color-text);
+  line-height: 1.8;
+  max-width: 700px;
+  margin: 0 auto var(--space-2xl);
+  text-align: left;
+}
+
+.case-detail__body {
+  text-align: left;
+  font-size: var(--text-base);
+  line-height: 1.8;
+  margin-bottom: var(--space-2xl);
+  padding: var(--space-2xl);
+  background: var(--color-bg-alt);
+  border-radius: var(--radius-lg);
+}
+
+.case-detail__actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-md);
+  margin-top: var(--space-2xl);
+  flex-wrap: wrap;
+}
+
+.case-detail__related {
+  margin-top: var(--space-3xl);
+  text-align: center;
+}
+
+.case-detail__related-title {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  position: relative;
+  display: inline-block;
+}
+
+.case-detail__related-title::after {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 3px;
+  background: var(--color-primary);
+  margin: var(--space-sm) auto 0;
+  border-radius: 2px;
+}
+
+.related-product-card {
+  text-align: center;
+}
+
+.related-product-card:hover {
+  border-color: var(--color-primary);
+}
+
+@media (max-width: 768px) {
+  .case-detail__title { font-size: var(--text-2xl); }
+  .case-detail__desc { font-size: var(--text-base); text-align: justify; }
+  .case-detail__icon img { max-width: 100%; }
+}
+</style>

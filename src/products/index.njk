@@ -1,0 +1,208 @@
+---
+layout: layout.njk
+activePage: products
+pagination:
+  data: langs
+  size: 1
+  alias: lang
+permalink: /{{ lang.prefix }}products/index.html
+eleventyComputed:
+  title: "{{ 'Products' if lang.code == 'en' else '产品中心' }}"
+---
+
+{% set langCode = lang.code %}
+{% set t = i18n[langCode] %}
+
+<div class="page-hero">
+  <img src="{{ site.basePath }}/images/banner-product-hero.png" alt="产品中心" class="page-hero__bg" loading="eager">
+  <div class="page-hero__overlay">
+    <div class="container">
+      <h1 class="page-hero__title">{{ t.products }}</h1>
+      <p class="page-hero__subtitle">{% if langCode == 'zh' %}7大产品线 · 70+ 款产品 · 覆盖全场景计算需求{% else %}7 Product Lines · 70+ Models · Full-Spectrum Computing{% endif %}</p>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+
+  <div class="container">
+    <div class="product-layout">
+      <!-- Sidebar -->
+      <aside class="product-sidebar">
+        <h4 class="sidebar-title">{{ t.allProducts }}</h4>
+        {% for cat in products.categories %}
+        <div class="sidebar-cat">
+          <button class="sidebar-cat__title" onclick="toggleSub(this)">
+            {{ cat.nameEn if langCode == 'en' else cat.name }}
+            <span class="sidebar-cat__count">{{ cat.sub | length }}</span>
+          </button>
+          <div class="sidebar-cat__subs">
+            {% for sub in cat.sub %}
+            <a href="#sub-{{ sub.id }}" class="sidebar-cat__sub">
+              {{ sub.nameEn if langCode == 'en' else sub.name }}
+              {% set count = products.products | getProductsByCategory(sub.id) | length %}
+              <span>{{ count }}</span>
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      </aside>
+
+      <!-- Main content -->
+      <div class="product-main">
+        {% for cat in products.categories %}
+        <div id="cat-{{ cat.id }}" class="product-cat-section">
+        {% for sub in cat.sub %}
+        <div class="product-group" id="sub-{{ sub.id }}">
+          <h3 class="product-group__title">{{ cat.nameEn if langCode == 'en' else cat.name }} — {{ sub.nameEn if langCode == 'en' else sub.name }} <span class="tag">{{ products.products | getProductsByCategory(sub.id) | length }} {% if langCode == 'zh' %}款产品{% else %}models{% endif %}</span></h3>
+          <div class="grid grid--3">
+            {% for p in products.products %}
+            {% if p.classId == sub.id %}
+            <a href="{{ site.basePath }}/{{ lang.prefix }}products/{{ p.name | productSlug }}/" class="card product-card" id="{{ p.name }}">
+              <div class="card__image">
+                <img src="{{ site.basePath }}/images/products/{{ p.name | lower | replace('/', '-') }}-01.png"
+                     alt="{{ p.name }}"
+                     loading="lazy"
+                     onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:var(--color-text-secondary);font-size:var(--text-2xl)\'>📦</div>'">
+              </div>
+              <div class="card__body">
+                <h3 class="card__title">{{ p.name }}</h3>
+                <p class="card__text">{{ p.duibi or p.name }}</p>
+              </div>
+            </a>
+            {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.product-layout {
+  display: flex;
+  gap: var(--space-2xl);
+}
+
+.product-sidebar {
+  width: 200px;
+  flex-shrink: 0;
+  position: sticky;
+  top: calc(var(--nav-height) + var(--space-lg));
+  align-self: flex-start;
+  max-height: calc(100vh - var(--nav-height) - var(--space-4xl));
+  overflow-y: auto;
+}
+
+.sidebar-title {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--color-border-light);
+  margin-bottom: var(--space-md);
+}
+
+.sidebar-cat { margin-bottom: var(--space-xs); scroll-margin-top: calc(var(--nav-height) + var(--space-md)); }
+
+.sidebar-cat__title {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-text);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background var(--transition-fast);
+}
+
+.sidebar-cat__title:hover { background: var(--color-bg-alt); }
+
+.sidebar-cat__count {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  background: var(--color-bg-alt);
+  padding: 1px 8px;
+  border-radius: var(--radius-full);
+}
+
+.sidebar-cat__subs {
+  display: flex;
+  flex-direction: column;
+  padding-left: var(--space-md);
+}
+
+.sidebar-cat__sub {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.sidebar-cat__sub:hover,
+.sidebar-cat__sub:target {
+  color: var(--color-primary);
+  background: var(--color-tag-bg);
+}
+
+.product-main { flex: 1; min-width: 0; }
+
+.product-group { margin-bottom: var(--space-4xl); scroll-margin-top: calc(var(--nav-height) + var(--space-sm)); }
+
+.product-cat-section { scroll-margin-top: calc(var(--nav-height) + var(--space-sm)); }
+
+.product-group__title {
+  font-size: var(--text-xl);
+  font-weight: var(--font-semibold);
+  margin-bottom: var(--space-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+/* Uniform card heights in product grid */
+.product-main .card {
+  height: 100%;
+}
+
+.product-main .card__body {
+  display: flex;
+  flex-direction: column;
+}
+
+.product-main .card__text {
+  flex: 1;
+}
+
+@media (max-width: 1024px) {
+  .product-layout { flex-direction: column; }
+  .product-sidebar {
+    width: 100%;
+    position: static;
+    max-height: none;
+    overflow-y: visible;
+  }
+  .sidebar-cat__subs { display: none; }
+  .sidebar-cat.open .sidebar-cat__subs { display: flex; }
+}
+</style>
+
+<script>
+function toggleSub(btn) {
+  btn.parentElement.classList.toggle('open');
+}
+</script>

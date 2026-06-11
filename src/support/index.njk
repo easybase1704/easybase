@@ -1,0 +1,163 @@
+---
+layout: layout.njk
+activePage: support
+pagination:
+  data: langs
+  size: 1
+  alias: lang
+permalink: /{{ lang.prefix }}support/index.html
+eleventyComputed:
+  title: "{{ 'Support' if lang.code == 'en' else '技术支持' }}"
+---
+
+{% set langCode = lang.code %}
+{% set t = i18n[langCode] %}
+
+<div class="page-hero">
+  <img src="{{ site.basePath }}/images/banner-support.jpg" alt="技术支持" class="page-hero__bg" loading="eager">
+  <div class="page-hero__overlay">
+    <div class="container">
+      <h1 class="page-hero__title">{{ t.support }}</h1>
+      <p class="page-hero__subtitle">{% if langCode == 'zh' %}驱动下载 · 定制服务 · 技术咨询{% else %}Downloads · Custom Services · Technical Support{% endif %}</p>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+
+    <!-- Downloads -->
+    <div class="support-section" style="margin-bottom:var(--space-3xl)">
+      <h3>📥 {{ t.download }}</h3>
+      <p class="text-secondary mb-3">{% if langCode == 'zh' %}产品驱动、固件、用户手册下载{% else %}Product drivers, firmware & user manuals{% endif %}</p>
+
+      <div class="grid grid--2">
+        <div class="card" style="padding:var(--space-xl)">
+          <h4>BV10 Series</h4>
+          <p class="text-secondary" style="margin:var(--space-sm) 0">{% if langCode == 'zh' %}V1.0 驱动及手册{% else %}V1.0 Drivers & Manual{% endif %}</p>
+          <a href="#" class="btn btn--outline" style="margin-top:var(--space-md)">{% if langCode == 'zh' %}下载{% else %}Download{% endif %}</a>
+        </div>
+        <div class="card" style="padding:var(--space-xl)">
+          <h4>B25 Series</h4>
+          <p class="text-secondary" style="margin:var(--space-sm) 0">{% if langCode == 'zh' %}V2.0 驱动及手册{% else %}V2.0 Drivers & Manual{% endif %}</p>
+          <a href="#" class="btn btn--outline" style="margin-top:var(--space-md)">{% if langCode == 'zh' %}下载{% else %}Download{% endif %}</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Custom Service -->
+    <div class="support-section">
+      <h3>🔧 {{ t.customService }}</h3>
+
+      <div class="support-banner">
+        <img src="{{ site.basePath }}/images/support-banner.jpg" alt="定制服务" loading="lazy">
+        <div class="support-banner__text">
+          <strong>{{ t.customService }}</strong>
+          <p>{% if langCode == 'zh' %}
+            从在家办公到IT数据中心，再到云端，我们的专家级技术人员和自助服务选项可满足您所有的硬件和软件需求。
+          {% else %}
+            From home offices to IT data centers and the cloud, our expert technicians and self-service options meet all your hardware and software needs.
+          {% endif %}</p>
+        </div>
+      </div>
+
+      <div class="support-custom">
+        <strong class="support-custom__title">{% if langCode == 'zh' %}客制化服务{% else %}Customization Services{% endif %}</strong>
+        <p class="support-custom__desc">
+          {% if langCode == 'zh' %}
+          服务于嵌入式计算机行业近30年，凭借自身专业的技术和研发优势、高效的质量管理体系、完整而灵活的产品制造能力，
+          与英特尔、AMD、恩智浦、瑞芯微、海思、海光、飞腾、兆芯、龙芯等国内外知名芯片企业协同合作，
+          能够根据客户需求提供各类嵌入式计算机产品的定制化方案。
+          从计算机硬件到操作系统、产品驱动、安全软件，无论是单板开发还是系统整机的生产定制，
+          均可为客户提供高度弹性且客制化的产品及服务。
+          {% else %}
+          With nearly 30 years of experience in the embedded computing industry, we leverage our technical expertise,
+          efficient quality management system, and flexible manufacturing capabilities. Collaborating with leading
+          chip vendors including Intel, AMD, NXP, Rockchip, HiSilicon, Hygon, Phytium, Zhaoxin and Loongson,
+          we deliver customized embedded computing solutions tailored to customer requirements.
+          From hardware to operating systems, drivers, and security software — whether single-board development
+          or full system production — we provide highly flexible and customized products and services.
+          {% endif %}
+        </p>
+        <div class="support-custom__img">
+          <img src="{{ site.basePath }}/images/support-custom.jpg" alt="定制服务" loading="lazy">
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+.support-banner {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: var(--space-xl);
+}
+
+.support-banner img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.support-banner__text {
+  position: absolute;
+  left: var(--space-2xl);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.support-banner__text strong {
+  display: block;
+  color: #fff;
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  margin-bottom: var(--space-xs);
+}
+
+.support-banner__text p {
+  color: #fff;
+  font-size: var(--text-base);
+  line-height: 1.8;
+  margin: 0;
+}
+
+.support-custom {
+  margin-bottom: var(--space-xl);
+}
+
+.support-custom__title {
+  display: block;
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  margin-bottom: var(--space-md);
+}
+
+.support-custom__desc {
+  line-height: 1.9;
+  margin-bottom: var(--space-xl);
+}
+
+.support-custom__img img {
+  width: 100%;
+  max-width: 886px;
+  margin: 0 auto;
+  height: auto;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .support-banner__text {
+    left: var(--space-lg);
+    right: var(--space-lg);
+  }
+  .support-banner__text strong {
+    font-size: var(--text-lg);
+  }
+  .support-banner__text p {
+    font-size: var(--text-sm);
+    line-height: 1.5;
+  }
+}
+</style>

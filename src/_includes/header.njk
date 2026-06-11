@@ -1,0 +1,53 @@
+<header class="header" id="header">
+  <nav class="nav container">
+    <a href="{{ site.basePath }}/{{ 'en/' if langCode == 'en' }}" class="nav__logo">
+      <span class="nav__logo-text">{{ site.name }}</span>
+    </a>
+
+    <button class="nav__toggle" id="navToggle" aria-label="Menu">
+      <span></span><span></span>
+    </button>
+
+    <ul class="nav__menu" id="navMenu">
+      <li class="nav__item">
+        <a href="{{ site.basePath }}/{{ 'en/' if langCode == 'en' }}" class="nav__link {% if activePage == 'home' %}active{% endif %}">{{ t.home }}</a>
+      </li>
+
+      <!-- 产品中心 下拉 -->
+      <li class="nav__item nav__item--dropdown">
+        <a href="{{ site.basePath }}/{{ 'en/' if langCode == 'en' }}products/" class="nav__link {% if activePage == 'products' %}active{% endif %}">{{ t.products }} ▾</a>
+        <div class="nav__dropdown">
+          <div class="nav__dropdown-inner">
+            {% for cat in products.categories %}
+            <a href="{{ site.basePath }}/{{ 'en/' if langCode == 'en' }}products/#cat-{{ cat.id }}" class="nav__dropdown-link">{{ cat.nameEn if langCode == 'en' else cat.name }}</a>
+            {% endfor %}
+          </div>
+        </div>
+      </li>
+
+      <!-- 行业方案 下拉 -->
+      <li class="nav__item nav__item--dropdown">
+        <a href="{{ site.basePath }}/{{ 'en/' if langCode == 'en' }}cases/" class="nav__link {% if activePage == 'cases' %}active{% endif %}">{{ t.cases }} ▾</a>
+        <div class="nav__dropdown">
+          <div class="nav__dropdown-inner">
+            {% for sol in cases.solutions %}
+            <a href="{{ site.basePath }}/{{ 'en/' if langCode == 'en' }}cases/{{ sol | caseSlug }}/" class="nav__dropdown-link">{{ sol.nameEn if langCode == 'en' else sol.name }}</a>
+            {% endfor %}
+          </div>
+        </div>
+      </li>
+
+      <li class="nav__item">
+        <a href="{{ site.basePath }}/{{ 'en/' if langCode == 'en' }}news/" class="nav__link {% if activePage == 'news' %}active{% endif %}">{{ t.news }}</a>
+      </li>
+
+      <li class="nav__item">
+        <a href="{{ site.basePath }}/{{ 'en/' if langCode == 'en' }}support/" class="nav__link {% if activePage == 'support' %}active{% endif %}">{{ t.support }}</a>
+      </li>
+      <li class="nav__item">
+        <a href="{{ site.basePath }}/{{ 'en/' if langCode == 'en' }}about/" class="nav__link {% if activePage == 'about' %}active{% endif %}">{{ t.about }}</a>
+      </li>
+    </ul>
+
+  </nav>
+</header>

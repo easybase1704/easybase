@@ -1,0 +1,30 @@
+{
+  "basePath": "",
+  "name": "原基科技",
+  "nameEn": "EasyBase Technology",
+  "slogan": "工控机 · 云终端 · 边缘计算设备制造商",
+  "sloganEn": "Industrial Computer · Cloud Terminal · Edge Computing Manufacturer",
+  "contact": {
+    "phone": "0755-88658839",
+    "phoneEdge": "13242092998",
+    "hours": "工作日 09:00 ~ 18:00",
+    "address": "深圳市光明区光明街道东周社区双明大道南侧云智科技园3栋C座（B2）1704",
+    "email": "liur@easy-base.com.cn",
+    "hrEmail": "hr@easy-base.com.cn",
+    "sales": [
+      { "name": "王先生", "phone": "18565743789", "title": "销售一部" },
+      { "name": "杜先生", "phone": "13923747717", "title": "销售二部" },
+      { "name": "赵先生", "phone": "13242092998", "title": "销售三部" }
+    ]
+  },
+  "seo": {
+    "keywords": "工控机,云终端,边缘计算,台式计算机,一体机,服务器,工业控制,迷你主机,原基科技",
+    "description": "深圳市原基科技有限公司是工控机、云终端、边缘计算设备制造商，提供国产平台和X86平台全系列产品解决方案。"
+  },
+  "seoEn": {
+    "keywords": "Industrial Computer, Cloud Terminal, Edge Computing, Desktop Computer, All-in-One, Server, Industrial Control, Mini PC, EasyBase Technology",
+    "description": "EasyBase Technology is a manufacturer of industrial computers, cloud terminals, and edge computing devices, offering a full range of X86 and domestic platform solutions."
+  },
+  "copyright": "© 2026 深圳市原基科技有限公司 版权所有",
+  "icp": "粤ICP备20006577号"
+}

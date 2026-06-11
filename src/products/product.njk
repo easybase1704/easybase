@@ -1,0 +1,312 @@
+---
+layout: layout.njk
+pagination:
+  data: productEntries
+  size: 1
+  alias: p
+permalink: /{{ p.langPrefix }}products/{{ p.name | productSlug }}/index.html
+activePage: products
+eleventyComputed:
+  title: "{{ p.name }}"
+  date: "2026-06-10"
+---
+
+{% set langCode = p.langCode %}
+{% set t = i18n[langCode] %}
+{% set cat = p.classId | getCategory %}
+{% set imgBase = site.basePath + '/images/products/' + p.name | lower | replace('/', '-') %}
+
+<nav class="breadcrumb">
+  <div class="container">
+    <a href="{{ site.basePath }}/{{ p.langPrefix }}">{{ t.home }}</a><span>/</span>
+    <a href="{{ site.basePath }}/{{ p.langPrefix }}products/">{{ t.products }}</a><span>/</span>
+    {% if cat %}<a href="{{ site.basePath }}/{{ p.langPrefix }}products/#cat-{{ cat.parent.id }}">{{ cat.parent.nameEn if langCode == 'en' else cat.parent.name }}</a><span>/</span>{% endif %}
+    <span>{{ p.name }}</span>
+  </div>
+</nav>
+
+<section class="section">
+  <div class="container">
+
+    <!-- 标题行 -->
+    <div class="product-head">
+      <span class="tag">{{ (cat.parent.nameEn if langCode == 'en' else cat.parent.name) + ' · ' + (cat.sub.nameEn if langCode == 'en' else cat.sub.name) if cat else '' }}</span>
+      <h1 class="product-head__name">{{ p.name }}</h1>
+      {% if p.duibi %}<p class="product-head__brief">{% if langCode == 'en' and p.duibiEn %}{{ p.duibiEn }}{% else %}{{ p.duibi }}{% endif %}</p>{% endif %}
+    </div>
+
+    <!-- 上半区：左图 + 右亮点 -->
+    <div class="product-top">
+      <!-- 图片 -->
+      <div class="product-gallery" id="gallery">
+        <div class="product-gallery__main" id="galleryMain">
+          <img src="{{ imgBase }}-01.png" alt="{{ p.name }}" id="mainImg"
+               onerror="this.parentElement.innerHTML='<div class=\'gallery-placeholder\'>📦</div>'">
+        </div>
+        <div class="product-gallery__thumbs">
+          {% for i in [1, 2, 3, 4] %}
+          <button class="product-gallery__thumb{% if i === 1 %} active{% endif %}" data-idx="{{ i }}"
+                  onclick="switchImage(this, {{ i }})">
+            <img src="{{ imgBase }}-0{{ i }}.png" alt="{{ p.name }}"
+                 onerror="this.closest('button').style.display='none'" loading="lazy">
+          </button>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- 亮点 + 基础参数 -->
+      <div class="product-info">
+        {% set lifekitContent = p.lifekitEn if langCode == 'en' and p.lifekitEn else p.lifekit %}
+        {% if lifekitContent %}
+        <div class="product-highlights">
+          {{ lifekitContent | safe }}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- 下半区：规格表 -->
+    <div class="product-specs">
+      <h3 class="product-specs__title">{{ t.specs }}</h3>
+      <div>
+        {% set specContent = p.yiwaibaoEn if langCode == 'en' and p.yiwaibaoEn else p.yiwaibao %}
+        {% if specContent %}
+        <div class="spec-wrapper">
+          {{ specContent | safe }}
+        </div>
+        {% else %}
+        <table class="spec-fallback">
+          <tr><td>{% if langCode == 'zh' %}处理器{% else %}CPU{% endif %}</td><td>{{ p.cpu }}</td></tr>
+          <tr><td>{% if langCode == 'zh' %}内存{% else %}Memory{% endif %}</td><td>{{ p.neicun }}</td></tr>
+          <tr><td>{% if langCode == 'zh' %}存储{% else %}Storage{% endif %}</td><td>{{ p.ssd }}</td></tr>
+          <tr><td>{% if langCode == 'zh' %}接口{% else %}Ports{% endif %}</td><td>{{ p.jiekou }}</td></tr>
+        </table>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- 操作 -->
+    <div class="product-actions">
+      <a href="{{ site.basePath }}/{{ p.langPrefix }}about/#contact" class="btn btn--primary">{{ t.consultPrice }}</a>
+      <a href="{{ site.basePath }}/{{ p.langPrefix }}products/" class="btn btn--outline">{{ t.backToList }}</a>
+    </div>
+
+  </div>
+</section>
+
+<style>
+.product-head {
+  margin-bottom: var(--space-xl);
+}
+
+.product-head .tag {
+  display: inline-block;
+  margin-bottom: var(--space-xs);
+}
+
+.product-head__name {
+  font-size: var(--text-3xl);
+  font-weight: var(--font-bold);
+  color: var(--color-text);
+  margin: 0 0 var(--space-xs);
+}
+
+.product-head__brief {
+  font-size: var(--text-base);
+  color: var(--color-text);
+  margin: 0;
+}
+
+.product-top {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2xl);
+  align-items: start;
+  margin-bottom: var(--space-2xl);
+}
+
+.product-gallery__main {
+  background: #FFFFFF;
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  aspect-ratio: 4/3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.product-gallery__main img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.gallery-placeholder {
+  font-size: 3rem;
+  color: var(--color-text);
+  user-select: none;
+}
+
+.product-gallery__thumbs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-xs);
+  margin-top: var(--space-sm);
+}
+
+.product-gallery__thumb {
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-sm);
+  padding: 2px;
+  background: #FFFFFF;
+  cursor: pointer;
+  aspect-ratio: 4/3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s;
+  overflow: hidden;
+}
+
+.product-gallery__thumb:hover,
+.product-gallery__thumb.active {
+  border-color: var(--color-primary);
+}
+
+.product-gallery__thumb img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.product-highlights ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.product-highlights li {
+  padding: var(--space-xs) 0;
+  padding-left: var(--space-md);
+  position: relative;
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+.product-highlights li::before {
+  content: '◆';
+  position: absolute;
+  left: 0;
+  top: var(--space-xs);
+  font-size: 0.45em;
+  color: var(--color-primary);
+  line-height: 1.6;
+}
+
+.product-highlights p {
+  margin: 0;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+.product-specs {
+  margin-bottom: var(--space-xl);
+}
+
+.product-specs__title {
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  color: var(--color-text);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-xs);
+  border-bottom: 2px solid var(--color-primary);
+  display: inline-block;
+}
+
+.spec-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+}
+
+.spec-wrapper table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+.spec-wrapper td {
+  padding: 8px 12px;
+  border-right: 1px solid var(--color-border-light);
+  border-bottom: 1px solid var(--color-border-light);
+  vertical-align: middle;
+  text-align: center;
+  color: var(--color-text);
+}
+
+.spec-wrapper td:last-child {
+  border-right: none;
+}
+
+.spec-wrapper tr:last-child td {
+  border-bottom: none;
+}
+
+.spec-fallback {
+  width: 100%;
+  max-width: 500px;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+
+.spec-fallback tr {
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.spec-fallback td {
+  padding: var(--space-sm) var(--space-md);
+  text-align: left;
+  color: var(--color-text);
+}
+
+.spec-fallback td:first-child {
+  width: 80px;
+  font-weight: var(--font-semibold);
+  white-space: nowrap;
+}
+
+.product-actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--color-border-light);
+}
+
+@media (max-width: 768px) {
+  .product-top {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+  .product-head__name { font-size: var(--text-2xl); }
+  .spec-wrapper table { font-size: 11px; }
+  .spec-wrapper td { padding: 4px 6px; }
+  .spec-fallback td { padding: var(--space-sm); }
+}
+</style>
+
+<script>
+function switchImage(btn, idx) {
+  btn.parentElement.querySelectorAll('.product-gallery__thumb').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('mainImg').src = '{{ imgBase }}-0' + idx + '.png';
+}
+</script>

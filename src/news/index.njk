@@ -1,0 +1,65 @@
+---
+layout: layout.njk
+activePage: news
+pagination:
+  data: langs
+  size: 1
+  alias: lang
+permalink: /{{ lang.prefix }}news/index.html
+eleventyComputed:
+  title: "{{ 'News' if lang.code == 'en' else '新闻资讯' }}"
+---
+
+{% set langCode = lang.code %}
+{% set t = i18n[langCode] %}
+
+<div class="page-hero">
+  <img src="{{ site.basePath }}/images/banner-news.png" alt="新闻资讯" class="page-hero__bg" loading="eager">
+  <div class="page-hero__overlay">
+    <div class="container">
+      <h1 class="page-hero__title">{{ t.news }}</h1>
+      <p class="page-hero__subtitle">{% if langCode == 'zh' %}公司动态与行业新闻{% else %}Company Updates & Industry News{% endif %}</p>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="grid grid--3">
+      {% for article in news.articles | sort(attribute='date') | reverse %}
+      <a href="{{ site.basePath }}/{{ lang.prefix }}news/{{ article | articleSlug }}/" class="card product-card" id="article-{{ article.oid }}">
+        <div class="card__image">
+          <img src="{{ article.img }}" alt="{{ article.title }}" loading="lazy" onerror="this.style.display='none'">
+        </div>
+        <div class="card__body">
+          <span class="tag">{{ article.date }}</span>
+          <h3 class="card__title" style="margin-top:var(--space-sm)">{% if langCode == 'en' and article.titleEn %}{{ article.titleEn }}{% else %}{{ article.title }}{% endif %}</h3>
+          <p class="card__text">{% if langCode == 'en' and article.descriptionEn %}{{ article.descriptionEn }}{% else %}{{ article.description or article.title }}{% endif %}</p>
+          <p style="font-size:var(--text-xs);color:var(--color-text-tertiary);margin-top:var(--space-sm)">
+            👁️ {{ article.hits }} {% if langCode == 'zh' %}次阅读{% else %}views{% endif %}
+          </p>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+/* Uniform card heights */
+.grid--3 .card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.grid--3 .card__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.grid--3 .card__text {
+  flex: 1;
+}
+</style>

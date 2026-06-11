@@ -1,0 +1,165 @@
+---
+layout: layout.njk
+activePage: home
+pagination:
+  data: langs
+  size: 1
+  alias: lang
+permalink: /{{ lang.prefix }}index.html
+eleventyComputed:
+  title: "{{ 'Home' if lang.code == 'en' else '首页' }}"
+---
+
+{% set langCode = lang.code %}
+{% set t = i18n[langCode] %}
+
+<!-- Hero -->
+<div class="page-hero">
+  <img src="{{ site.basePath }}/images/banner-home-1.jpg" alt="原基科技" class="page-hero__bg" loading="eager">
+  <div class="page-hero__overlay">
+    <div class="container">
+      <h1 class="page-hero__title">{{ site.slogan if langCode == 'zh' else site.sloganEn }}</h1>
+      <p class="page-hero__subtitle">{{ t.sloganSub | safe if langCode == 'zh' else t.sloganSubEn | safe }}</p>
+      <div style="margin-top:var(--space-lg)">
+        <a href="{{ site.basePath }}/{{ lang.prefix }}products/" class="btn btn--primary">{{ t.browseProducts }}</a>
+        <a href="{{ site.basePath }}/{{ lang.prefix }}about/#contact" class="btn btn--outline" style="border-color:rgba(255,255,255,0.5);color:#fff">{{ t.contactUs }}</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Product Categories -->
+<section class="section">
+  <div class="container">
+    <h2 class="section__title">{{ t.products }}</h2>
+    <p class="section__subtitle">{% if langCode == 'zh' %}7大产品线 · 70+ 款产品 · 覆盖全场景计算需求{% else %}7 Product Lines · 70+ Models · Full-Spectrum Computing{% endif %}</p>
+
+    <div class="grid grid--4">
+      {% for cat in products.categories %}
+      <a href="{{ site.basePath }}/{{ lang.prefix }}products/#cat-{{ cat.id }}" class="category-card">
+        <div class="category-card__icon">
+          {% if cat.id == 1 %}🖥️{% elif cat.id == 27 %}💻{% elif cat.id == 21 %}🖥️{% elif cat.id == 11 %}⚡{% elif cat.id == 12 %}🗄️{% elif cat.id == 13 %}🏭{% else %}🖥️{% endif %}
+        </div>
+        <h3 class="category-card__title">{{ cat.nameEn if langCode == 'en' else cat.name }}</h3>
+        <p class="category-card__sub">{{ cat.nameEn if langCode == 'en' else cat.nameEn }}</p>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Solutions -->
+<section class="section">
+  <div class="container">
+    <h2 class="section__title">{{ t.cases }}</h2>
+    <p class="section__subtitle">{% if langCode == 'zh' %}覆盖 8 大行业场景，提供端到端解决方案{% else %}8 Industry Solutions — End-to-End Delivery{% endif %}</p>
+
+    <div class="grid grid--4">
+      {% for sol in cases.solutions %}
+      <a href="{{ site.basePath }}/{{ lang.prefix }}cases/#case-{{ sol.oid }}" class="card">
+        <div class="card__body">
+          <h3 class="card__title">{{ sol.nameEn if langCode == 'en' else sol.name }}</h3>
+          <p class="card__text">{{ (sol.duibi | truncate(80)) if langCode == 'zh' else (sol.nameEn) }}</p>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- News -->
+<section class="section section--alt">
+  <div class="container">
+    <h2 class="section__title">{% if langCode == 'zh' %}最新资讯{% else %}Latest News{% endif %}</h2>
+    <p class="section__subtitle">{% if langCode == 'zh' %}公司动态与行业新闻{% else %}Company Updates & Industry News{% endif %}</p>
+
+    <div class="grid grid--3">
+      {% for article in news.articles | sort(attribute='date') | reverse %}
+      {% if loop.index <= 3 %}
+      <a href="{{ site.basePath }}/{{ lang.prefix }}news/#article-{{ article.oid }}" class="card">
+        <div class="card__image">
+          <img src="{{ article.img }}" alt="{{ article.title }}" loading="lazy" onerror="this.style.display='none'">
+        </div>
+        <div class="card__body">
+          <span class="tag">
+            {% for cat in news.categories %}
+            {% if cat.id == article.classId %}{{ cat.nameEn if langCode == 'en' else cat.name }}{% endif %}
+            {% endfor %}
+          </span>
+          <h3 class="card__title">{{ article.title }}</h3>
+          <p class="card__text">{{ article.description | truncate(60) }}</p>
+          <p class="card__text" style="margin-top:var(--space-sm)">{{ article.date }}</p>
+        </div>
+      </a>
+      {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="text-center mt-4">
+      <a href="{{ site.basePath }}/{{ lang.prefix }}news/" class="btn btn--outline">{{ t.viewDetail if langCode == 'en' else '查看全部新闻' }}</a>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section class="section section--dark" style="text-align:center">
+  <div class="container container--narrow">
+    <h2 class="section__title" style="color:var(--color-text-on-dark)">{{ t.contactUs }}</h2>
+    <p class="section__subtitle" style="color:rgba(255,255,255,0.85);line-height:2;margin-bottom:var(--space-md)">
+      📍 {{ site.contact.address }}<br>
+      📞 {{ t.phoneLabel }}：{{ site.contact.phone }}<br>
+      {% for s in site.contact.sales %}
+      {{ s.title }}：{{ s.phone }} {{ s.name }}{% if not loop.last %}<br>{% endif %}
+      {% endfor %}
+    </p>
+    <p style="color:rgba(255,255,255,0.7);font-size:var(--text-sm);margin-bottom:var(--space-lg)">
+      📧 {{ t.emailBiz }}：{{ site.contact.email }}　|　📧 {{ t.emailHR }}：{{ site.contact.hrEmail }}<br>
+      🕐 {{ t.hoursLabel }}
+    </p>
+    <a href="{{ site.basePath }}/{{ lang.prefix }}about/#contact" class="btn btn--primary">{{ t.learnMore }}</a>
+  </div>
+</section>
+
+<style>
+.hero__actions {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+  margin-top: var(--space-2xl);
+}
+
+.category-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-2xl) var(--space-lg);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  transition: all var(--transition-base);
+}
+
+.category-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-primary);
+}
+
+.category-card__icon {
+  font-size: 2.5rem;
+  margin-bottom: var(--space-xs);
+}
+
+.category-card__title {
+  font-size: var(--text-lg);
+  color: var(--color-text);
+  font-weight: var(--font-semibold);
+}
+
+.category-card__sub {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+}
+</style>
