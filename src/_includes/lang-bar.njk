@@ -7,9 +7,9 @@
           <span class="lang-bar__link lang-bar__link--active">{{ l.flag }} {{ l.label }}</span>
         {% else %}
           {% if l.code == 'en' %}
-            <a href="/en{{ page.url }}" class="lang-bar__link">{{ l.flag }} {{ l.label }}</a>
+            <a href="{{ site.basePath }}/en{{ page.url }}" class="lang-bar__link">{{ l.flag }} {{ l.label }}</a>
           {% else %}
-            <a href="{{ page.url | replace('/en/', '/') }}" class="lang-bar__link">{{ l.flag }} {{ l.label }}</a>
+            <a href="{{ site.basePath }}{{ page.url | replace('/en/', '/') }}" class="lang-bar__link">{{ l.flag }} {{ l.label }}</a>
           {% endif %}
         {% endif %}
         {% if not loop.last %}<span class="lang-bar__sep">|</span>{% endif %}
