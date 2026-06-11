@@ -35,7 +35,7 @@ eleventyComputed:
 
       {% if article.body %}
       <div class="article-detail__body">
-        {{ article.body | safe }}
+        {{ article.body | fixPaths(site.basePath) | safe }}
       </div>
       {% endif %}
 

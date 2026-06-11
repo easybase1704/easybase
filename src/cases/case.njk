@@ -34,7 +34,7 @@ eleventyComputed:
 
       {% if sol.body %}
       <div class="case-detail__body">
-        {{ sol.body | safe }}
+        {{ sol.body | fixPaths(site.basePath) | safe }}
       </div>
       {% endif %}
 

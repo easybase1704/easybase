@@ -59,7 +59,7 @@ eleventyComputed:
         {% set lifekitContent = p.lifekitEn if langCode == 'en' and p.lifekitEn else p.lifekit %}
         {% if lifekitContent %}
         <div class="product-highlights">
-          {{ lifekitContent | safe }}
+          {{ lifekitContent | fixPaths(site.basePath) | safe }}
         </div>
         {% endif %}
       </div>
@@ -72,7 +72,7 @@ eleventyComputed:
         {% set specContent = p.yiwaibaoEn if langCode == 'en' and p.yiwaibaoEn else p.yiwaibao %}
         {% if specContent %}
         <div class="spec-wrapper">
-          {{ specContent | safe }}
+          {{ specContent | fixPaths(site.basePath) | safe }}
         </div>
         {% else %}
         <table class="spec-fallback">

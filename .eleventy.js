@@ -53,6 +53,17 @@ module.exports = function(eleventyConfig) {
       .replace(/^-|-$/g, '');
   });
 
+  // Fix asset paths for GitHub Pages subdirectory deployment
+  eleventyConfig.addFilter("fixPaths", function(content, basePath) {
+    if (!basePath) return content;
+    return content
+      .replace(/src="\/images\//g, `src="${basePath}/images/`)
+      .replace(/src='\/images\//g, `src='${basePath}/images/`)
+      .replace(/href="\/images\//g, `href="${basePath}/images/`)
+      .replace(/href="\/css\//g, `href="${basePath}/css/`)
+      .replace(/href="\/js\//g, `href="${basePath}/js/`);
+  });
+
   return {
     dir: {
       input: "src",

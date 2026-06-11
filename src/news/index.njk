@@ -29,7 +29,7 @@ eleventyComputed:
       {% for article in news.articles | sort(attribute='date') | reverse %}
       <a href="{{ site.basePath }}/{{ lang.prefix }}news/{{ article | articleSlug }}/" class="card product-card" id="article-{{ article.oid }}">
         <div class="card__image">
-          <img src="{{ article.img }}" alt="{{ article.title }}" loading="lazy" onerror="this.style.display='none'">
+          <img src="{{ site.basePath }}{{ article.img }}" alt="{{ article.title }}" loading="lazy" onerror="this.style.display='none'">
         </div>
         <div class="card__body">
           <span class="tag">{{ article.date }}</span>
