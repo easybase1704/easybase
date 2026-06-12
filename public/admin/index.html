@@ -726,6 +726,20 @@ createApp({
       const diag = [];
       diag.push('Token 前缀: ' + raw.substring(0, 7) + '***');
       diag.push('Token 长度: ' + raw.length + ' 字符');
+
+      // Hidden character check
+      const hidden = [];
+      for (let i = 0; i < raw.length; i++) {
+        const code = raw.charCodeAt(i);
+        if (code < 32 || code === 127 || (code > 127 && code < 160) || code === 0x200B || code === 0xFEFF) {
+          hidden.push(`位置${i}: U+${code.toString(16).toUpperCase()}`);
+        }
+      }
+      if (hidden.length > 0) {
+        this.loginError = 'Token 含隐藏/非法字符: ' + hidden.join(', ') + ' —— 请重新复制粘贴';
+        this.loggingIn = false;
+        return;
+      }
       diag.push('目标仓库: easybase1704/easybase');
 
       // Test 1: /user endpoint
