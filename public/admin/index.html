@@ -1107,6 +1107,18 @@ createApp({
     },
     _destroyProdQuill() {
       this._prodQuillToModel();
+      // 清理旧的 Quill DOM（工具栏 + 容器），防止重复叠加
+      ['prodLifekitZh', 'prodLifekitEn', 'prodYiwaibaoZh', 'prodYiwaibaoEn'].forEach(ref => {
+        const el = this.$refs[ref];
+        if (el) {
+          // 移除 Quill 创建的工具栏（在容器前面的兄弟节点）
+          while (el.previousElementSibling && el.previousElementSibling.classList.contains('ql-toolbar')) {
+            el.previousElementSibling.remove();
+          }
+          // 清空容器内容
+          el.innerHTML = '';
+        }
+      });
       if (this._prodQuills) {
         for (const tab of ['zh', 'en']) {
           for (const k of ['lifekit', 'yiwaibao']) {
@@ -1296,6 +1308,16 @@ createApp({
     _destroyQuill() {
       // Save content first, then null the refs
       this._quillToModel();
+      // 清理旧的 Quill DOM，防止重复叠加
+      ['editorZh', 'editorEn'].forEach(ref => {
+        const el = this.$refs[ref];
+        if (el) {
+          while (el.previousElementSibling && el.previousElementSibling.classList.contains('ql-toolbar')) {
+            el.previousElementSibling.remove();
+          }
+          el.innerHTML = '';
+        }
+      });
       if (this._quillZh) { this._quillZh = null; }
       if (this._quillEn) { this._quillEn = null; }
     },
