@@ -1115,6 +1115,8 @@ createApp({
           while (el.previousElementSibling && el.previousElementSibling.classList.contains('ql-toolbar')) {
             el.previousElementSibling.remove();
           }
+          // 移除 Quill 添加的 CSS 类，避免第二次初始化时跳过设置
+          el.classList.remove('ql-container', 'ql-snow', 'ql-disabled');
           // 清空容器内容
           el.innerHTML = '';
         }
@@ -1315,6 +1317,7 @@ createApp({
           while (el.previousElementSibling && el.previousElementSibling.classList.contains('ql-toolbar')) {
             el.previousElementSibling.remove();
           }
+          el.classList.remove('ql-container', 'ql-snow', 'ql-disabled');
           el.innerHTML = '';
         }
       });
