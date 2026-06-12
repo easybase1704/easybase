@@ -397,7 +397,7 @@ body { font-size: 14px; background: #f5f6fa; }
             <div class="row g-2">
               <div v-for="i in [1,2,3,4]" :key="i" class="col-3 text-center">
                 <div style="border:1px dashed #ccc;border-radius:6px;padding:6px;min-height:140px;background:#fafafa;">
-                  <img :src="productImgUrl(i) + '?v=' + _imgVersion" style="max-width:100%;max-height:90px;"
+                  <img :src="productImgUrl(i) + '?v=' + imgVersion" style="max-width:100%;max-height:90px;"
                        @error="$event.target.style.display='none'"
                        @load="$event.target.style.display=''">
                   <div v-if="!productImgExists(i)" class="text-muted small py-4">图{{ i }} 未上传</div>
@@ -663,7 +663,7 @@ createApp({
       prodTab: 'zh',
       prodSrcMode: false,
       uploadingImg: 0,
-      _imgVersion: 1,
+      imgVersion: 1,
       yiwaibaoPreviewZh: false,
       yiwaibaoPreviewEn: false,
       newsTab: 'zh',
@@ -1016,7 +1016,7 @@ createApp({
           });
           this.toast(`图片 ${this.productImgSlug()}-0${i}.png 已上传`, 'success');
           // Force refresh preview by adding cache buster
-          this._imgVersion = Date.now();
+          this.imgVersion = Date.now();
         } catch (e) {
           this.toast('上传失败: ' + e.message, 'danger');
         }
@@ -1033,7 +1033,7 @@ createApp({
       this.prodSrcMode = false;
       this.yiwaibaoPreviewZh = false;
       this.yiwaibaoPreviewEn = false;
-      this._imgVersion = Date.now();
+      this.imgVersion = Date.now();
       this._showModal('productModal');
       this.$nextTick(() => this._initProdQuill());
     },
@@ -1043,7 +1043,7 @@ createApp({
       this.prodSrcMode = false;
       this.yiwaibaoPreviewZh = false;
       this.yiwaibaoPreviewEn = false;
-      this._imgVersion = Date.now();
+      this.imgVersion = Date.now();
       this._showModal('productModal');
       this.$nextTick(() => this._initProdQuill());
     },
