@@ -751,6 +751,13 @@ createApp({
       return { oid: null, name: '', nameEn: '', duibi: '', duibiEn: '', icon: '', body: '', thumb: '', relatedProducts: [] };
     },
 
+    _fmtHtml(html) {
+      if (!html) return '';
+      return html
+        .replace(/></g, '>\n<')
+        .replace(/<\/tr>/gi, '</tr>\n')
+        .replace(/<\/table>/gi, '</table>\n');
+    },
     _b64Encode(str) {
       const bytes = new TextEncoder().encode(str);
       let binary = '';
@@ -1057,6 +1064,9 @@ createApp({
     editProduct(p) {
       console.log('[Quill] editProduct called, name:', p.name, 'lifekit len:', (p.lifekit || '').length);
       this.editingProduct = JSON.parse(JSON.stringify(p));
+      // 格式化规格表 HTML，便于阅读编辑
+      this.editingProduct.yiwaibao = this._fmtHtml(this.editingProduct.yiwaibao);
+      this.editingProduct.yiwaibaoEn = this._fmtHtml(this.editingProduct.yiwaibaoEn);
       this.prodTab = 'zh';
       this.prodSrcMode = false;
       this.yiwaibaoPreviewZh = false;
