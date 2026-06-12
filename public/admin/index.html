@@ -426,11 +426,11 @@ body { font-size: 14px; background: #f5f6fa; }
             <div class="mb-2"><label class="form-label small mb-1 fw-bold">亮点 (lifekit)</label>
               <div class="news-editor-wrap"><div ref="prodLifekitZh"></div></div>
             </div>
-            <div class="mb-2"><label class="form-label small mb-1 fw-bold">规格表 (yiwaibao)
+            <div class="mb-2"><label class="form-label small mb-1 fw-bold">规格表 (yiwaibao) — 仅源码编辑
               <a href="#" class="small fw-normal ms-2" @click.prevent="yiwaibaoPreviewZh = !yiwaibaoPreviewZh">{{ yiwaibaoPreviewZh ? '✏️ 编辑' : '👁 预览' }}</a>
             </label>
               <div v-if="yiwaibaoPreviewZh" v-html="editingProduct.yiwaibao" style="border:1px solid #dee2e6;border-radius:4px;padding:12px;background:#fff;max-height:300px;overflow:auto;font-size:13px;"></div>
-              <div v-else class="news-editor-wrap"><div ref="prodYiwaibaoZh" style="min-height:200px;"></div></div>
+              <textarea v-else v-model="editingProduct.yiwaibao" class="form-control form-control-sm" rows="18" style="font-size:11px;font-family:monospace;"></textarea>
             </div>
           </div>
           <!-- Chinese Source Code -->
@@ -450,11 +450,11 @@ body { font-size: 14px; background: #f5f6fa; }
             <div class="mb-2"><label class="form-label small mb-1 fw-bold">亮点 (lifekitEn)</label>
               <div class="news-editor-wrap"><div ref="prodLifekitEn"></div></div>
             </div>
-            <div class="mb-2"><label class="form-label small mb-1 fw-bold">规格表 (yiwaibaoEn)
+            <div class="mb-2"><label class="form-label small mb-1 fw-bold">规格表 (yiwaibaoEn) — 仅源码编辑
               <a href="#" class="small fw-normal ms-2" @click.prevent="yiwaibaoPreviewEn = !yiwaibaoPreviewEn">{{ yiwaibaoPreviewEn ? '✏️ 编辑' : '👁 预览' }}</a>
             </label>
               <div v-if="yiwaibaoPreviewEn" v-html="editingProduct.yiwaibaoEn" style="border:1px solid #dee2e6;border-radius:4px;padding:12px;background:#fff;max-height:300px;overflow:auto;font-size:13px;"></div>
-              <div v-else class="news-editor-wrap"><div ref="prodYiwaibaoEn" style="min-height:200px;"></div></div>
+              <textarea v-else v-model="editingProduct.yiwaibaoEn" class="form-control form-control-sm" rows="18" style="font-size:11px;font-family:monospace;"></textarea>
             </div>
           </div>
           <!-- English Source Code -->
@@ -1076,10 +1076,9 @@ createApp({
       if (!quills) return;
       const zh = quills.zh;
       const en = quills.en;
+      // lifekit: 从 Quill 读取，yiwaibao: textarea v-model 已自动同步
       if (zh.lifekit) this.editingProduct.lifekit = zh.lifekit.root.innerHTML;
-      if (zh.yiwaibao) this.editingProduct.yiwaibao = zh.yiwaibao.root.innerHTML;
       if (en.lifekit) this.editingProduct.lifekitEn = en.lifekit.root.innerHTML;
-      if (en.yiwaibao) this.editingProduct.yiwaibaoEn = en.yiwaibao.root.innerHTML;
     },
     async _initProdQuill() {
       console.log('[Quill] _initProdQuill called, prodSrcMode:', this.prodSrcMode);
@@ -1098,14 +1097,9 @@ createApp({
       }
       const tab = this.prodTab;
       const lifekitRef = tab === 'zh' ? 'prodLifekitZh' : 'prodLifekitEn';
-      const yiwaibaoRef = tab === 'zh' ? 'prodYiwaibaoZh' : 'prodYiwaibaoEn';
       const lifekitField = tab === 'zh' ? 'lifekit' : 'lifekitEn';
-      const yiwaibaoField = tab === 'zh' ? 'yiwaibao' : 'yiwaibaoEn';
       const lifekitEl = this.$refs[lifekitRef];
-      const yiwaibaoEl = this.$refs[yiwaibaoRef];
-      console.log('[Quill] tab:', tab, 'lifekitEl:', !!lifekitEl, 'yiwaibaoEl:', !!yiwaibaoEl);
-      console.log('[Quill] lifekitField:', lifekitField, 'html len:', (this.editingProduct[lifekitField] || '').length);
-      console.log('[Quill] yiwaibaoField:', yiwaibaoField, 'html len:', (this.editingProduct[yiwaibaoField] || '').length);
+      console.log('[Quill] tab:', tab, 'lifekitEl:', !!lifekitEl);
       if (!this._prodQuills) this._prodQuills = { zh: {}, en: {} };
       if (lifekitEl) {
         console.log('[Quill] creating lifekit Quill...');
@@ -1116,37 +1110,24 @@ createApp({
         else console.log('[Quill] lifekit empty, skipping');
         this._prodQuills[tab].lifekit = q;
       }
-      if (yiwaibaoEl) {
-        console.log('[Quill] creating yiwaibao Quill...');
-        const q = this._makeQuill(yiwaibaoEl, '规格表...');
-        const html = this.editingProduct[yiwaibaoField] || '';
-        console.log('[Quill] yiwaibao html to load:', html.substring(0, 80));
-        if (html.trim()) { q.clipboard.dangerouslyPasteHTML(html); console.log('[Quill] yiwaibao loaded'); }
-        else console.log('[Quill] yiwaibao empty, skipping');
-        this._prodQuills[tab].yiwaibao = q;
-      }
     },
     _destroyProdQuill() {
       this._prodQuillToModel();
-      // 清理旧的 Quill DOM（工具栏 + 容器），防止重复叠加
-      ['prodLifekitZh', 'prodLifekitEn', 'prodYiwaibaoZh', 'prodYiwaibaoEn'].forEach(ref => {
+      // 清理 lifekit 的旧 Quill DOM（工具栏 + 容器），防止重复叠加
+      // yiwaibao 现在是纯 textarea，不需要清理
+      ['prodLifekitZh', 'prodLifekitEn'].forEach(ref => {
         const el = this.$refs[ref];
         if (el) {
-          // 移除 Quill 创建的工具栏（在容器前面的兄弟节点）
           while (el.previousElementSibling && el.previousElementSibling.classList.contains('ql-toolbar')) {
             el.previousElementSibling.remove();
           }
-          // 移除 Quill 添加的 CSS 类，避免第二次初始化时跳过设置
           el.classList.remove('ql-container', 'ql-snow', 'ql-disabled');
-          // 清空容器内容
           el.innerHTML = '';
         }
       });
       if (this._prodQuills) {
         for (const tab of ['zh', 'en']) {
-          for (const k of ['lifekit', 'yiwaibao']) {
-            if (this._prodQuills[tab][k]) this._prodQuills[tab][k] = null;
-          }
+          if (this._prodQuills[tab].lifekit) this._prodQuills[tab].lifekit = null;
         }
       }
     },
