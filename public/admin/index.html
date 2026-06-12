@@ -1091,17 +1091,26 @@ createApp({
       const yiwaibaoField = tab === 'zh' ? 'yiwaibao' : 'yiwaibaoEn';
       const lifekitEl = this.$refs[lifekitRef];
       const yiwaibaoEl = this.$refs[yiwaibaoRef];
+      console.log('[Quill] tab:', tab, 'lifekitEl:', !!lifekitEl, 'yiwaibaoEl:', !!yiwaibaoEl);
+      console.log('[Quill] lifekitField:', lifekitField, 'html len:', (this.editingProduct[lifekitField] || '').length);
+      console.log('[Quill] yiwaibaoField:', yiwaibaoField, 'html len:', (this.editingProduct[yiwaibaoField] || '').length);
       if (!this._prodQuills) this._prodQuills = { zh: {}, en: {} };
       if (lifekitEl) {
+        console.log('[Quill] creating lifekit Quill...');
         const q = this._makeQuill(lifekitEl, '产品亮点...');
         const html = this.editingProduct[lifekitField] || '';
-        if (html.trim()) q.root.innerHTML = html;
+        console.log('[Quill] lifekit html to load:', html.substring(0, 80));
+        if (html.trim()) { q.root.innerHTML = html; console.log('[Quill] lifekit loaded'); }
+        else console.log('[Quill] lifekit empty, skipping');
         this._prodQuills[tab].lifekit = q;
       }
       if (yiwaibaoEl) {
+        console.log('[Quill] creating yiwaibao Quill...');
         const q = this._makeQuill(yiwaibaoEl, '规格表...');
         const html = this.editingProduct[yiwaibaoField] || '';
-        if (html.trim()) q.root.innerHTML = html;
+        console.log('[Quill] yiwaibao html to load:', html.substring(0, 80));
+        if (html.trim()) { q.root.innerHTML = html; console.log('[Quill] yiwaibao loaded'); }
+        else console.log('[Quill] yiwaibao empty, skipping');
         this._prodQuills[tab].yiwaibao = q;
       }
     },
