@@ -14,7 +14,7 @@ eleventyComputed:
 {% set t = i18n[langCode] %}
 
 <div class="page-hero">
-  <img src="{{ site.basePath }}/images/banner-product-hero.png" alt="产品中心" class="page-hero__bg" loading="eager">
+  <img src="{{ site.basePath }}/images/banner-product-hero.webp" alt="产品中心" class="page-hero__bg" loading="eager">
   <div class="page-hero__overlay">
     <div class="container">
       <h1 class="page-hero__title">{{ t.products }}</h1>
@@ -61,7 +61,7 @@ eleventyComputed:
             {% if p.classId == sub.id %}
             <a href="{{ site.basePath }}/{{ lang.prefix }}products/{{ p.name | productSlug }}/" class="card product-card" id="{{ p.name }}">
               <div class="card__image">
-                <img src="{{ site.basePath }}/images/products/{{ p.name | lower | replace('/', '-') }}-01.png"
+                <img src="{{ site.basePath }}/images/products/{{ p.name | lower | replace('/', '-') }}-01.webp"
                      alt="{{ p.name }}"
                      loading="lazy"
                      onerror="this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:var(--color-text-secondary);font-size:var(--text-2xl)\'>📦</div>'">

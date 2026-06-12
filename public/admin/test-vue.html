@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>精简测试</title>
+<style>
+body { font-size: 14px; background: #f5f6fa; }
+.diag { position:fixed;top:0;left:0;right:0;background:#fff3cd;color:#664d03;padding:10px 16px;font-size:13px;z-index:99999;text-align:center;font-family:monospace;border-bottom:2px solid #ffc107; }
+</style>
+</head>
+<body>
+<div class="diag" id="diag">🔍 诊断横幅 — 如果看到这个，说明 HTML 渲染正常</div>
+
+<div id="app" style="padding:80px 20px;">
+  <h1>Vue 测试</h1>
+  <p>message: {{ msg }}</p>
+  <p>token: {{ token || '(空)' }}</p>
+</div>
+
+<script src="vendor/bootstrap.bundle.min.js"></script>
+<script src="vendor/vue.global.prod.js"></script>
+<script>
+try {
+  document.getElementById('diag').textContent = '✅ Bootstrap + Vue 文件加载完毕，正在创建 Vue 应用...';
+
+  const { createApp } = Vue;
+
+  const app = createApp({
+    data() {
+      return {
+        msg: 'Hello Vue!',
+        token: localStorage.getItem('gh_token') || ''
+      };
+    },
+    mounted() {
+      document.getElementById('diag').textContent = '✅ Vue 应用挂载成功！token=' + (this.token ? '有' : '无');
+      document.getElementById('diag').style.background = '#d4edda';
+      document.getElementById('diag').style.color = '#0f5132';
+      document.getElementById('diag').style.borderColor = '#28a745';
+    }
+  });
+
+  app.mount('#app');
+
+  // If mount() doesn't throw, show success
+  document.getElementById('diag').textContent = '✅ Vue 挂载调用完成';
+  document.getElementById('diag').style.background = '#d4edda';
+  document.getElementById('diag').style.color = '#0f5132';
+  document.getElementById('diag').style.borderColor = '#28a745';
+
+} catch(e) {
+  document.getElementById('diag').textContent = '❌ 错误: ' + e.message + ' (line ' + e.lineNumber + ')';
+  document.getElementById('diag').style.background = '#f8d7da';
+  document.getElementById('diag').style.color = '#842029';
+  document.getElementById('diag').style.borderColor = '#dc3545';
+}
+</script>
+</body>
+</html>

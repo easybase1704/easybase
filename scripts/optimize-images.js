@@ -1,111 +1,93 @@
 /**
- * 图片优化脚本
- * - PNG/JPG → 最大1600px宽 + 压缩
- * - 同时生成 WebP 版本（体积小5-10倍）
- * - 跳过已处理的图片（通过 .optimized 标记文件）
+ * 图片 WebP 化脚本
+ * - 按目录分尺寸：产品600px / banner1400px / 案例+关于+新闻800px
+ * - 质量80%，只生成 WebP，删除原 PNG/JPG
+ * - 跳过 SVG
  */
 const sharp = require('sharp');
 const fs = require('fs');
 const path = require('path');
 
-const MAX_WIDTH = 1600;
-const PNG_QUALITY = 85;
-const WEBP_QUALITY = 80;
 const IMAGE_DIR = path.join(__dirname, '..', 'src', 'images');
-const MARKER_FILE = path.join(IMAGE_DIR, '.optimized');
+const QUALITY = 80;
 
-// Recursively find all PNG/JPG files
-function* findImages(dir) {
+// 目标宽度规则（从上到下匹配，先匹配到的生效）
+const RULES = [
+  // 根目录 banner 文件
+  { match: (rel) => !rel.includes('/') && path.basename(rel).startsWith('banner-'), width: 1400 },
+  // 子目录
+  { match: (rel) => rel.startsWith('products/'), width: 600 },
+  { match: (rel) => rel.startsWith('cases/'), width: 800 },
+  { match: (rel) => rel.startsWith('about/'), width: 800 },
+  { match: (rel) => rel.startsWith('news/'), width: 600 },
+  // support, uploads 等保持原尺寸
+];
+
+function getTargetWidth(relPath) {
+  for (const rule of RULES) {
+    if (rule.match(relPath)) return rule.width;
+  }
+  return null; // null = 保持原尺寸
+}
+
+function* findImages(dir, baseDir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      yield* findImages(full);
-    } else if (/\.(png|jpe?g)$/i.test(entry.name) && !entry.name.includes('.tmp.')) {
-      yield full;
+      yield* findImages(full, baseDir);
+    } else if (/\.(png|jpe?g)$/i.test(entry.name)) {
+      yield { fullPath: full, relPath: path.relative(baseDir, full).replace(/\\/g, '/') };
     }
   }
 }
 
-function formatSize(bytes) {
-  if (bytes < 1024) return bytes + 'B';
-  if (bytes < 1048576) return (bytes / 1024).toFixed(1) + 'KB';
-  return (bytes / 1048576).toFixed(1) + 'MB';
-}
+async function convertOne({ fullPath, relPath }) {
+  const targetWidth = getTargetWidth(relPath);
+  const origSize = fs.statSync(fullPath).size;
 
-async function optimizeImage(filePath) {
-  const ext = path.extname(filePath);
-  const webpPath = filePath.replace(ext, '.webp');
-  const originalSize = fs.statSync(filePath).size;
-  const meta = await sharp(filePath).metadata();
-
-  let needsResize = meta.width > MAX_WIDTH;
-
-  // Optimize PNG/JPEG
-  if (needsResize) {
-    const tmp = filePath + '.tmp';
-    await sharp(filePath)
-      .resize(MAX_WIDTH, null, { withoutEnlargement: true })
-      .png({ quality: PNG_QUALITY, compressionLevel: 9 })
-      .toFile(tmp);
-    fs.renameSync(tmp, filePath);
-  } else {
-    // Just recompress without resize
-    const tmp = filePath + '.tmp';
-    await sharp(filePath)
-      .png({ quality: PNG_QUALITY, compressionLevel: 9 })
-      .toFile(tmp);
-    fs.renameSync(tmp, filePath);
+  let pipeline = sharp(fullPath);
+  if (targetWidth) {
+    pipeline = pipeline.resize(targetWidth, null, { withoutEnlargement: true, fit: 'inside' });
   }
+  pipeline = pipeline.webp({ quality: QUALITY, effort: 4 });
 
-  const newSize = fs.statSync(filePath).size;
-  const pct1 = originalSize > 0 ? ((1 - newSize / originalSize) * 100).toFixed(0) : 0;
-
-  // Generate WebP (always, regardless of whether we resized)
-  await sharp(filePath)
-    .webp({ quality: WEBP_QUALITY })
-    .toFile(webpPath);
+  const webpPath = fullPath.replace(/\.(png|jpe?g)$/i, '.webp');
+  await pipeline.toFile(webpPath);
 
   const webpSize = fs.statSync(webpPath).size;
-  const pct2 = originalSize > 0 ? ((1 - webpSize / originalSize) * 100).toFixed(0) : 0;
+  const savings = ((1 - webpSize / origSize) * 100).toFixed(0);
+  const origKB = (origSize / 1024).toFixed(0);
+  const webpKB = (webpSize / 1024).toFixed(0);
+  const label = targetWidth ? `${targetWidth}px` : '原尺寸';
 
-  const relPath = path.relative(IMAGE_DIR, filePath);
-  console.log(
-    `${relPath}: ${meta.width}×${meta.height} ${formatSize(originalSize)} → ` +
-    `${formatSize(newSize)}(-${pct1}%) + WebP ${formatSize(webpSize)}(-${pct2}%)`
-  );
+  // 删除原图
+  fs.unlinkSync(fullPath);
 
-  return { originalSize, newSize, webpSize };
+  return { relPath, origKB, webpKB, savings, label };
 }
 
 async function main() {
-  if (fs.existsSync(MARKER_FILE)) {
-    console.log('⏭️  图片已优化过（删除 src/images/.optimized 可强制重新处理）');
-    return;
-  }
+  const images = [...findImages(IMAGE_DIR, IMAGE_DIR)];
+  console.log(`找到 ${images.length} 个 PNG/JPG 文件\n`);
 
-  console.log('🔧 图片优化中...\n');
+  let totalOrig = 0;
+  let totalWebp = 0;
 
-  let totalOrig = 0, totalNew = 0, totalWebp = 0, count = 0;
-
-  for (const file of findImages(IMAGE_DIR)) {
+  for (let i = 0; i < images.length; i++) {
+    const img = images[i];
     try {
-      const result = await optimizeImage(file);
-      totalOrig += result.originalSize;
-      totalNew += result.newSize;
-      totalWebp += result.webpSize;
-      count++;
+      const r = await convertOne(img);
+      totalOrig += parseInt(r.origKB);
+      totalWebp += parseInt(r.webpKB);
+      console.log(`[${String(i+1).padStart(3)}/${images.length}] ${r.relPath.padEnd(60)} ${r.origKB.padStart(6)}KB → ${r.webpKB.padStart(6)}KB  (${r.savings.padStart(3)}%)  [${r.label}]`);
     } catch (e) {
-      console.error(`  ❌ ${path.relative(IMAGE_DIR, file)}: ${e.message}`);
+      console.error(`[${String(i+1).padStart(3)}/${images.length}] ❌ ${img.relPath}: ${e.message}`);
     }
   }
 
-  // Write marker so we don't re-optimize
-  fs.writeFileSync(MARKER_FILE, new Date().toISOString());
-
-  console.log(`\n✅ 完成！处理了 ${count} 张图片`);
-  console.log(`   原始: ${formatSize(totalOrig)}`);
-  console.log(`   PNG优化后: ${formatSize(totalNew)} (-${totalOrig > 0 ? ((1 - totalNew / totalOrig) * 100).toFixed(0) : 0}%)`);
-  console.log(`   WebP版本: ${formatSize(totalWebp)} (-${totalOrig > 0 ? ((1 - totalWebp / totalOrig) * 100).toFixed(0) : 0}%)`);
+  const pct = ((1 - totalWebp / totalOrig) * 100).toFixed(0);
+  console.log(`\n========================================`);
+  console.log(`总计: ${totalOrig}KB → ${totalWebp}KB  体积减少 ${pct}%`);
+  console.log(`原 PNG/JPG 已删除，仅保留 .webp`);
 }
-
 main().catch(e => { console.error(e); process.exit(1); });

@@ -394,7 +394,7 @@ body { font-size: 14px; background: #f5f6fa; }
 
           <!-- Product Images -->
           <div class="mb-3">
-            <label class="form-label small mb-2 fw-bold">🖼️ 产品图片（4张，命名: slug-01.png ~ slug-04.png）</label>
+            <label class="form-label small mb-2 fw-bold">🖼️ 产品图片（4张，命名: slug-01.webp ~ slug-04.webp）</label>
             <div class="row g-2">
               <div v-for="i in [1,2,3,4]" :key="i" class="col-3 text-center">
                 <div style="border:1px dashed #ccc;border-radius:6px;padding:6px;min-height:140px;background:#fafafa;">
@@ -402,7 +402,7 @@ body { font-size: 14px; background: #f5f6fa; }
                        @error="$event.target.style.display='none'"
                        @load="$event.target.style.display=''">
                   <div v-if="!productImgExists(i)" class="text-muted small py-4">图{{ i }} 未上传</div>
-                  <div class="mt-1 small text-muted">{{ productImgSlug() }}-0{{ i }}.png</div>
+                  <div class="mt-1 small text-muted">{{ productImgSlug() }}-0{{ i }}.webp</div>
                   <button class="btn btn-outline-secondary btn-sm w-100 mt-1" @click="uploadProductImg(i)">📤 上传</button>
                   <span class="text-success small" v-if="uploadingImg === i">上传中...</span>
                 </div>
@@ -990,7 +990,7 @@ createApp({
     productImgUrl(i) {
       const slug = this.productImgSlug();
       if (!slug) return '';
-      return `/images/products/${slug}-0${i}.png`;
+      return `/images/products/${slug}-0${i}.webp`;
     },
     productImgExists(i) {
       // Can't check without loading — always return true and let onerror handle
@@ -1005,7 +1005,7 @@ createApp({
         const file = input.files[0];
         if (!file) { this.uploadingImg = 0; return; }
         try {
-          const path = `src/images/products/${this.productImgSlug()}-0${i}.png`;
+          const path = `src/images/products/${this.productImgSlug()}-0${i}.webp`;
           const buf = await file.arrayBuffer();
           const bytes = new Uint8Array(buf);
           let binary = '';
@@ -1015,7 +1015,7 @@ createApp({
             message: `Update product image ${this.productImgSlug()}-0${i} via admin`,
             content: b64, branch: 'master'
           });
-          this.toast(`图片 ${this.productImgSlug()}-0${i}.png 已上传`, 'success');
+          this.toast(`图片 ${this.productImgSlug()}-0${i}.webp 已上传`, 'success');
           // Force refresh preview by adding cache buster
           this.imgVersion = Date.now();
         } catch (e) {

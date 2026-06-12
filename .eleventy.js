@@ -62,7 +62,7 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addFilter("getCategoryThumb", function(cat, products) {
     // Check override first
     if (CATEGORY_THUMB_OVERRIDE[cat.id]) {
-      return '/images/products/' + CATEGORY_THUMB_OVERRIDE[cat.id] + '-01.png';
+      return '/images/products/' + CATEGORY_THUMB_OVERRIDE[cat.id] + '-01.webp';
     }
     if (!cat.sub || !cat.sub.length) return '';
     const firstSubId = cat.sub[0].id;
@@ -73,7 +73,7 @@ module.exports = function(eleventyConfig) {
       .replace(/[^a-z0-9\-]/g, '')
       .replace(/-+/g, '-')
       .replace(/^-|-$/g, '');
-    return '/images/products/' + slug + '-01.png';
+    return '/images/products/' + slug + '-01.webp';
   });
 
   // Fix asset paths for GitHub Pages subdirectory deployment

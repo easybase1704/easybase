@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>CSS 诊断</title>
+<link href="vendor/bootstrap.min.css" rel="stylesheet">
+<style>
+body { padding: 40px; }
+.box { padding: 20px; margin: 20px 0; border-radius: 8px; }
+</style>
+</head>
+<body>
+<h2>CSS 诊断测试</h2>
+
+<div id="diag-banner" style="position:fixed;top:0;left:0;right:0;background:#fff3cd;color:#664d03;padding:10px 16px;font-size:13px;z-index:99999;text-align:center;font-family:monospace;border-bottom:2px solid #ffc107;">
+  🔍 你能看到这个黄色横幅吗？
+</div>
+
+<div class="box" style="background:#d4edda;border:2px solid #28a745;">
+  ✅ 如果你能看到这个绿框，说明 Bootstrap CSS 加载没问题
+</div>
+
+<div class="box" style="background:#f8d7da;border:2px solid #dc3545;">
+  ❌ 如果只有文字没有样式，说明 Bootstrap CSS 加载失败
+</div>
+
+<script>
+document.write('<div class="box" style="background:#cce5ff;border:2px solid #004085;"><b>JS 执行正常</b> - 时间: ' + new Date().toLocaleTimeString() + '</div>');
+</script>
+</body>
+</html>

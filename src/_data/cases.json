@@ -6,8 +6,8 @@
       "nameEn": "Smart Education",
       "duibi": "普教、成教、政府办公、中小企业、医院及酒店等行业的桌面虚拟化部署，提供从VDI到IDV多样的客户端解决方案。",
       "icon": "education",
-      "body": "<p><img src=\"/images/cases/case-1.jpg\" title=\".jpg\"/></p>",
-      "thumb": "/images/cases/case-1-thumb.jpg",
+      "body": "<p><img src=\"/images/cases/case-1.webp\" title=\".webp\"/></p>",
+      "thumb": "/images/cases/case-1-thumb.webp",
       "relatedProducts": [
         {
           "name": "BV10/12/16",
@@ -30,8 +30,8 @@
       "nameEn": "Smart Office",
       "duibi": "智慧办公是一种利用云计算技术对办公业务所需的软硬件设备进行智能化管理,实现企业应用软件统一部署与交付的新型办公模式",
       "icon": "office",
-      "body": "<p><img src=\"/images/cases/case-2.jpg\" title=\".jpg\"/></p>",
-      "thumb": "/images/cases/case-2-thumb.jpg",
+      "body": "<p><img src=\"/images/cases/case-2.webp\" title=\".webp\"/></p>",
+      "thumb": "/images/cases/case-2-thumb.webp",
       "relatedProducts": [
         {
           "name": "BV10/12/16",
@@ -54,8 +54,8 @@
       "nameEn": "Smart Park",
       "duibi": "功能完善的商住办公综合体不断落成，对园区综合管理能力提出了更高的要求。合理利用智能化设备和数据，可以保证园区高效运营。",
       "icon": "park",
-      "body": "<p style=\"text-align: center\"><img src=\"/images/cases/case-3.jpg\" title=\".jpg\"/></p><p><br/></p>",
-      "thumb": "/images/cases/case-3-thumb.jpg",
+      "body": "<p style=\"text-align: center\"><img src=\"/images/cases/case-3.webp\" title=\".webp\"/></p><p><br/></p>",
+      "thumb": "/images/cases/case-3-thumb.webp",
       "relatedProducts": [
         {
           "name": "EB16",
@@ -78,8 +78,8 @@
       "nameEn": "Smart Retail",
       "duibi": "智慧门店是融合大数据、智能软件和硬件，并通过CRM实现店铺互联网化、数据化、电子化的消费管理和营销服务平台，核心是彻底解决商户和消费者的交易管理问题，为门店创造更加高效的经济效益。",
       "icon": "retail",
-      "body": "<p><img src=\"/images/cases/case-4.jpg\" title=\"微信图片_20240703152151.jpg\"/></p>",
-      "thumb": "/images/cases/case-4-thumb.png",
+      "body": "<p><img src=\"/images/cases/case-4.webp\" title=\"微信图片_20240703152151.webp\"/></p>",
+      "thumb": "/images/cases/case-4-thumb.webp",
       "relatedProducts": [
         {
           "name": "EB16",
@@ -102,8 +102,8 @@
       "nameEn": "Smart Transportation",
       "duibi": "智慧交通是以互联网、物联网等网络组合为基础，以智慧路网、智慧装备、智慧出行、智慧管理为重要内容的交通发展新模式，具有信息联通、实时监控、管理协同、人物合一的基本特征。",
       "icon": "transport",
-      "body": "<p><img src=\"/images/cases/case-6.jpg\" title=\"智慧交通.jpg\"/></p>",
-      "thumb": "/images/cases/case-6-thumb.jpg",
+      "body": "<p><img src=\"/images/cases/case-6.webp\" title=\"智慧交通.webp\"/></p>",
+      "thumb": "/images/cases/case-6-thumb.webp",
       "relatedProducts": [
         {
           "name": "B25",
@@ -126,8 +126,8 @@
       "nameEn": "Smart Healthcare",
       "duibi": "智慧医疗英文简称WITMED，是最近兴起的专有医疗名词，通过打造健康档案区域医疗信息平台，利用最先进的物联网技术，实现患者与医务人员、医疗机构、医疗设备之间的互动，逐步达到信息化。",
       "icon": "healthcare",
-      "body": "<p><img src=\"/images/cases/case-7.jpg\" title=\"智慧医疗.jpg\"/></p>",
-      "thumb": "/images/cases/case-7-thumb.jpg",
+      "body": "<p><img src=\"/images/cases/case-7.webp\" title=\"智慧医疗.webp\"/></p>",
+      "thumb": "/images/cases/case-7-thumb.webp",
       "relatedProducts": [
         {
           "name": "BV65",
@@ -150,7 +150,7 @@
       "nameEn": "Smart Manufacturing",
       "duibi": "智能制造（Intelligent Manufacturing，IM）是一种由智能机器和人类专家共同组成的人机一体化智能系统，它在制造过程中能进行智能活动，诸如分析、推理、判断、构思和决策等。通过人与智能机器的合作共事，去扩大、延伸和部分地取代人类专家在制造过程中的脑力劳动。它把制造自动化的概念更新，扩展到柔性化、智能化和高度集成化。",
       "icon": "manufacturing",
-      "body": "<p><img src=\"/images/cases/case-8.jpg\" title=\"智慧制造.jpg\"/></p>",
+      "body": "<p><img src=\"/images/cases/case-8.webp\" title=\"智慧制造.webp\"/></p>",
       "thumb": "/images/cases/case-8-thumb.jfif",
       "relatedProducts": [
         {
@@ -174,8 +174,8 @@
       "nameEn": "Machine Vision",
       "duibi": "机器视觉是人工智能正在快速发展的一个分支。简单说来，机器视觉就是用机器代替人眼来做测量和判断。机器视觉系统是通过机器视觉产品(即图像摄取装置，分CMOS和CCD两种)将被摄取目标转换成图像信号，传送给专用的图像处理系统，得到被摄目标的形态信息，根据像素分布和亮度、颜色等信息，转变成数字化信号;图像系统对这些信号进行各种运算来抽取目标的特征，进而根据判别的结果来控制现场的设备动作。",
       "icon": "vision",
-      "body": "<p><img src=\"/images/cases/case-9.jpg\" title=\"机器视觉.jpg\"/></p>",
-      "thumb": "/images/cases/case-9-thumb.jpg",
+      "body": "<p><img src=\"/images/cases/case-9.webp\" title=\"机器视觉.webp\"/></p>",
+      "thumb": "/images/cases/case-9-thumb.webp",
       "relatedProducts": [
         {
           "name": "BV1L-N",

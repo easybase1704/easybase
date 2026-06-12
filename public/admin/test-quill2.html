@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Quill 复现测试</title>
+<link href="vendor/bootstrap.min.css" rel="stylesheet">
+<link href="vendor/quill.snow.css" rel="stylesheet">
+<style>
+body { padding: 40px; background: #f5f6fa; }
+.news-editor-wrap { border: 1px solid #dee2e6; border-radius: 4px; }
+.news-editor-wrap .ql-toolbar { border: none; border-bottom: 1px solid #dee2e6; }
+.news-editor-wrap .ql-container { border: none; }
+.ql-editor { min-height: 250px; font-size: 14px; }
+.ql-editor p { margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<h3>复现：和主页面完全相同的初始化方式</h3>
+
+<button onclick="testNormal()">测试1：正常初始化（有初始HTML）</button>
+<button onclick="testEmpty()">测试2：空容器初始化（和主页面一样）</button>
+<button onclick="testDestroy()">测试3：销毁后重建</button>
+<hr>
+
+<div id="container-area">
+  <div class="news-editor-wrap">
+    <div ref="testEditor" id="editor" style="min-height:200px;"></div>
+  </div>
+</div>
+
+<script src="vendor/quill.min.js"></script>
+<script>
+var quill = null;
+
+function testNormal() {
+  if (quill) destroyQuill();
+  var el = document.getElementById('editor');
+  el.innerHTML = '<p>初始内容：<b>Hello World</b></p>';
+  quill = new Quill(el, {
+    theme: 'snow',
+    placeholder: '测试...',
+    modules: {
+      toolbar: [
+        [{ header: [1, 2, 3, false] }],
+        ['bold', 'italic', 'underline'],
+        ['link', 'image'],
+        ['clean']
+      ]
+    }
+  });
+  log('✅ 正常初始化完成');
+}
+
+function testEmpty() {
+  if (quill) destroyQuill();
+  var el = document.getElementById('editor');
+  el.innerHTML = '';
+  quill = new Quill(el, {
+    theme: 'snow',
+    placeholder: '测试...',
+    modules: {
+      toolbar: {
+        container: [
+          [{ header: [1, 2, 3, false] }],
+          ['bold', 'italic', 'underline'],
+          ['link', 'image'],
+          ['clean']
+        ]
+      }
+    }
+  });
+  var html = '<table><tr><th>规格</th><th>参数</th></tr><tr><td>CPU</td><td>Intel i7</td></tr></table>';
+  if (html.trim()) quill.root.innerHTML = html;
+  log('✅ 空容器初始化完成（和主页面相同方式）');
+}
+
+function destroyQuill() {
+  var el = document.getElementById('editor');
+  while (el.previousElementSibling && el.previousElementSibling.classList.contains('ql-toolbar')) {
+    el.previousElementSibling.remove();
+  }
+  el.classList.remove('ql-container', 'ql-snow', 'ql-disabled');
+  el.innerHTML = '';
+  quill = null;
+  log('🗑 已销毁');
+}
+
+function testDestroy() {
+  destroyQuill();
+  testEmpty();
+  log('✅ 销毁后重建完成');
+}
+
+function log(msg) {
+  var d = document.createElement('div');
+  d.textContent = msg;
+  d.style.cssText = 'font-family:monospace;font-size:12px;padding:2px 0;';
+  document.body.appendChild(d);
+}
+</script>
+</body>
+</html>

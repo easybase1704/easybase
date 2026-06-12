@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>诊断测试</title>
+<style>
+body { background: #f0f0f0; font-family: sans-serif; padding: 40px; }
+.box { background: #fff3cd; border: 2px solid #ffc107; padding: 20px; margin: 20px 0; border-radius: 8px; }
+.ok { background: #d4edda; border-color: #28a745; }
+.err { background: #f8d7da; border-color: #dc3545; }
+</style>
+</head>
+<body>
+<h2>🔍 后台诊断测试页</h2>
+
+<div class="box" id="test1">✅ 测试1：HTML 渲染正常，你能看到这个黄色框</div>
+
+<div class="box" id="test2">⏳ 测试2：检查 vendor 文件...</div>
+
+<div class="box" id="test3">⏳ 测试3：检查 Vue 加载...</div>
+
+<script>
+document.getElementById('test2').textContent = '⏳ 测试2：正在尝试加载 Bootstrap...';
+
+var bsScript = document.createElement('script');
+bsScript.src = 'vendor/bootstrap.bundle.min.js';
+bsScript.onload = function() {
+  document.getElementById('test2').className = 'box ok';
+  document.getElementById('test2').textContent = '✅ 测试2：Bootstrap JS 加载成功';
+};
+bsScript.onerror = function() {
+  document.getElementById('test2').className = 'box err';
+  document.getElementById('test2').textContent = '❌ 测试2：Bootstrap JS 加载失败！路径：' + bsScript.src;
+};
+document.head.appendChild(bsScript);
+
+var vueScript = document.createElement('script');
+vueScript.src = 'vendor/vue.global.prod.js';
+vueScript.onload = function() {
+  document.getElementById('test3').className = 'box ok';
+  document.getElementById('test3').textContent = '✅ 测试3：Vue ' + (typeof Vue !== 'undefined' ? Vue.version : '?') + ' 加载成功！一切正常。';
+};
+vueScript.onerror = function() {
+  document.getElementById('test3').className = 'box err';
+  document.getElementById('test3').textContent = '❌ 测试3：Vue JS 加载失败！路径：' + vueScript.src;
+};
+document.head.appendChild(vueScript);
+
+// 捕获全局错误
+window.addEventListener('error', function(e) {
+  var div = document.createElement('div');
+  div.className = 'box err';
+  div.textContent = '❌ 全局错误: ' + (e.target ? (e.target.tagName + ' ' + (e.target.src || e.target.href)) : e.message);
+  document.body.appendChild(div);
+});
+</script>
+</body>
+</html>

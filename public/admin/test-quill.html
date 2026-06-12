@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Quill 独立测试</title>
+<link href="vendor/bootstrap.min.css" rel="stylesheet">
+<link href="vendor/quill.snow.css" rel="stylesheet">
+<style>
+body { padding: 40px; background: #f5f6fa; }
+</style>
+</head>
+<body>
+<h3>Quill 编辑器测试</h3>
+<p>能否在下面输入框里编辑？文字有没有叠在一起？</p>
+<div id="editor" style="min-height:150px;">
+  <table><tr><th>规格</th><th>参数</th></tr><tr><td>CPU</td><td>Intel i7</td></tr></table>
+</div>
+<br>
+<button onclick="alert(document.querySelector('.ql-editor').innerHTML)">获取内容</button>
+
+<script src="vendor/quill.min.js"></script>
+<script>
+var q = new Quill('#editor', {
+  theme: 'snow',
+  modules: {
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      ['bold', 'italic', 'underline'],
+      ['link', 'image'],
+      ['clean']
+    ]
+  }
+});
+</script>
+</body>
+</html>
