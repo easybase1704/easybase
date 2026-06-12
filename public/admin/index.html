@@ -99,25 +99,17 @@ body { font-size: 14px; background: #f5f6fa; }
   display: flex; align-items: center; justify-content: center; z-index: 9998;
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
-  .sidebar { width: 60px; }
-  .sidebar .logo { font-size: 0; padding: 12px 8px; }
+/* 窄屏：侧边栏只显示图标 */
+@media (max-width: 860px) {
+  .sidebar { width: 50px; }
+  .sidebar .logo { font-size: 0; padding: 10px 4px; }
   .sidebar .logo small { display: none; }
-  .sidebar .nav-item { padding: 12px 8px; font-size: 0; text-align: center; border-left: none; }
+  .sidebar .nav-item { font-size: 0; padding: 10px 6px; text-align: center; border-left: none; }
   .sidebar .nav-item i { margin-right: 0; font-size: 18px; }
   .sidebar .user-info { display: none; }
-  .topbar { left: 60px; }
-  .main-content { margin-left: 60px; }
-  :root { --sidebar-w: 60px; }
-}
-
-@media (max-width: 768px) {
-  .sidebar { width: 48px; }
-  .sidebar .nav-item i { font-size: 16px; }
-  .topbar { left: 48px; }
-  .main-content { margin-left: 48px; padding: 12px; }
-  :root { --sidebar-w: 48px; }
+  .topbar { left: 50px; }
+  .main-content { margin-left: 50px; padding: 12px; }
+  :root { --sidebar-w: 50px; }
 }
 </style>
 </head>
