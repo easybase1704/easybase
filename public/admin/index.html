@@ -9,7 +9,8 @@
 <link href="vendor/quill.snow.css" rel="stylesheet">
 <style>
 :root {
-  --sidebar-w: clamp(180px, 14rem, 260px);
+  --sidebar-w: 220px;
+  --sidebar-min: 180px;
   --topbar-h: 50px;
 }
 body { font-size: 14px; background: #f5f6fa; }
@@ -38,8 +39,10 @@ body { font-size: 14px; background: #f5f6fa; }
 /* Layout */
 .sidebar {
   position: fixed; top: 0; left: 0; bottom: 0;
-  width: var(--sidebar-w); background: #1e293b; color: #fff;
-  overflow-y: auto; z-index: 100;
+  width: var(--sidebar-w);
+  min-width: var(--sidebar-min);
+  background: #1e293b; color: #fff;
+  overflow-y: auto; overflow-x: hidden; z-index: 100;
 }
 .sidebar .logo { padding: 16px 20px; font-size: 18px; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.1); }
 .sidebar .logo small { font-size: 11px; opacity: 0.6; display: block; }
