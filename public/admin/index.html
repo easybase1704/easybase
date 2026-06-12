@@ -742,19 +742,45 @@ createApp({
       }
       diag.push('目标仓库: easybase1704/easybase');
 
-      // Test 1: /user endpoint
+      // Test 1: /user with Bearer
       try {
         const r1 = await fetch('https://api.github.com/user', {
           headers: { 'Authorization': `Bearer ${this.token}`, 'Accept': 'application/vnd.github.v3+json' },
         });
         if (r1.ok) {
           const u = await r1.json();
-          diag.push('✅ /user 验证通过，登录账号: ' + u.login);
+          diag.push('✅ /user Bearer 通过，账号: ' + u.login);
         } else {
-          diag.push('❌ /user 返回 HTTP ' + r1.status + (r1.status === 401 ? ' (Bad credentials)' : ''));
+          diag.push('❌ /user Bearer → HTTP ' + r1.status);
         }
       } catch (e) {
-        diag.push('❌ /user 网络错误: ' + e.message);
+        diag.push('❌ /user Bearer 网络错误: ' + e.message);
+      }
+
+      // Test 2: /user with Basic auth (username:token)
+      try {
+        const basicCred = btoa('x-access-token:' + this.token);
+        const r2 = await fetch('https://api.github.com/user', {
+          headers: { 'Authorization': `Basic ${basicCred}`, 'Accept': 'application/vnd.github.v3+json' },
+        });
+        if (r2.ok) {
+          const u = await r2.json();
+          diag.push('✅ /user Basic 通过，账号: ' + u.login);
+        } else {
+          diag.push('❌ /user Basic → HTTP ' + r2.status);
+        }
+      } catch (e) {
+        diag.push('❌ /user Basic 网络错误: ' + e.message);
+      }
+
+      // Test 3: No auth (verify API reachable)
+      try {
+        const r3 = await fetch('https://api.github.com/rate_limit', {
+          headers: { 'Accept': 'application/vnd.github.v3+json' },
+        });
+        diag.push(r3.ok ? '✅ /rate_limit 无需认证 → OK（API 可达）' : '⚠️ /rate_limit → HTTP ' + r3.status);
+      } catch (e) {
+        diag.push('❌ /rate_limit 网络错误（无法连接 api.github.com）');
       }
 
       // Test 2: repo access
