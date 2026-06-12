@@ -1038,6 +1038,7 @@ createApp({
       this.$nextTick(() => this._initProdQuill());
     },
     editProduct(p) {
+      console.log('[Quill] editProduct called, name:', p.name, 'lifekit len:', (p.lifekit || '').length);
       this.editingProduct = JSON.parse(JSON.stringify(p));
       this.prodTab = 'zh';
       this.prodSrcMode = false;
@@ -1075,7 +1076,12 @@ createApp({
       if (en.yiwaibao) this.editingProduct.yiwaibaoEn = en.yiwaibao.root.innerHTML;
     },
     async _initProdQuill() {
-      this._destroyProdQuill();
+      console.log('[Quill] _initProdQuill called, prodSrcMode:', this.prodSrcMode);
+      try {
+        this._destroyProdQuill();
+      } catch (e) {
+        console.error('[Quill] _destroyProdQuill error:', e);
+      }
       if (this.prodSrcMode) return;
       try {
         await this._ensureQuill();
