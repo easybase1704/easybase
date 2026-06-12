@@ -592,8 +592,8 @@ createApp({
 
   async mounted() {
     if (this.token) {
-      const valid = await this._verifyToken();
-      if (!valid) { this.token = ''; localStorage.removeItem('gh_token'); return; }
+      const result = await this._verifyToken();
+      if (!result.ok) { this.token = ''; localStorage.removeItem('gh_token'); this.loginError = result.error; return; }
       await this.refreshAll();
     }
   },
@@ -629,8 +629,23 @@ createApp({
         headers: { 'Authorization': `token ${this.token}`, 'Accept': 'application/vnd.github.v3+json' },
       };
       if (body) opts.body = JSON.stringify(body);
-      const resp = await fetch(`https://api.github.com/repos/easybase1704/easybase/contents/${path}`, opts);
-      if (!resp.ok) throw new Error(`GitHub API ${resp.status}: ${(await resp.json()).message}`);
+      let resp;
+      try {
+        resp = await fetch(`https://api.github.com/repos/easybase1704/easybase/contents/${path}`, opts);
+      } catch (e) {
+        throw new Error(`网络请求失败: ${e.message}（检查是否能访问 api.github.com）`);
+      }
+      if (!resp.ok) {
+        let errMsg = `HTTP ${resp.status}`;
+        try {
+          const body = await resp.json();
+          errMsg += `: ${body.message}`;
+          if (resp.status === 401) errMsg += '（Token无效或已过期）';
+          if (resp.status === 403) errMsg += '（无权限，Token需要repo scope；或API限流）';
+          if (resp.status === 404) errMsg += '（仓库或文件不存在）';
+        } catch (_) {}
+        throw new Error(errMsg);
+      }
       return resp.json();
     },
 
@@ -653,9 +668,9 @@ createApp({
     async _verifyToken() {
       try {
         await this._githubAPI('src/_data/site-base.json');
-        return true;
+        return { ok: true };
       } catch (e) {
-        return false;
+        return { ok: false, error: e.message };
       }
     },
 
@@ -665,15 +680,16 @@ createApp({
       if (!this.inputToken.trim()) { this.loginError = '请输入 Token'; return; }
       this.loggingIn = true;
       this.token = this.inputToken.trim();
-      const valid = await this._verifyToken();
-      if (valid) {
+      const result = await this._verifyToken();
+      if (result.ok) {
         localStorage.setItem('gh_token', this.token);
         this.inputToken = '';
+        this.loginError = '';
         this.toast('登录成功', 'success');
         await this.refreshAll();
       } else {
         this.token = '';
-        this.loginError = 'Token 无效或无权限访问仓库';
+        this.loginError = result.error;
       }
       this.loggingIn = false;
     },
