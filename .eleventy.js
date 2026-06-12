@@ -54,7 +54,16 @@ module.exports = function(eleventyConfig) {
   });
 
   // Category thumbnail: first product image from first sub-category
+  // Specific overrides for categories where default doesn't fit
+  const CATEGORY_THUMB_OVERRIDE = {
+    11: 'b18',       // 边缘计算 → B18
+    12: 'gs-r266',   // 服务器 → GS-R266
+  };
   eleventyConfig.addFilter("getCategoryThumb", function(cat, products) {
+    // Check override first
+    if (CATEGORY_THUMB_OVERRIDE[cat.id]) {
+      return '/images/products/' + CATEGORY_THUMB_OVERRIDE[cat.id] + '-01.png';
+    }
     if (!cat.sub || !cat.sub.length) return '';
     const firstSubId = cat.sub[0].id;
     const firstProduct = products.find(p => p.classId === firstSubId);
