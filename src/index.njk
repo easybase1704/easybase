@@ -38,7 +38,7 @@ eleventyComputed:
       {% for cat in products.categories %}
       <a href="{{ site.basePath }}/{{ lang.prefix }}products/#cat-{{ cat.id }}" class="category-card">
         <div class="category-card__icon">
-          {% if cat.id == 1 %}🖥️{% elif cat.id == 27 %}💻{% elif cat.id == 21 %}🖥️{% elif cat.id == 11 %}⚡{% elif cat.id == 12 %}🗄️{% elif cat.id == 13 %}🏭{% else %}🖥️{% endif %}
+          <img src="{{ site.basePath }}{{ cat | getCategoryThumb(products.products) }}" alt="{{ cat.name if langCode == 'zh' else cat.nameEn }}" loading="lazy">
         </div>
         <h3 class="category-card__title">{{ cat.nameEn if langCode == 'en' else cat.name }}</h3>
         <p class="category-card__sub">{{ cat.nameEn if langCode == 'en' else cat.nameEn }}</p>
@@ -148,8 +148,19 @@ eleventyComputed:
 }
 
 .category-card__icon {
-  font-size: 2.5rem;
+  width: 100%;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-bottom: var(--space-xs);
+  background: #fff;
+}
+
+.category-card__icon img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 
 .category-card__title {

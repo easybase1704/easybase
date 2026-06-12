@@ -53,6 +53,20 @@ module.exports = function(eleventyConfig) {
       .replace(/^-|-$/g, '');
   });
 
+  // Category thumbnail: first product image from first sub-category
+  eleventyConfig.addFilter("getCategoryThumb", function(cat, products) {
+    if (!cat.sub || !cat.sub.length) return '';
+    const firstSubId = cat.sub[0].id;
+    const firstProduct = products.find(p => p.classId === firstSubId);
+    if (!firstProduct) return '';
+    const slug = firstProduct.name.toLowerCase()
+      .replace(/[\/\s]+/g, '-')
+      .replace(/[^a-z0-9\-]/g, '')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '');
+    return '/images/products/' + slug + '-01.png';
+  });
+
   // Fix asset paths for GitHub Pages subdirectory deployment
   eleventyConfig.addFilter("fixPaths", function(content, basePath) {
     if (!basePath) return content;
