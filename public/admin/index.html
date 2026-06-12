@@ -399,7 +399,7 @@ body { font-size: 14px; background: #f5f6fa; }
                        @error="$event.target.style.display='none'"
                        @load="$event.target.style.display=''">
                   <div v-if="!productImgExists(i)" class="text-muted small py-4">图{{ i }} 未上传</div>
-                  <div class="mt-1 small text-muted">{{ productImgSlug }}-0{{ i }}.png</div>
+                  <div class="mt-1 small text-muted">{{ productImgSlug() }}-0{{ i }}.png</div>
                   <button class="btn btn-outline-secondary btn-sm w-100 mt-1" @click="uploadProductImg(i)">📤 上传</button>
                   <span class="text-success small" v-if="uploadingImg === i">上传中...</span>
                 </div>
@@ -629,7 +629,7 @@ createApp({
       prodTab: 'zh',
       prodSrcMode: false,
       uploadingImg: 0,
-      _imgVersion: Date.now(),
+      _imgVersion: 1,
       yiwaibaoPreviewZh: false,
       yiwaibaoPreviewEn: false,
       newsTab: 'zh',
