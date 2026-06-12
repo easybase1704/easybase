@@ -19,6 +19,11 @@ body { font-size: 14px; background: #f5f6fa; }
 /* Quill overrides */
 .ql-editor { min-height: 250px; font-size: 14px; }
 .ql-editor p { margin-bottom: 8px; }
+/* 规格表预览样式 */
+.spec-preview { border:1px solid #dee2e6;border-radius:4px;padding:12px;background:#fff;max-height:400px;overflow:auto;font-size:13px; }
+.spec-preview table { width:100%;border-collapse:collapse;color:#333; }
+.spec-preview td { padding:6px 10px;border:1px solid #dee2e6;vertical-align:middle;text-align:center;font-size:13px;background:#fff;color:#333; }
+.spec-preview td:first-child { background:#f0f0f0;font-weight:600; }
 .ql-toolbar { border-radius: 4px 4px 0 0; }
 .ql-container { border-radius: 0 0 4px 4px; }
 .news-editor-wrap { border: 1px solid #dee2e6; border-radius: 4px; }
@@ -447,7 +452,7 @@ body { font-size: 14px; background: #f5f6fa; }
               <a href="#" class="small fw-normal ms-2 text-success" @click.prevent="applySpecTemplate('zh')">📋 3列模板</a>
               <small class="text-muted ms-2">💡 也可直接 Ctrl+V 粘贴表格</small>
             </label>
-              <div v-if="!yiwaibaoPreviewZh" v-html="editingProduct.yiwaibao" style="border:1px solid #dee2e6;border-radius:4px;padding:12px;background:#fff;max-height:400px;overflow:auto;font-size:13px;"></div>
+              <div v-if="!yiwaibaoPreviewZh" v-html="editingProduct.yiwaibao" class="spec-preview"></div>
               <textarea v-else v-model="editingProduct.yiwaibao" class="form-control form-control-sm" rows="18" style="font-size:11px;font-family:monospace;"
                @paste="handleSpecPaste($event, 'zh')"></textarea>
             </div>
@@ -474,7 +479,7 @@ body { font-size: 14px; background: #f5f6fa; }
               <a href="#" class="small fw-normal ms-2 text-success" @click.prevent="applySpecTemplate('en')">📋 3列模板</a>
               <small class="text-muted ms-2">💡 也可直接 Ctrl+V 粘贴表格</small>
             </label>
-              <div v-if="!yiwaibaoPreviewEn" v-html="editingProduct.yiwaibaoEn" style="border:1px solid #dee2e6;border-radius:4px;padding:12px;background:#fff;max-height:400px;overflow:auto;font-size:13px;"></div>
+              <div v-if="!yiwaibaoPreviewEn" v-html="editingProduct.yiwaibaoEn" class="spec-preview"></div>
               <textarea v-else v-model="editingProduct.yiwaibaoEn" class="form-control form-control-sm" rows="18" style="font-size:11px;font-family:monospace;"
                @paste="handleSpecPaste($event, 'en')"></textarea>
             </div>
