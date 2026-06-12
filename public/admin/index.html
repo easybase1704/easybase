@@ -6,7 +6,6 @@
 <title>原基科技 - 后台管理</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
 <style>
 :root {
   --sidebar-w: 220px;
@@ -584,7 +583,6 @@ body { font-size: 14px; background: #f5f6fa; }
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
 <script>
 const { createApp } = Vue;
@@ -1036,9 +1034,16 @@ createApp({
       if (en.lifekit) this.editingProduct.lifekitEn = en.lifekit.root.innerHTML;
       if (en.yiwaibao) this.editingProduct.yiwaibaoEn = en.yiwaibao.root.innerHTML;
     },
-    _initProdQuill() {
+    async _initProdQuill() {
       this._destroyProdQuill();
       if (this.prodSrcMode) return;
+      try {
+        await this._ensureQuill();
+      } catch (e) {
+        this.toast(e.message, 'danger');
+        this.prodSrcMode = true; // Fall back to source mode
+        return;
+      }
       const tab = this.prodTab;
       const lifekitRef = tab === 'zh' ? 'prodLifekitZh' : 'prodLifekitEn';
       const yiwaibaoRef = tab === 'zh' ? 'prodYiwaibaoZh' : 'prodYiwaibaoEn';
@@ -1134,6 +1139,24 @@ createApp({
       this.$nextTick(() => this._initQuill());
     },
     // ==================== SHARED QUILL FACTORY ====================
+    async _ensureQuill() {
+      if (window.Quill) return;
+      // Load CSS
+      if (!document.querySelector('link[href*="quill"]')) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css';
+        document.head.appendChild(link);
+      }
+      // Load JS
+      await new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.min.js';
+        s.onload = resolve;
+        s.onerror = () => reject(new Error('Quill CDN 加载失败（jsdelivr 可能被墙，请检查网络）'));
+        document.head.appendChild(s);
+      });
+    },
     _makeQuill(container, placeholder) {
       const self = this;
       const q = new Quill(container, {
@@ -1211,19 +1234,24 @@ createApp({
       if (this._quillZh && this.newsTab === 'zh') this.editingNews.body = this._quillZh.root.innerHTML;
       if (this._quillEn && this.newsTab === 'en') this.editingNews.bodyEn = this._quillEn.root.innerHTML;
     },
-    _initQuill() {
+    async _initQuill() {
       this._destroyQuill();
       const tab = this.newsTab;
       const refKey = tab === 'zh' ? 'editorZh' : 'editorEn';
       const fieldKey = tab === 'zh' ? 'body' : 'bodyEn';
       const container = this.$refs[refKey];
       if (!container || this.newsSrcMode) return;
-      const q = this._makeQuill(container, tab === 'zh' ? '在此编辑新闻正文...' : 'Edit news content here...');
-      // Load existing content
-      const html = this.editingNews[fieldKey] || '';
-      if (html.trim()) q.root.innerHTML = html;
-      if (tab === 'zh') this._quillZh = q;
-      else this._quillEn = q;
+      try {
+        await this._ensureQuill();
+        const q = this._makeQuill(container, tab === 'zh' ? '在此编辑新闻正文...' : 'Edit news content here...');
+        const html = this.editingNews[fieldKey] || '';
+        if (html.trim()) q.root.innerHTML = html;
+        if (tab === 'zh') this._quillZh = q;
+        else this._quillEn = q;
+      } catch (e) {
+        this.toast(e.message, 'danger');
+        this.newsSrcMode = true; // Fall back to source mode
+      }
     },
     _destroyQuill() {
       // Save content first, then null the refs
