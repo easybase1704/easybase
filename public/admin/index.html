@@ -666,11 +666,41 @@ createApp({
     },
 
     async _verifyToken() {
+      // Try both auth formats
+      for (const authPrefix of ['Bearer', 'token']) {
+        try {
+          const resp = await fetch('https://api.github.com/repos/easybase1704/easybase/contents/src/_data/site-base.json', {
+            headers: { 'Authorization': `${authPrefix} ${this.token}`, 'Accept': 'application/vnd.github.v3+json' },
+          });
+          if (resp.ok) {
+            return { ok: true, via: authPrefix };
+          }
+          let errMsg = `HTTP ${resp.status}`;
+          try {
+            const body = await resp.json();
+            errMsg += `: ${body.message}`;
+          } catch (_) {}
+          // Don't break - try the other auth format
+        } catch (e) {
+          // Network error - try next format
+        }
+      }
+      // Both failed — get detailed error from the last attempt
       try {
-        await this._githubAPI('src/_data/site-base.json');
-        return { ok: true };
+        const resp = await fetch('https://api.github.com/repos/easybase1704/easybase/contents/src/_data/site-base.json', {
+          headers: { 'Authorization': `Bearer ${this.token}`, 'Accept': 'application/vnd.github.v3+json' },
+        });
+        let errMsg = `HTTP ${resp.status}`;
+        try {
+          const body = await resp.json();
+          errMsg += `: ${body.message}`;
+          if (resp.status === 401) errMsg += '（Token无效或已过期）';
+          if (resp.status === 403) errMsg += '（无权限，Token需要repo scope；或API限流）';
+          if (resp.status === 404) errMsg += '（仓库或文件不存在）';
+        } catch (_) {}
+        return { ok: false, error: errMsg };
       } catch (e) {
-        return { ok: false, error: e.message };
+        return { ok: false, error: `网络请求失败: ${e.message}（无法连接 api.github.com）` };
       }
     },
 
@@ -681,7 +711,7 @@ createApp({
       if (!raw) { this.loginError = '请输入 Token'; return; }
       // Quick format check
       if (!raw.startsWith('ghp_') && !raw.startsWith('github_pat_')) {
-        this.loginError = 'Token 格式异常：应以 ghp_ 或 github_pat_ 开头，请检查是否完整复制';
+        this.loginError = 'Token 格式异常：应以 ghp_ 或 github_pat_ 开头，当前开头: ' + raw.substring(0, 10) + '...';
         return;
       }
       if (raw.length < 30) {
@@ -690,16 +720,46 @@ createApp({
       }
       this.loggingIn = true;
       this.token = raw;
+
+      // Diagnostic: show what we're about to test
+      const diag = [];
+      diag.push('Token 前缀: ' + raw.substring(0, 7) + '***');
+      diag.push('Token 长度: ' + raw.length + ' 字符');
+      diag.push('目标仓库: easybase1704/easybase');
+
+      // Test 1: /user endpoint
+      try {
+        const r1 = await fetch('https://api.github.com/user', {
+          headers: { 'Authorization': `Bearer ${this.token}`, 'Accept': 'application/vnd.github.v3+json' },
+        });
+        if (r1.ok) {
+          const u = await r1.json();
+          diag.push('✅ /user 验证通过，登录账号: ' + u.login);
+        } else {
+          diag.push('❌ /user 返回 HTTP ' + r1.status + (r1.status === 401 ? ' (Bad credentials)' : ''));
+        }
+      } catch (e) {
+        diag.push('❌ /user 网络错误: ' + e.message);
+      }
+
+      // Test 2: repo access
       const result = await this._verifyToken();
       if (result.ok) {
+        diag.push('✅ 仓库验证通过 (via ' + result.via + ')');
         localStorage.setItem('gh_token', this.token);
         this.inputToken = '';
         this.loginError = '';
         this.toast('登录成功', 'success');
         await this.refreshAll();
       } else {
+        diag.push('❌ 仓库验证失败: ' + result.error);
         this.token = '';
         this.loginError = result.error;
+      }
+
+      console.log('=== 登录诊断 ===\n' + diag.join('\n'));
+      if (!result.ok) {
+        this.loginError = diag.join(' | ');
       }
       this.loggingIn = false;
     },
