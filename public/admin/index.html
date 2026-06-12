@@ -6,6 +6,7 @@
 <title>原基科技 - 后台管理</title>
 <link href="vendor/bootstrap.min.css" rel="stylesheet">
 <link href="vendor/bootstrap-icons.css" rel="stylesheet">
+<link href="vendor/quill.snow.css" rel="stylesheet">
 <style>
 :root {
   --sidebar-w: 220px;
@@ -1035,7 +1036,7 @@ createApp({
       this.yiwaibaoPreviewEn = false;
       this.imgVersion = Date.now();
       this._showModal('productModal');
-      this.$nextTick(() => this._initProdQuill());
+      setTimeout(() => this._initProdQuill(), 200);
     },
     editProduct(p) {
       console.log('[Quill] editProduct called, name:', p.name, 'lifekit len:', (p.lifekit || '').length);
@@ -1057,7 +1058,7 @@ createApp({
       if (this.prodSrcMode) {
         // Switching to visual: init Quill from model
         this.prodSrcMode = false;
-        this.$nextTick(() => this._initProdQuill());
+        setTimeout(() => this._initProdQuill(), 200);
       } else {
         // Switching to source: save Quill to model then destroy
         this._prodQuillToModel();
@@ -1068,7 +1069,7 @@ createApp({
     switchProdTab(tab) {
       this._prodQuillToModel();
       this.prodTab = tab;
-      this.$nextTick(() => this._initProdQuill());
+      setTimeout(() => this._initProdQuill(), 200);
     },
     _prodQuillToModel() {
       const quills = this._prodQuills;
@@ -1188,19 +1189,19 @@ createApp({
       this.newsTab = 'zh';
       this.newsSrcMode = false;
       this._showModal('newsModal');
-      this.$nextTick(() => this._initQuill());
+      setTimeout(() => this._initQuill(), 200);
     },
     editNews(a) {
       this.editingNews = JSON.parse(JSON.stringify(a));
       this.newsTab = 'zh';
       this.newsSrcMode = false;
       this._showModal('newsModal');
-      this.$nextTick(() => this._initQuill());
+      setTimeout(() => this._initQuill(), 200);
     },
     toggleNewsSrc() {
       if (this.newsSrcMode) {
         this.newsSrcMode = false;
-        this.$nextTick(() => this._initQuill());
+        setTimeout(() => this._initQuill(), 200);
       } else {
         this._quillToModel();
         this._destroyQuill();
@@ -1210,18 +1211,12 @@ createApp({
     switchNewsTab(tab) {
       this._quillToModel();
       this.newsTab = tab;
-      this.$nextTick(() => this._initQuill());
+      setTimeout(() => this._initQuill(), 200);
     },
     // ==================== SHARED QUILL FACTORY ====================
     async _ensureQuill() {
       if (window.Quill) return;
-      // Load CSS
-      if (!document.querySelector('link[href*="quill"]')) {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = 'vendor/quill.snow.css';
-        document.head.appendChild(link);
-      }
+      // CSS 已在 <head> 中预加载，这里只需加载 JS
       // Load JS
       await new Promise((resolve, reject) => {
         const s = document.createElement('script');
