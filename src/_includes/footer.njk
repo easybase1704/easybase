@@ -40,7 +40,7 @@
       <div class="footer__col footer__col--contact">
         <h4 class="footer__heading">{{ site.name }}</h4>
         <div class="footer__contact">
-          <p>📞 {{ t.phoneLabel }}：{{ site.contact.phone }}</p>
+          {% if site.contact.phone %}<p>📞 {{ t.phoneLabel }}：{{ site.contact.phone }}</p>{% endif %}
           <p>📧 {{ site.contact.email }}</p>
           <p>🕐 {{ t.hoursLabel }}</p>
           <p>📍 {{ site.contact.address }}</p>

@@ -136,7 +136,7 @@ eleventyComputed:
         <div class="contact-box__info">
           <p style="font-size:var(--text-lg);font-weight:var(--font-semibold);margin-bottom:var(--space-md)">{{ site.name }}</p>
           <p>📍 {{ site.contact.address }}</p>
-          <p style="margin-top:var(--space-md)">📞 {{ t.phoneLabel }}：<strong>{{ site.contact.phone }}</strong></p>
+          {% if site.contact.phone %}<p style="margin-top:var(--space-md)">📞 {{ t.phoneLabel }}：<strong>{{ site.contact.phone }}</strong></p>{% endif %}
           {% for s in site.contact.sales %}
           <p style="padding-left:var(--space-lg)">
             {% if langCode == 'zh' %}{{ s.title }}{% elif loop.index == 1 %}{{ t.sales1 }}{% elif loop.index == 2 %}{{ t.sales2 }}{% else %}{{ t.sales3 }}{% endif %}：<strong>{{ s.phone }}</strong> {{ s.name }}

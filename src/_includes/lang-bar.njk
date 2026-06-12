@@ -1,6 +1,6 @@
 <div class="lang-bar">
   <div class="container lang-bar__inner">
-    <span class="lang-bar__phone">📞 {{ site.contact.phone }}</span>
+    {% if site.contact.phone %}<span class="lang-bar__phone">📞 {{ site.contact.phone }}</span>{% endif %}
     <div class="lang-bar__switcher">
       {% for l in langs %}
         {% if l.code == langCode %}

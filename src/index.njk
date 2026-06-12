@@ -107,7 +107,7 @@ eleventyComputed:
     <h2 class="section__title" style="color:var(--color-text-on-dark)">{{ t.contactUs }}</h2>
     <p class="section__subtitle" style="color:rgba(255,255,255,0.85);line-height:2;margin-bottom:var(--space-md)">
       📍 {{ site.contact.address }}<br>
-      📞 {{ t.phoneLabel }}：{{ site.contact.phone }}<br>
+      {% if site.contact.phone %}📞 {{ t.phoneLabel }}：{{ site.contact.phone }}<br>{% endif %}
       {% for s in site.contact.sales %}
       {{ s.title }}：{{ s.phone }} {{ s.name }}{% if not loop.last %}<br>{% endif %}
       {% endfor %}
