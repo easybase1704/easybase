@@ -626,7 +626,7 @@ createApp({
     async _githubAPI(path, method = 'GET', body = null) {
       const opts = {
         method,
-        headers: { 'Authorization': `token ${this.token}`, 'Accept': 'application/vnd.github.v3+json' },
+        headers: { 'Authorization': `Bearer ${this.token}`, 'Accept': 'application/vnd.github.v3+json' },
       };
       if (body) opts.body = JSON.stringify(body);
       let resp;
@@ -677,9 +677,19 @@ createApp({
     // ==================== AUTH ====================
     async login() {
       this.loginError = '';
-      if (!this.inputToken.trim()) { this.loginError = '请输入 Token'; return; }
+      const raw = this.inputToken.trim();
+      if (!raw) { this.loginError = '请输入 Token'; return; }
+      // Quick format check
+      if (!raw.startsWith('ghp_') && !raw.startsWith('github_pat_')) {
+        this.loginError = 'Token 格式异常：应以 ghp_ 或 github_pat_ 开头，请检查是否完整复制';
+        return;
+      }
+      if (raw.length < 30) {
+        this.loginError = 'Token 长度不足（仅' + raw.length + '字符），请检查是否完整复制';
+        return;
+      }
       this.loggingIn = true;
-      this.token = this.inputToken.trim();
+      this.token = raw;
       const result = await this._verifyToken();
       if (result.ok) {
         localStorage.setItem('gh_token', this.token);
