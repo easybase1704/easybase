@@ -1046,7 +1046,12 @@ createApp({
       this.yiwaibaoPreviewEn = false;
       this.imgVersion = Date.now();
       this._showModal('productModal');
-      this.$nextTick(() => this._initProdQuill());
+      console.log('[Quill] modal shown, scheduling Quill init...');
+      // 使用 setTimeout 代替 $nextTick，确保 Bootstrap modal 动画完成
+      setTimeout(() => {
+        console.log('[Quill] setTimeout fired, calling _initProdQuill...');
+        this._initProdQuill();
+      }, 200);
     },
     toggleProdSrc() {
       if (this.prodSrcMode) {
