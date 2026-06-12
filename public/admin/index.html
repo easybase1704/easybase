@@ -1111,7 +1111,7 @@ createApp({
         const q = this._makeQuill(lifekitEl, '产品亮点...');
         const html = this.editingProduct[lifekitField] || '';
         console.log('[Quill] lifekit html to load:', html.substring(0, 80));
-        if (html.trim()) { q.root.innerHTML = html; console.log('[Quill] lifekit loaded'); }
+        if (html.trim()) { q.clipboard.dangerouslyPasteHTML(html); console.log('[Quill] lifekit loaded'); }
         else console.log('[Quill] lifekit empty, skipping');
         this._prodQuills[tab].lifekit = q;
       }
@@ -1120,7 +1120,7 @@ createApp({
         const q = this._makeQuill(yiwaibaoEl, '规格表...');
         const html = this.editingProduct[yiwaibaoField] || '';
         console.log('[Quill] yiwaibao html to load:', html.substring(0, 80));
-        if (html.trim()) { q.root.innerHTML = html; console.log('[Quill] yiwaibao loaded'); }
+        if (html.trim()) { q.clipboard.dangerouslyPasteHTML(html); console.log('[Quill] yiwaibao loaded'); }
         else console.log('[Quill] yiwaibao empty, skipping');
         this._prodQuills[tab].yiwaibao = q;
       }
