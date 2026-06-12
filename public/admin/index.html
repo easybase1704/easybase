@@ -520,6 +520,7 @@ createApp({
     return {
       // Auth
       token: localStorage.getItem('gh_token') || '',
+      authPrefix: localStorage.getItem('gh_auth_prefix') || 'Bearer',
       inputToken: '',
       loggingIn: false,
       loginError: '',
@@ -626,7 +627,7 @@ createApp({
     async _githubAPI(path, method = 'GET', body = null) {
       const opts = {
         method,
-        headers: { 'Authorization': `Bearer ${this.token}`, 'Accept': 'application/vnd.github.v3+json' },
+        headers: { 'Authorization': `${this.authPrefix} ${this.token}`, 'Accept': 'application/vnd.github.v3+json' },
       };
       if (body) opts.body = JSON.stringify(body);
       let resp;
@@ -746,7 +747,9 @@ createApp({
       const result = await this._verifyToken();
       if (result.ok) {
         diag.push('✅ 仓库验证通过 (via ' + result.via + ')');
+        this.authPrefix = result.via;
         localStorage.setItem('gh_token', this.token);
+        localStorage.setItem('gh_auth_prefix', result.via);
         this.inputToken = '';
         this.loginError = '';
         this.toast('登录成功', 'success');
