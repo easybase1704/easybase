@@ -426,8 +426,11 @@ body { font-size: 14px; background: #f5f6fa; }
             <div class="mb-2"><label class="form-label small mb-1 fw-bold">亮点 (lifekit)</label>
               <div class="news-editor-wrap"><div ref="prodLifekitZh"></div></div>
             </div>
-            <div class="mb-2"><label class="form-label small mb-1 fw-bold">规格表 (yiwaibao) HTML 源码</label>
-              <textarea v-model="editingProduct.yiwaibao" class="form-control form-control-sm" rows="18" style="font-size:11px;font-family:monospace;"></textarea>
+            <div class="mb-2"><label class="form-label small mb-1 fw-bold">规格表 (yiwaibao)
+              <a href="#" class="small fw-normal ms-2" @click.prevent="yiwaibaoPreviewZh = !yiwaibaoPreviewZh">{{ yiwaibaoPreviewZh ? '✏️ 编辑HTML' : '👁 预览' }}</a>
+            </label>
+              <div v-if="!yiwaibaoPreviewZh" v-html="editingProduct.yiwaibao" style="border:1px solid #dee2e6;border-radius:4px;padding:12px;background:#fff;max-height:400px;overflow:auto;font-size:13px;"></div>
+              <textarea v-else v-model="editingProduct.yiwaibao" class="form-control form-control-sm" rows="18" style="font-size:11px;font-family:monospace;"></textarea>
             </div>
           </div>
           <!-- Chinese Source Code -->
@@ -447,8 +450,11 @@ body { font-size: 14px; background: #f5f6fa; }
             <div class="mb-2"><label class="form-label small mb-1 fw-bold">亮点 (lifekitEn)</label>
               <div class="news-editor-wrap"><div ref="prodLifekitEn"></div></div>
             </div>
-            <div class="mb-2"><label class="form-label small mb-1 fw-bold">规格表 (yiwaibaoEn) HTML 源码</label>
-              <textarea v-model="editingProduct.yiwaibaoEn" class="form-control form-control-sm" rows="18" style="font-size:11px;font-family:monospace;"></textarea>
+            <div class="mb-2"><label class="form-label small mb-1 fw-bold">规格表 (yiwaibaoEn)
+              <a href="#" class="small fw-normal ms-2" @click.prevent="yiwaibaoPreviewEn = !yiwaibaoPreviewEn">{{ yiwaibaoPreviewEn ? '✏️ 编辑HTML' : '👁 预览' }}</a>
+            </label>
+              <div v-if="!yiwaibaoPreviewEn" v-html="editingProduct.yiwaibaoEn" style="border:1px solid #dee2e6;border-radius:4px;padding:12px;background:#fff;max-height:400px;overflow:auto;font-size:13px;"></div>
+              <textarea v-else v-model="editingProduct.yiwaibaoEn" class="form-control form-control-sm" rows="18" style="font-size:11px;font-family:monospace;"></textarea>
             </div>
           </div>
           <!-- English Source Code -->
