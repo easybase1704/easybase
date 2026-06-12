@@ -389,6 +389,24 @@ body { font-size: 14px; background: #f5f6fa; }
             </div>
           </div>
 
+          <!-- Product Images -->
+          <div class="mb-3">
+            <label class="form-label small mb-2 fw-bold">🖼️ 产品图片（4张，命名: slug-01.png ~ slug-04.png）</label>
+            <div class="row g-2">
+              <div v-for="i in [1,2,3,4]" :key="i" class="col-3 text-center">
+                <div style="border:1px dashed #ccc;border-radius:6px;padding:6px;min-height:140px;background:#fafafa;">
+                  <img :src="productImgUrl(i) + '?v=' + _imgVersion" style="max-width:100%;max-height:90px;"
+                       @error="$event.target.style.display='none'"
+                       @load="$event.target.style.display=''">
+                  <div v-if="!productImgExists(i)" class="text-muted small py-4">图{{ i }} 未上传</div>
+                  <div class="mt-1 small text-muted">{{ productImgSlug }}-0{{ i }}.png</div>
+                  <button class="btn btn-outline-secondary btn-sm w-100 mt-1" @click="uploadProductImg(i)">📤 上传</button>
+                  <span class="text-success small" v-if="uploadingImg === i">上传中...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <ul class="nav nav-tabs mb-3">
             <li class="nav-item"><a class="nav-link" :class="{ active: prodTab === 'zh' }" href="#" @click.prevent="switchProdTab('zh')">🇨🇳 中文</a></li>
             <li class="nav-item"><a class="nav-link" :class="{ active: prodTab === 'en' }" href="#" @click.prevent="switchProdTab('en')">🇺🇸 英文</a></li>
@@ -405,8 +423,11 @@ body { font-size: 14px; background: #f5f6fa; }
             <div class="mb-2"><label class="form-label small mb-1 fw-bold">亮点 (lifekit)</label>
               <div class="news-editor-wrap"><div ref="prodLifekitZh"></div></div>
             </div>
-            <div class="mb-2"><label class="form-label small mb-1 fw-bold">规格表 (yiwaibao)</label>
-              <div class="news-editor-wrap"><div ref="prodYiwaibaoZh" style="min-height:200px;"></div></div>
+            <div class="mb-2"><label class="form-label small mb-1 fw-bold">规格表 (yiwaibao)
+              <a href="#" class="small fw-normal ms-2" @click.prevent="yiwaibaoPreviewZh = !yiwaibaoPreviewZh">{{ yiwaibaoPreviewZh ? '✏️ 编辑' : '👁 预览' }}</a>
+            </label>
+              <div v-if="yiwaibaoPreviewZh" v-html="editingProduct.yiwaibao" style="border:1px solid #dee2e6;border-radius:4px;padding:12px;background:#fff;max-height:300px;overflow:auto;font-size:13px;"></div>
+              <div v-else class="news-editor-wrap"><div ref="prodYiwaibaoZh" style="min-height:200px;"></div></div>
             </div>
           </div>
           <!-- Chinese Source Code -->
@@ -426,8 +447,11 @@ body { font-size: 14px; background: #f5f6fa; }
             <div class="mb-2"><label class="form-label small mb-1 fw-bold">亮点 (lifekitEn)</label>
               <div class="news-editor-wrap"><div ref="prodLifekitEn"></div></div>
             </div>
-            <div class="mb-2"><label class="form-label small mb-1 fw-bold">规格表 (yiwaibaoEn)</label>
-              <div class="news-editor-wrap"><div ref="prodYiwaibaoEn" style="min-height:200px;"></div></div>
+            <div class="mb-2"><label class="form-label small mb-1 fw-bold">规格表 (yiwaibaoEn)
+              <a href="#" class="small fw-normal ms-2" @click.prevent="yiwaibaoPreviewEn = !yiwaibaoPreviewEn">{{ yiwaibaoPreviewEn ? '✏️ 编辑' : '👁 预览' }}</a>
+            </label>
+              <div v-if="yiwaibaoPreviewEn" v-html="editingProduct.yiwaibaoEn" style="border:1px solid #dee2e6;border-radius:4px;padding:12px;background:#fff;max-height:300px;overflow:auto;font-size:13px;"></div>
+              <div v-else class="news-editor-wrap"><div ref="prodYiwaibaoEn" style="min-height:200px;"></div></div>
             </div>
           </div>
           <!-- English Source Code -->
@@ -604,6 +628,10 @@ createApp({
       // Modal tabs
       prodTab: 'zh',
       prodSrcMode: false,
+      uploadingImg: 0,
+      _imgVersion: Date.now(),
+      yiwaibaoPreviewZh: false,
+      yiwaibaoPreviewEn: false,
       newsTab: 'zh',
       newsSrcMode: false,
 
@@ -915,12 +943,59 @@ createApp({
     },
 
     // ==================== PRODUCTS ====================
+    // ==================== PRODUCT IMAGE HELPERS ====================
+    productImgSlug() {
+      const name = this.editingProduct.name || '';
+      return name.toLowerCase().replace(/[\/\s]+/g, '-').replace(/[^a-z0-9\-]/g, '').replace(/-+/g, '-').replace(/^-|-$/g, '');
+    },
+    productImgUrl(i) {
+      const slug = this.productImgSlug();
+      if (!slug) return '';
+      return `/images/products/${slug}-0${i}.png`;
+    },
+    productImgExists(i) {
+      // Can't check without loading — always return true and let onerror handle
+      return !!this.productImgSlug();
+    },
+    async uploadProductImg(i) {
+      this.uploadingImg = i;
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/png,image/jpeg,image/webp';
+      input.onchange = async () => {
+        const file = input.files[0];
+        if (!file) { this.uploadingImg = 0; return; }
+        try {
+          const path = `src/images/products/${this.productImgSlug()}-0${i}.png`;
+          const buf = await file.arrayBuffer();
+          const bytes = new Uint8Array(buf);
+          let binary = '';
+          bytes.forEach(b => binary += String.fromCharCode(b));
+          const b64 = btoa(binary);
+          await this._githubAPI(path, 'PUT', {
+            message: `Update product image ${this.productImgSlug()}-0${i} via admin`,
+            content: b64, branch: 'master'
+          });
+          this.toast(`图片 ${this.productImgSlug()}-0${i}.png 已上传`, 'success');
+          // Force refresh preview by adding cache buster
+          this._imgVersion = Date.now();
+        } catch (e) {
+          this.toast('上传失败: ' + e.message, 'danger');
+        }
+        this.uploadingImg = 0;
+      };
+      input.click();
+    },
+
     addProduct() {
       const maxOid = this.productData.products.reduce((max, p) => Math.max(max, p.oid || 0), 0);
       this.editingProduct = this._emptyProduct();
       this.editingProduct.oid = maxOid + 1;
       this.prodTab = 'zh';
       this.prodSrcMode = false;
+      this.yiwaibaoPreviewZh = false;
+      this.yiwaibaoPreviewEn = false;
+      this._imgVersion = Date.now();
       this._showModal('productModal');
       this.$nextTick(() => this._initProdQuill());
     },
@@ -928,6 +1003,9 @@ createApp({
       this.editingProduct = JSON.parse(JSON.stringify(p));
       this.prodTab = 'zh';
       this.prodSrcMode = false;
+      this.yiwaibaoPreviewZh = false;
+      this.yiwaibaoPreviewEn = false;
+      this._imgVersion = Date.now();
       this._showModal('productModal');
       this.$nextTick(() => this._initProdQuill());
     },
