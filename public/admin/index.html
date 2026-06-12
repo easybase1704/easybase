@@ -6,6 +6,7 @@
 <title>原基科技 - 后台管理</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
 <style>
 :root {
   --sidebar-w: 220px;
@@ -13,6 +14,15 @@
 }
 body { font-size: 14px; background: #f5f6fa; }
 #app { min-height: 100vh; }
+
+/* Quill overrides */
+.ql-editor { min-height: 250px; font-size: 14px; }
+.ql-editor p { margin-bottom: 8px; }
+.ql-toolbar { border-radius: 4px 4px 0 0; }
+.ql-container { border-radius: 0 0 4px 4px; }
+.news-editor-wrap { border: 1px solid #dee2e6; border-radius: 4px; }
+.news-editor-wrap .ql-toolbar { border: none; border-bottom: 1px solid #dee2e6; }
+.news-editor-wrap .ql-container { border: none; }
 
 /* Login */
 .login-page {
@@ -380,26 +390,51 @@ body { font-size: 14px; background: #f5f6fa; }
           </div>
 
           <ul class="nav nav-tabs mb-3">
-            <li class="nav-item"><a class="nav-link" :class="{ active: prodTab === 'zh' }" href="#" @click.prevent="prodTab='zh'">🇨🇳 中文</a></li>
-            <li class="nav-item"><a class="nav-link" :class="{ active: prodTab === 'en' }" href="#" @click.prevent="prodTab='en'">🇺🇸 英文</a></li>
+            <li class="nav-item"><a class="nav-link" :class="{ active: prodTab === 'zh' }" href="#" @click.prevent="switchProdTab('zh')">🇨🇳 中文</a></li>
+            <li class="nav-item"><a class="nav-link" :class="{ active: prodTab === 'en' }" href="#" @click.prevent="switchProdTab('en')">🇺🇸 英文</a></li>
+            <li class="nav-item ms-auto"><a class="nav-link small text-muted" href="#" @click.prevent="toggleProdSrc">{{ prodSrcMode ? '📝 可视化编辑' : '🔧 源码模式' }}</a></li>
           </ul>
 
           <!-- Chinese Fields -->
-          <div v-show="prodTab === 'zh'">
+          <div v-show="prodTab === 'zh' && !prodSrcMode">
             <div class="mb-2"><label class="form-label small mb-1">简要介绍 (duibi)</label><input v-model="editingProduct.duibi" class="form-control form-control-sm"></div>
             <div class="mb-2"><label class="form-label small mb-1">处理器 (cpu)</label><input v-model="editingProduct.cpu" class="form-control form-control-sm"></div>
             <div class="mb-2"><label class="form-label small mb-1">内存 (neicun)</label><input v-model="editingProduct.neicun" class="form-control form-control-sm"></div>
             <div class="mb-2"><label class="form-label small mb-1">存储 (ssd)</label><input v-model="editingProduct.ssd" class="form-control form-control-sm"></div>
             <div class="mb-2"><label class="form-label small mb-1">扩展接口 (jiekou)</label><input v-model="editingProduct.jiekou" class="form-control form-control-sm"></div>
-            <div class="mb-2"><label class="form-label small mb-1">亮点 (lifekit) HTML</label><textarea v-model="editingProduct.lifekit" class="form-control form-control-sm" rows="3"></textarea></div>
-            <div class="mb-2"><label class="form-label small mb-1">规格表 (yiwaibao) HTML</label><textarea v-model="editingProduct.yiwaibao" class="form-control form-control-sm" rows="6" style="font-size:11px;"></textarea></div>
+            <div class="mb-2"><label class="form-label small mb-1 fw-bold">亮点 (lifekit)</label>
+              <div class="news-editor-wrap"><div ref="prodLifekitZh"></div></div>
+            </div>
+            <div class="mb-2"><label class="form-label small mb-1 fw-bold">规格表 (yiwaibao)</label>
+              <div class="news-editor-wrap"><div ref="prodYiwaibaoZh" style="min-height:200px;"></div></div>
+            </div>
+          </div>
+          <!-- Chinese Source Code -->
+          <div v-show="prodTab === 'zh' && prodSrcMode">
+            <div class="mb-2"><label class="form-label small mb-1">简要介绍</label><input v-model="editingProduct.duibi" class="form-control form-control-sm"></div>
+            <div class="mb-2"><label class="form-label small mb-1">处理器</label><input v-model="editingProduct.cpu" class="form-control form-control-sm"></div>
+            <div class="mb-2"><label class="form-label small mb-1">内存</label><input v-model="editingProduct.neicun" class="form-control form-control-sm"></div>
+            <div class="mb-2"><label class="form-label small mb-1">存储</label><input v-model="editingProduct.ssd" class="form-control form-control-sm"></div>
+            <div class="mb-2"><label class="form-label small mb-1">扩展接口</label><input v-model="editingProduct.jiekou" class="form-control form-control-sm"></div>
+            <div class="mb-2"><label class="form-label small mb-1">亮点 HTML 源码</label><textarea v-model="editingProduct.lifekit" class="form-control form-control-sm" rows="4" style="font-size:11px;"></textarea></div>
+            <div class="mb-2"><label class="form-label small mb-1">规格表 HTML 源码</label><textarea v-model="editingProduct.yiwaibao" class="form-control form-control-sm" rows="8" style="font-size:11px;"></textarea></div>
           </div>
 
           <!-- English Fields -->
-          <div v-show="prodTab === 'en'">
+          <div v-show="prodTab === 'en' && !prodSrcMode">
             <div class="mb-2"><label class="form-label small mb-1">简要介绍 (duibiEn)</label><input v-model="editingProduct.duibiEn" class="form-control form-control-sm"></div>
-            <div class="mb-2"><label class="form-label small mb-1">亮点 (lifekitEn) HTML</label><textarea v-model="editingProduct.lifekitEn" class="form-control form-control-sm" rows="3"></textarea></div>
-            <div class="mb-2"><label class="form-label small mb-1">规格表 (yiwaibaoEn) HTML</label><textarea v-model="editingProduct.yiwaibaoEn" class="form-control form-control-sm" rows="6" style="font-size:11px;"></textarea></div>
+            <div class="mb-2"><label class="form-label small mb-1 fw-bold">亮点 (lifekitEn)</label>
+              <div class="news-editor-wrap"><div ref="prodLifekitEn"></div></div>
+            </div>
+            <div class="mb-2"><label class="form-label small mb-1 fw-bold">规格表 (yiwaibaoEn)</label>
+              <div class="news-editor-wrap"><div ref="prodYiwaibaoEn" style="min-height:200px;"></div></div>
+            </div>
+          </div>
+          <!-- English Source Code -->
+          <div v-show="prodTab === 'en' && prodSrcMode">
+            <div class="mb-2"><label class="form-label small mb-1">简要介绍</label><input v-model="editingProduct.duibiEn" class="form-control form-control-sm"></div>
+            <div class="mb-2"><label class="form-label small mb-1">亮点 HTML 源码</label><textarea v-model="editingProduct.lifekitEn" class="form-control form-control-sm" rows="4" style="font-size:11px;"></textarea></div>
+            <div class="mb-2"><label class="form-label small mb-1">规格表 HTML 源码</label><textarea v-model="editingProduct.yiwaibaoEn" class="form-control form-control-sm" rows="8" style="font-size:11px;"></textarea></div>
           </div>
         </div>
         <div class="modal-footer">
@@ -435,18 +470,32 @@ body { font-size: 14px; background: #f5f6fa; }
           <div class="mb-2"><label class="form-label small mb-1">点击量</label><input v-model="editingNews.hits" type="number" class="form-control form-control-sm" style="width:120px;"></div>
 
           <ul class="nav nav-tabs mb-3 mt-3">
-            <li class="nav-item"><a class="nav-link" :class="{ active: newsTab === 'zh' }" href="#" @click.prevent="newsTab='zh'">🇨🇳 中文正文</a></li>
-            <li class="nav-item"><a class="nav-link" :class="{ active: newsTab === 'en' }" href="#" @click.prevent="newsTab='en'">🇺🇸 英文正文</a></li>
+            <li class="nav-item"><a class="nav-link" :class="{ active: newsTab === 'zh' }" href="#" @click.prevent="switchNewsTab('zh')">🇨🇳 中文正文</a></li>
+            <li class="nav-item"><a class="nav-link" :class="{ active: newsTab === 'en' }" href="#" @click.prevent="switchNewsTab('en')">🇺🇸 英文正文</a></li>
+            <li class="nav-item ms-auto"><a class="nav-link small text-muted" href="#" @click.prevent="toggleNewsSrc">{{ newsSrcMode ? '📝 可视化编辑' : '🔧 源码模式' }}</a></li>
           </ul>
-          <div v-show="newsTab === 'zh'">
-            <label class="form-label small mb-1">正文 (body) HTML</label>
-            <textarea v-model="editingNews.body" class="form-control form-control-sm" rows="12" style="font-size:11px;"></textarea>
+          <!-- Rich Text Editor -->
+          <div v-show="newsTab === 'zh' && !newsSrcMode" class="news-editor-wrap mb-3">
+            <div ref="editorZh"></div>
           </div>
-          <div v-show="newsTab === 'en'">
+          <!-- Source Code Fallback -->
+          <div v-show="newsTab === 'zh' && newsSrcMode">
+            <label class="form-label small mb-1">正文 HTML 源码</label>
+            <textarea v-model="editingNews.body" class="form-control form-control-sm" rows="14" style="font-size:11px;"></textarea>
+          </div>
+          <!-- English -->
+          <div v-show="newsTab === 'en' && !newsSrcMode">
             <div class="mb-2"><label class="form-label small mb-1">标题 (英文)</label><input v-model="editingNews.titleEn" class="form-control form-control-sm"></div>
             <div class="mb-2"><label class="form-label small mb-1">描述 (英文)</label><input v-model="editingNews.descriptionEn" class="form-control form-control-sm"></div>
-            <label class="form-label small mb-1">正文 (bodyEn) HTML</label>
-            <textarea v-model="editingNews.bodyEn" class="form-control form-control-sm" rows="12" style="font-size:11px;"></textarea>
+            <div class="news-editor-wrap mb-3">
+              <div ref="editorEn"></div>
+            </div>
+          </div>
+          <div v-show="newsTab === 'en' && newsSrcMode">
+            <div class="mb-2"><label class="form-label small mb-1">标题 (英文)</label><input v-model="editingNews.titleEn" class="form-control form-control-sm"></div>
+            <div class="mb-2"><label class="form-label small mb-1">描述 (英文)</label><input v-model="editingNews.descriptionEn" class="form-control form-control-sm"></div>
+            <label class="form-label small mb-1">正文 HTML 源码</label>
+            <textarea v-model="editingNews.bodyEn" class="form-control form-control-sm" rows="14" style="font-size:11px;"></textarea>
           </div>
         </div>
         <div class="modal-footer">
@@ -511,6 +560,7 @@ body { font-size: 14px; background: #f5f6fa; }
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
 <script>
 const { createApp } = Vue;
@@ -553,7 +603,14 @@ createApp({
 
       // Modal tabs
       prodTab: 'zh',
+      prodSrcMode: false,
       newsTab: 'zh',
+      newsSrcMode: false,
+
+      // Quill instances
+      _quillZh: null,
+      _quillEn: null,
+      _prodQuills: null,
 
       // Modal instances
       _productModal: null,
@@ -863,14 +920,80 @@ createApp({
       this.editingProduct = this._emptyProduct();
       this.editingProduct.oid = maxOid + 1;
       this.prodTab = 'zh';
+      this.prodSrcMode = false;
       this._showModal('productModal');
+      this.$nextTick(() => this._initProdQuill());
     },
     editProduct(p) {
       this.editingProduct = JSON.parse(JSON.stringify(p));
       this.prodTab = 'zh';
+      this.prodSrcMode = false;
       this._showModal('productModal');
+      this.$nextTick(() => this._initProdQuill());
+    },
+    toggleProdSrc() {
+      if (this.prodSrcMode) {
+        // Switching to visual: init Quill from model
+        this.prodSrcMode = false;
+        this.$nextTick(() => this._initProdQuill());
+      } else {
+        // Switching to source: save Quill to model then destroy
+        this._prodQuillToModel();
+        this._destroyProdQuill();
+        this.prodSrcMode = true;
+      }
+    },
+    switchProdTab(tab) {
+      this._prodQuillToModel();
+      this.prodTab = tab;
+      this.$nextTick(() => this._initProdQuill());
+    },
+    _prodQuillToModel() {
+      const quills = this._prodQuills;
+      if (!quills) return;
+      const zh = quills.zh;
+      const en = quills.en;
+      if (zh.lifekit) this.editingProduct.lifekit = zh.lifekit.root.innerHTML;
+      if (zh.yiwaibao) this.editingProduct.yiwaibao = zh.yiwaibao.root.innerHTML;
+      if (en.lifekit) this.editingProduct.lifekitEn = en.lifekit.root.innerHTML;
+      if (en.yiwaibao) this.editingProduct.yiwaibaoEn = en.yiwaibao.root.innerHTML;
+    },
+    _initProdQuill() {
+      this._destroyProdQuill();
+      if (this.prodSrcMode) return;
+      const tab = this.prodTab;
+      const lifekitRef = tab === 'zh' ? 'prodLifekitZh' : 'prodLifekitEn';
+      const yiwaibaoRef = tab === 'zh' ? 'prodYiwaibaoZh' : 'prodYiwaibaoEn';
+      const lifekitField = tab === 'zh' ? 'lifekit' : 'lifekitEn';
+      const yiwaibaoField = tab === 'zh' ? 'yiwaibao' : 'yiwaibaoEn';
+      const lifekitEl = this.$refs[lifekitRef];
+      const yiwaibaoEl = this.$refs[yiwaibaoRef];
+      if (!this._prodQuills) this._prodQuills = { zh: {}, en: {} };
+      if (lifekitEl) {
+        const q = this._makeQuill(lifekitEl, '产品亮点...');
+        const html = this.editingProduct[lifekitField] || '';
+        if (html.trim()) q.root.innerHTML = html;
+        this._prodQuills[tab].lifekit = q;
+      }
+      if (yiwaibaoEl) {
+        const q = this._makeQuill(yiwaibaoEl, '规格表...');
+        const html = this.editingProduct[yiwaibaoField] || '';
+        if (html.trim()) q.root.innerHTML = html;
+        this._prodQuills[tab].yiwaibao = q;
+      }
+    },
+    _destroyProdQuill() {
+      this._prodQuillToModel();
+      if (this._prodQuills) {
+        for (const tab of ['zh', 'en']) {
+          for (const k of ['lifekit', 'yiwaibao']) {
+            if (this._prodQuills[tab][k]) this._prodQuills[tab][k] = null;
+          }
+        }
+      }
     },
     async saveProduct() {
+      this._prodQuillToModel();
       const p = this.editingProduct;
       const products = JSON.parse(JSON.stringify(this.productData.products));
       const idx = products.findIndex(x => x.oid === p.oid);
@@ -879,12 +1002,12 @@ createApp({
       } else {
         products.push(JSON.parse(JSON.stringify(p)));
       }
-      // Auto-generate slug
       if (!p.slug) {
         p.slug = p.name.toLowerCase().replace(/[\/\s]+/g, '-').replace(/[^a-z0-9\-]/g, '').replace(/-+/g, '-').replace(/^-|-$/g, '');
       }
       await this._writeProducts(products, `${idx >= 0 ? '编辑' : '新增'}产品 ${p.name}`);
       this.productData.products = products;
+      this._destroyProdQuill();
       this._hideModal('productModal');
       this.toast(`产品 "${p.name}" 已保存`, 'success');
     },
@@ -906,14 +1029,132 @@ createApp({
       this.editingNews = this._emptyNews();
       this.editingNews.oid = maxOid + 1;
       this.newsTab = 'zh';
+      this.newsSrcMode = false;
       this._showModal('newsModal');
+      this.$nextTick(() => this._initQuill());
     },
     editNews(a) {
       this.editingNews = JSON.parse(JSON.stringify(a));
       this.newsTab = 'zh';
+      this.newsSrcMode = false;
       this._showModal('newsModal');
+      this.$nextTick(() => this._initQuill());
+    },
+    toggleNewsSrc() {
+      if (this.newsSrcMode) {
+        this.newsSrcMode = false;
+        this.$nextTick(() => this._initQuill());
+      } else {
+        this._quillToModel();
+        this._destroyQuill();
+        this.newsSrcMode = true;
+      }
+    },
+    switchNewsTab(tab) {
+      this._quillToModel();
+      this.newsTab = tab;
+      this.$nextTick(() => this._initQuill());
+    },
+    // ==================== SHARED QUILL FACTORY ====================
+    _makeQuill(container, placeholder) {
+      const self = this;
+      const q = new Quill(container, {
+        theme: 'snow',
+        placeholder: placeholder || '在此编辑...',
+        modules: {
+          toolbar: {
+            container: [
+              [{ header: [1, 2, 3, false] }],
+              ['bold', 'italic', 'underline'],
+              [{ color: [] }, { background: [] }],
+              [{ align: [] }],
+              [{ list: 'ordered' }, { list: 'bullet' }],
+              ['link', 'image'],
+              ['clean']
+            ],
+            handlers: {
+              image: function() { self._quillImageHandler(this, q); }
+            }
+          }
+        }
+      });
+      return q;
+    },
+    _quillImageHandler(range, quill) {
+      // Create a file input
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.onchange = async () => {
+        const file = input.files[0];
+        if (!file) return;
+        // Show uploading indicator
+        const cursorPos = range ? range.index : quill.getLength();
+        quill.insertText(cursorPos, '⏳ 上传中...', 'italic', true);
+        try {
+          const url = await this._uploadImage(file);
+          // Replace the placeholder with the actual image
+          quill.deleteText(cursorPos, 6); // Remove "⏳ 上传中..."
+          quill.insertEmbed(cursorPos, 'image', url);
+          quill.setSelection(cursorPos + 1);
+        } catch (e) {
+          quill.deleteText(cursorPos, 6);
+          quill.insertText(cursorPos, '❌ 上传失败: ' + e.message, 'italic', true);
+          this.toast('图片上传失败: ' + e.message, 'danger');
+        }
+      };
+      input.click();
+    },
+    async _uploadImage(file) {
+      // Upload to src/images/upload/ via GitHub API
+      const ts = new Date().toISOString().replace(/[:.]/g, '-').substring(0, 19);
+      const safeName = file.name.replace(/[^a-zA-Z0-9._\-]/g, '_');
+      const path = `src/images/upload/${ts}-${safeName}`;
+
+      // Read file as base64
+      const buf = await file.arrayBuffer();
+      const bytes = new Uint8Array(buf);
+      let binary = '';
+      bytes.forEach(b => binary += String.fromCharCode(b));
+      const b64 = btoa(binary);
+
+      // Commit to GitHub
+      await this._githubAPI(path, 'PUT', {
+        message: `Upload image ${safeName} via admin`,
+        content: b64,
+        branch: 'master'
+      });
+
+      // Return public URL
+      return `/images/upload/${ts}-${safeName}`;
+    },
+
+    _quillToModel() {
+      if (this._quillZh && this.newsTab === 'zh') this.editingNews.body = this._quillZh.root.innerHTML;
+      if (this._quillEn && this.newsTab === 'en') this.editingNews.bodyEn = this._quillEn.root.innerHTML;
+    },
+    _initQuill() {
+      this._destroyQuill();
+      const tab = this.newsTab;
+      const refKey = tab === 'zh' ? 'editorZh' : 'editorEn';
+      const fieldKey = tab === 'zh' ? 'body' : 'bodyEn';
+      const container = this.$refs[refKey];
+      if (!container || this.newsSrcMode) return;
+      const q = this._makeQuill(container, tab === 'zh' ? '在此编辑新闻正文...' : 'Edit news content here...');
+      // Load existing content
+      const html = this.editingNews[fieldKey] || '';
+      if (html.trim()) q.root.innerHTML = html;
+      if (tab === 'zh') this._quillZh = q;
+      else this._quillEn = q;
+    },
+    _destroyQuill() {
+      // Save content first, then null the refs
+      this._quillToModel();
+      if (this._quillZh) { this._quillZh = null; }
+      if (this._quillEn) { this._quillEn = null; }
     },
     async saveNews() {
+      this._quillToModel();
       const a = this.editingNews;
       const articles = JSON.parse(JSON.stringify(this.newsData.articles));
       const idx = articles.findIndex(x => x.oid === a.oid);
@@ -922,6 +1163,7 @@ createApp({
       const data = { ...this.newsData, articles };
       await this._saveJSON('src/_data/news.json', data, `${idx >= 0 ? '编辑' : '新增'}新闻 ${a.title}`);
       this.newsData.articles = articles;
+      this._destroyQuill();
       this._hideModal('newsModal');
       this.toast(`新闻 "${a.title}" 已保存`, 'success');
     },
