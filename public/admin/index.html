@@ -1,11 +1,865 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>原基科技 - 后台管理</title>
-  <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>原基科技 - 后台管理</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+:root {
+  --sidebar-w: 220px;
+  --topbar-h: 50px;
+}
+body { font-size: 14px; background: #f5f6fa; }
+#app { min-height: 100vh; }
+
+/* Login */
+.login-page {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100vh; background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+}
+.login-card {
+  width: 420px; padding: 40px; background: #fff; border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+.login-card h3 { color: #1a73e8; font-weight: 700; }
+
+/* Layout */
+.sidebar {
+  position: fixed; top: 0; left: 0; bottom: 0;
+  width: var(--sidebar-w); background: #1e293b; color: #fff;
+  overflow-y: auto; z-index: 100;
+}
+.sidebar .logo { padding: 16px 20px; font-size: 18px; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.sidebar .logo small { font-size: 11px; opacity: 0.6; display: block; }
+.sidebar .nav-item { display: block; padding: 12px 20px; color: #94a3b8; text-decoration: none; cursor: pointer; border-left: 3px solid transparent; transition: all 0.15s; }
+.sidebar .nav-item:hover { color: #fff; background: rgba(255,255,255,0.05); }
+.sidebar .nav-item.active { color: #fff; background: rgba(255,255,255,0.1); border-left-color: #3b82f6; }
+.sidebar .nav-item i { margin-right: 8px; }
+.sidebar .user-info { padding: 12px 20px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 11px; color: #64748b; margin-top: auto; }
+
+.topbar {
+  position: fixed; top: 0; left: var(--sidebar-w); right: 0;
+  height: var(--topbar-h); background: #fff; border-bottom: 1px solid #e2e8f0;
+  display: flex; align-items: center; padding: 0 20px;
+  z-index: 99; font-size: 13px;
+}
+.topbar .breadcrumb { margin: 0; }
+.main-content {
+  margin-left: var(--sidebar-w); margin-top: var(--topbar-h);
+  padding: 24px;
+}
+
+/* Cards & Tables */
+.card { border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.table > :not(caption) > * > * { padding: 10px 12px; vertical-align: middle; }
+.table th { font-weight: 600; font-size: 12px; text-transform: uppercase; color: #64748b; background: #f8fafc; }
+.btn { font-size: 13px; }
+.btn-sm { font-size: 12px; }
+.badge { font-weight: 500; }
+
+/* Stats */
+.stat-card {
+  background: #fff; border-radius: 8px; padding: 20px;
+  border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 14px;
+  cursor: pointer; transition: box-shadow 0.15s;
+}
+.stat-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.stat-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff; }
+.stat-value { font-size: 24px; font-weight: 700; }
+.stat-label { font-size: 12px; color: #64748b; }
+
+/* Modal */
+.modal-lg-custom { max-width: 900px; }
+.modal-body textarea { font-family: 'Cascadia Code', 'Fira Code', monospace; font-size: 13px; }
+.nav-tabs .nav-link { font-size: 13px; padding: 8px 16px; }
+
+/* Toast */
+.toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; }
+
+/* Status dots */
+.status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.status-dot.ok { background: #22c55e; }
+.status-dot.warn { background: #f59e0b; }
+
+/* Loading overlay */
+.loading-overlay {
+  position: fixed; inset: 0; background: rgba(255,255,255,0.7);
+  display: flex; align-items: center; justify-content: center; z-index: 9998;
+}
+</style>
 </head>
 <body>
+
+<div id="app">
+  <!-- Login Screen -->
+  <div v-if="!token" class="login-page">
+    <div class="login-card">
+      <h3 class="mb-1">原基科技</h3>
+      <p class="text-muted mb-4">后台管理系统</p>
+      <div class="mb-3">
+        <label class="form-label">GitHub Personal Access Token</label>
+        <input v-model="inputToken" type="password" class="form-control" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+               @keyup.enter="login">
+      </div>
+      <button class="btn btn-primary w-100" @click="login" :disabled="loggingIn">
+        <span v-if="loggingIn" class="spinner-border spinner-border-sm me-1"></span>
+        {{ loggingIn ? '验证中...' : '登 录' }}
+      </button>
+      <p class="text-danger mt-2 small" v-if="loginError">{{ loginError }}</p>
+      <p class="text-muted mt-3 small mb-0">
+        <i class="bi bi-info-circle"></i> Token 需要 <code>repo</code> 权限，在
+        <a href="https://github.com/settings/tokens" target="_blank">GitHub Settings → Tokens</a> 生成
+      </p>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div v-else>
+    <!-- Sidebar -->
+    <div class="sidebar d-flex flex-column">
+      <div class="logo">原基科技 <small>内容管理系统</small></div>
+      <nav class="flex-grow-1 pt-2">
+        <a class="nav-item" :class="{ active: tab === 'dashboard' }" @click="switchTab('dashboard')">
+          <i class="bi bi-speedometer2"></i> 仪表盘
+        </a>
+        <a class="nav-item" :class="{ active: tab === 'products' }" @click="switchTab('products')">
+          <i class="bi bi-box-seam"></i> 产品管理
+        </a>
+        <a class="nav-item" :class="{ active: tab === 'news' }" @click="switchTab('news')">
+          <i class="bi bi-newspaper"></i> 新闻管理
+        </a>
+        <a class="nav-item" :class="{ active: tab === 'cases' }" @click="switchTab('cases')">
+          <i class="bi bi-building"></i> 方案管理
+        </a>
+        <a class="nav-item" :class="{ active: tab === 'settings' }" @click="switchTab('settings')">
+          <i class="bi bi-gear"></i> 网站设置
+        </a>
+      </nav>
+      <div class="user-info">
+        <i class="bi bi-github"></i> easybase1704/easybase<br>
+        <a href="#" @click.prevent="logout" class="text-muted">退出登录</a>
+      </div>
+    </div>
+
+    <!-- Topbar -->
+    <div class="topbar">
+      <nav class="breadcrumb">
+        <span class="breadcrumb-item">后台管理</span>
+        <span class="breadcrumb-item active">{{ tabLabel }}</span>
+      </nav>
+      <div class="ms-auto d-flex align-items-center gap-3">
+        <span v-if="saving" class="text-warning small"><span class="spinner-border spinner-border-sm me-1"></span>保存中</span>
+        <span v-else class="text-success small status-dot ok"></span>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+      <!-- ==================== DASHBOARD ==================== -->
+      <div v-if="tab === 'dashboard'">
+        <div class="row g-3 mb-4">
+          <div class="col-md-3" v-for="s in stats" :key="s.key">
+            <div class="stat-card" @click="switchTab(s.key)">
+              <div class="stat-icon" :style="{ background: s.color }"><i :class="s.icon"></i></div>
+              <div>
+                <div class="stat-value">{{ s.count }}</div>
+                <div class="stat-label">{{ s.label }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h6 class="card-title mb-3">快速操作</h6>
+            <button class="btn btn-outline-primary btn-sm me-2" @click="switchTab('products'); addProduct()"><i class="bi bi-plus-lg"></i> 新增产品</button>
+            <button class="btn btn-outline-primary btn-sm me-2" @click="switchTab('news'); addNews()"><i class="bi bi-plus-lg"></i> 新增新闻</button>
+            <button class="btn btn-outline-primary btn-sm me-2" @click="switchTab('cases'); addCase()"><i class="bi bi-plus-lg"></i> 新增方案</button>
+            <button class="btn btn-outline-secondary btn-sm" @click="refreshAll"><i class="bi bi-arrow-clockwise"></i> 刷新全部数据</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== PRODUCTS ==================== -->
+      <div v-if="tab === 'products'">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex align-items-center gap-3 mb-3 flex-wrap">
+              <h5 class="mb-0">产品列表</h5>
+              <select class="form-select form-select-sm w-auto" v-model="prodFilter" @change="filteredProducts">
+                <option value="">全部产品</option>
+                <optgroup v-for="cat in productData.categories" :key="cat.id" :label="cat.name">
+                  <option v-for="sub in cat.sub" :key="sub.id" :value="sub.id">
+                    {{ cat.name }} → {{ sub.name }}
+                  </option>
+                </optgroup>
+              </select>
+              <input class="form-control form-control-sm w-auto" placeholder="搜索型号..." v-model="prodSearch">
+              <span class="text-muted small">{{ filteredProducts.length }} / {{ productData.products.length }} 个产品</span>
+              <button class="btn btn-primary btn-sm ms-auto" @click="addProduct"><i class="bi bi-plus-lg"></i> 新增</button>
+            </div>
+            <div class="table-responsive" style="max-height: 60vh; overflow-y: auto;">
+              <table class="table table-hover table-sm">
+                <thead style="position: sticky; top: 0;">
+                  <tr>
+                    <th>型号</th>
+                    <th>分类</th>
+                    <th>简述</th>
+                    <th>热门</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="p in filteredProducts" :key="p.oid">
+                    <td><strong>{{ p.name }}</strong></td>
+                    <td><span class="badge bg-secondary">{{ getCategoryLabel(p.classId) }}</span></td>
+                    <td class="text-muted small">{{ p.duibi?.substring(0, 40) }}{{ p.duibi?.length > 40 ? '...' : '' }}</td>
+                    <td><span class="badge" :class="p.isHot ? 'bg-danger' : 'bg-light text-muted'">{{ p.isHot ? '🔥推荐' : '-' }}</span></td>
+                    <td>
+                      <button class="btn btn-outline-secondary btn-sm me-1" @click="editProduct(p)"><i class="bi bi-pencil"></i></button>
+                      <button class="btn btn-outline-danger btn-sm" @click="deleteProduct(p)"><i class="bi bi-trash"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== NEWS ==================== -->
+      <div v-if="tab === 'news'">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex align-items-center gap-3 mb-3 flex-wrap">
+              <h5 class="mb-0">新闻列表</h5>
+              <select class="form-select form-select-sm w-auto" v-model="newsFilter">
+                <option value="">全部新闻</option>
+                <option v-for="cat in newsData.categories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
+              </select>
+              <span class="text-muted small">{{ filteredNews.length }} 篇文章</span>
+              <button class="btn btn-primary btn-sm ms-auto" @click="addNews"><i class="bi bi-plus-lg"></i> 新增</button>
+            </div>
+            <div class="table-responsive" style="max-height: 60vh; overflow-y: auto;">
+              <table class="table table-hover table-sm">
+                <thead style="position: sticky; top: 0;">
+                  <tr><th>标题</th><th>分类</th><th>日期</th><th>操作</th></tr>
+                </thead>
+                <tbody>
+                  <tr v-for="a in filteredNews" :key="a.oid">
+                    <td><strong>{{ a.title }}</strong></td>
+                    <td><span class="badge bg-info">{{ getNewsCatLabel(a.classId) }}</span></td>
+                    <td class="text-muted small">{{ a.date }}</td>
+                    <td>
+                      <button class="btn btn-outline-secondary btn-sm me-1" @click="editNews(a)"><i class="bi bi-pencil"></i></button>
+                      <button class="btn btn-outline-danger btn-sm" @click="deleteNews(a)"><i class="bi bi-trash"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== CASES ==================== -->
+      <div v-if="tab === 'cases'">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex align-items-center gap-3 mb-3 flex-wrap">
+              <h5 class="mb-0">方案列表</h5>
+              <span class="text-muted small">{{ casesData.solutions.length }} 个方案</span>
+              <button class="btn btn-primary btn-sm ms-auto" @click="addCase"><i class="bi bi-plus-lg"></i> 新增</button>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-hover table-sm">
+                <thead><tr><th>名称</th><th>简述</th><th>关联产品</th><th>操作</th></tr></thead>
+                <tbody>
+                  <tr v-for="c in casesData.solutions" :key="c.oid">
+                    <td><strong>{{ c.name }}</strong></td>
+                    <td class="text-muted small">{{ c.duibi?.substring(0, 50) }}{{ c.duibi?.length > 50 ? '...' : '' }}</td>
+                    <td><span v-for="rp in c.relatedProducts" class="badge bg-light text-dark me-1">{{ rp.name }}</span></td>
+                    <td>
+                      <button class="btn btn-outline-secondary btn-sm me-1" @click="editCase(c)"><i class="bi bi-pencil"></i></button>
+                      <button class="btn btn-outline-danger btn-sm" @click="deleteCase(c)"><i class="bi bi-trash"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== SETTINGS ==================== -->
+      <div v-if="tab === 'settings'">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-body">
+                <h6 class="card-title">公司信息</h6>
+                <div class="mb-2"><label class="form-label small mb-1">公司名 (中文)</label><input v-model="siteForm.name" class="form-control form-control-sm"></div>
+                <div class="mb-2"><label class="form-label small mb-1">公司名 (英文)</label><input v-model="siteForm.nameEn" class="form-control form-control-sm"></div>
+                <div class="mb-2"><label class="form-label small mb-1">Slogan (中文)</label><input v-model="siteForm.slogan" class="form-control form-control-sm"></div>
+                <div class="mb-2"><label class="form-label small mb-1">Slogan (英文)</label><input v-model="siteForm.sloganEn" class="form-control form-control-sm"></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-body">
+                <h6 class="card-title">联系方式</h6>
+                <div class="mb-2"><label class="form-label small mb-1">邮箱</label><input v-model="siteForm.contact.email" class="form-control form-control-sm"></div>
+                <div class="mb-2"><label class="form-label small mb-1">招聘邮箱</label><input v-model="siteForm.contact.hrEmail" class="form-control form-control-sm"></div>
+                <div class="mb-2"><label class="form-label small mb-1">服务热线</label><input v-model="siteForm.contact.phoneEdge" class="form-control form-control-sm"></div>
+                <div class="mb-2"><label class="form-label small mb-1">地址</label><textarea v-model="siteForm.contact.address" class="form-control form-control-sm" rows="2"></textarea></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-body">
+                <h6 class="card-title">销售人员</h6>
+                <div v-for="(sales, idx) in siteForm.contact.sales" :key="idx" class="row g-1 mb-2">
+                  <div class="col-3"><input v-model="sales.title" class="form-control form-control-sm" placeholder="部门"></div>
+                  <div class="col-3"><input v-model="sales.name" class="form-control form-control-sm" placeholder="姓名"></div>
+                  <div class="col-4"><input v-model="sales.phone" class="form-control form-control-sm" placeholder="电话"></div>
+                  <div class="col-2"><button class="btn btn-outline-danger btn-sm w-100" @click="siteForm.contact.sales.splice(idx,1)"><i class="bi bi-x"></i></button></div>
+                </div>
+                <button class="btn btn-outline-secondary btn-sm" @click="siteForm.contact.sales.push({name:'',phone:'',title:''})"><i class="bi bi-plus"></i> 添加</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-body">
+                <h6 class="card-title">SEO</h6>
+                <label class="form-label small mb-1">关键词 (中文)</label>
+                <input v-model="siteForm.seo.keywords" class="form-control form-control-sm mb-2">
+                <label class="form-label small mb-1">描述 (中文)</label>
+                <textarea v-model="siteForm.seo.description" class="form-control form-control-sm mb-2" rows="2"></textarea>
+                <label class="form-label small mb-1">关键词 (英文)</label>
+                <input v-model="siteForm.seoEn.keywords" class="form-control form-control-sm mb-2">
+                <label class="form-label small mb-1">描述 (英文)</label>
+                <textarea v-model="siteForm.seoEn.description" class="form-control form-control-sm mb-2" rows="2"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-primary mt-3" @click="saveSettings"><i class="bi bi-check-lg"></i> 保存设置</button>
+      </div>
+
+    </div><!-- /main-content -->
+  </div><!-- /dashboard -->
+
+  <!-- ==================== PRODUCT EDIT MODAL ==================== -->
+  <div class="modal fade" id="productModal" tabindex="-1" ref="productModal">
+    <div class="modal-dialog modal-lg-custom modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ editingProduct.oid ? '编辑产品' : '新增产品' }}</h5>
+          <button class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-2 mb-3">
+            <div class="col-md-4"><label class="form-label small mb-1">产品型号 *</label><input v-model="editingProduct.name" class="form-control form-control-sm"></div>
+            <div class="col-md-3"><label class="form-label small mb-1">分类 *</label>
+              <select v-model="editingProduct.classId" class="form-select form-select-sm">
+                <optgroup v-for="cat in productData.categories" :label="cat.name">
+                  <option v-for="sub in cat.sub" :value="sub.id">{{ cat.name }} → {{ sub.name }}</option>
+                </optgroup>
+              </select>
+            </div>
+            <div class="col-md-2"><label class="form-label small mb-1">热门推荐</label>
+              <select v-model="editingProduct.isHot" class="form-select form-select-sm">
+                <option :value="false">否</option><option :value="true">是 🔥</option>
+              </select>
+            </div>
+          </div>
+
+          <ul class="nav nav-tabs mb-3">
+            <li class="nav-item"><a class="nav-link" :class="{ active: prodTab === 'zh' }" href="#" @click.prevent="prodTab='zh'">🇨🇳 中文</a></li>
+            <li class="nav-item"><a class="nav-link" :class="{ active: prodTab === 'en' }" href="#" @click.prevent="prodTab='en'">🇺🇸 英文</a></li>
+          </ul>
+
+          <!-- Chinese Fields -->
+          <div v-show="prodTab === 'zh'">
+            <div class="mb-2"><label class="form-label small mb-1">简要介绍 (duibi)</label><input v-model="editingProduct.duibi" class="form-control form-control-sm"></div>
+            <div class="mb-2"><label class="form-label small mb-1">处理器 (cpu)</label><input v-model="editingProduct.cpu" class="form-control form-control-sm"></div>
+            <div class="mb-2"><label class="form-label small mb-1">内存 (neicun)</label><input v-model="editingProduct.neicun" class="form-control form-control-sm"></div>
+            <div class="mb-2"><label class="form-label small mb-1">存储 (ssd)</label><input v-model="editingProduct.ssd" class="form-control form-control-sm"></div>
+            <div class="mb-2"><label class="form-label small mb-1">扩展接口 (jiekou)</label><input v-model="editingProduct.jiekou" class="form-control form-control-sm"></div>
+            <div class="mb-2"><label class="form-label small mb-1">亮点 (lifekit) HTML</label><textarea v-model="editingProduct.lifekit" class="form-control form-control-sm" rows="3"></textarea></div>
+            <div class="mb-2"><label class="form-label small mb-1">规格表 (yiwaibao) HTML</label><textarea v-model="editingProduct.yiwaibao" class="form-control form-control-sm" rows="6" style="font-size:11px;"></textarea></div>
+          </div>
+
+          <!-- English Fields -->
+          <div v-show="prodTab === 'en'">
+            <div class="mb-2"><label class="form-label small mb-1">简要介绍 (duibiEn)</label><input v-model="editingProduct.duibiEn" class="form-control form-control-sm"></div>
+            <div class="mb-2"><label class="form-label small mb-1">亮点 (lifekitEn) HTML</label><textarea v-model="editingProduct.lifekitEn" class="form-control form-control-sm" rows="3"></textarea></div>
+            <div class="mb-2"><label class="form-label small mb-1">规格表 (yiwaibaoEn) HTML</label><textarea v-model="editingProduct.yiwaibaoEn" class="form-control form-control-sm" rows="6" style="font-size:11px;"></textarea></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">取消</button>
+          <button class="btn btn-primary btn-sm" @click="saveProduct" :disabled="!editingProduct.name">
+            <i class="bi bi-check-lg"></i> 保存并写入 GitHub
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== NEWS EDIT MODAL ==================== -->
+  <div class="modal fade" id="newsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ editingNews.oid ? '编辑新闻' : '新增新闻' }}</h5>
+          <button class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-2 mb-3">
+            <div class="col-md-6"><label class="form-label small mb-1">标题 (中文)</label><input v-model="editingNews.title" class="form-control form-control-sm"></div>
+            <div class="col-md-3"><label class="form-label small mb-1">分类</label>
+              <select v-model="editingNews.classId" class="form-select form-select-sm">
+                <option v-for="cat in newsData.categories" :value="cat.id">{{ cat.name }}</option>
+              </select>
+            </div>
+            <div class="col-md-3"><label class="form-label small mb-1">日期</label><input v-model="editingNews.date" type="date" class="form-control form-control-sm"></div>
+          </div>
+          <div class="mb-2"><label class="form-label small mb-1">描述 (中文)</label><input v-model="editingNews.description" class="form-control form-control-sm"></div>
+          <div class="mb-2"><label class="form-label small mb-1">缩略图路径</label><input v-model="editingNews.img" class="form-control form-control-sm"></div>
+          <div class="mb-2"><label class="form-label small mb-1">点击量</label><input v-model="editingNews.hits" type="number" class="form-control form-control-sm" style="width:120px;"></div>
+
+          <ul class="nav nav-tabs mb-3 mt-3">
+            <li class="nav-item"><a class="nav-link" :class="{ active: newsTab === 'zh' }" href="#" @click.prevent="newsTab='zh'">🇨🇳 中文正文</a></li>
+            <li class="nav-item"><a class="nav-link" :class="{ active: newsTab === 'en' }" href="#" @click.prevent="newsTab='en'">🇺🇸 英文正文</a></li>
+          </ul>
+          <div v-show="newsTab === 'zh'">
+            <label class="form-label small mb-1">正文 (body) HTML</label>
+            <textarea v-model="editingNews.body" class="form-control form-control-sm" rows="12" style="font-size:11px;"></textarea>
+          </div>
+          <div v-show="newsTab === 'en'">
+            <div class="mb-2"><label class="form-label small mb-1">标题 (英文)</label><input v-model="editingNews.titleEn" class="form-control form-control-sm"></div>
+            <div class="mb-2"><label class="form-label small mb-1">描述 (英文)</label><input v-model="editingNews.descriptionEn" class="form-control form-control-sm"></div>
+            <label class="form-label small mb-1">正文 (bodyEn) HTML</label>
+            <textarea v-model="editingNews.bodyEn" class="form-control form-control-sm" rows="12" style="font-size:11px;"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">取消</button>
+          <button class="btn btn-primary btn-sm" @click="saveNews" :disabled="!editingNews.title">
+            <i class="bi bi-check-lg"></i> 保存并写入 GitHub
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== CASE EDIT MODAL ==================== -->
+  <div class="modal fade" id="caseModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ editingCase.oid ? '编辑方案' : '新增方案' }}</h5>
+          <button class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-2 mb-3">
+            <div class="col-md-6"><label class="form-label small mb-1">名称 (中文)</label><input v-model="editingCase.name" class="form-control form-control-sm"></div>
+            <div class="col-md-6"><label class="form-label small mb-1">名称 (英文)</label><input v-model="editingCase.nameEn" class="form-control form-control-sm"></div>
+          </div>
+          <div class="mb-2"><label class="form-label small mb-1">简述 (中文)</label><input v-model="editingCase.duibi" class="form-control form-control-sm"></div>
+          <div class="mb-2"><label class="form-label small mb-1">简述 (英文)</label><input v-model="editingCase.duibiEn" class="form-control form-control-sm"></div>
+          <div class="mb-2"><label class="form-label small mb-1">图标名称</label><input v-model="editingCase.icon" class="form-control form-control-sm"></div>
+          <div class="mb-2"><label class="form-label small mb-1">缩略图路径</label><input v-model="editingCase.thumb" class="form-control form-control-sm"></div>
+          <div class="mb-2"><label class="form-label small mb-1">内容 (body) HTML</label><textarea v-model="editingCase.body" class="form-control form-control-sm" rows="4"></textarea></div>
+          <label class="form-label small mb-1">关联产品</label>
+          <div v-for="(rp, idx) in editingCase.relatedProducts" :key="idx" class="row g-1 mb-1">
+            <div class="col-4"><input v-model="rp.name" class="form-control form-control-sm" placeholder="产品名"></div>
+            <div class="col-4"><input v-model="rp.slug" class="form-control form-control-sm" placeholder="URL slug"></div>
+            <div class="col-2"><button class="btn btn-outline-danger btn-sm" @click="editingCase.relatedProducts.splice(idx,1)"><i class="bi bi-x"></i></button></div>
+          </div>
+          <button class="btn btn-outline-secondary btn-sm" @click="editingCase.relatedProducts.push({name:'',slug:''})"><i class="bi bi-plus"></i> 添加产品</button>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">取消</button>
+          <button class="btn btn-primary btn-sm" @click="saveCase" :disabled="!editingCase.name">
+            <i class="bi bi-check-lg"></i> 保存并写入 GitHub
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container">
+    <div v-for="(t, i) in toasts" :key="i" class="toast align-items-center border-0 show" :class="'text-bg-' + t.type">
+      <div class="d-flex"><div class="toast-body">{{ t.msg }}</div>
+        <button class="btn-close btn-close-white me-2 m-auto" @click="toasts.splice(i,1)"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" v-if="loading">
+    <div class="text-center"><div class="spinner-border text-primary mb-2"></div><br>{{ loadingMsg }}</div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
+<script>
+const { createApp } = Vue;
+
+createApp({
+  data() {
+    return {
+      // Auth
+      token: localStorage.getItem('gh_token') || '',
+      inputToken: '',
+      loggingIn: false,
+      loginError: '',
+
+      // UI State
+      tab: 'dashboard',
+      loading: false,
+      loadingMsg: '加载中...',
+      saving: false,
+      toasts: [],
+
+      // Data caches
+      productData: { categories: [], products: [] },
+      newsData: { categories: [], articles: [] },
+      casesData: { solutions: [] },
+      siteData: {},
+      // File SHAs for updating
+      _shas: {},
+
+      // Product filters
+      prodFilter: '',
+      prodSearch: '',
+      newsFilter: '',
+
+      // Editing state
+      editingProduct: this._emptyProduct(),
+      editingNews: this._emptyNews(),
+      editingCase: this._emptyCase(),
+      siteForm: {},
+
+      // Modal tabs
+      prodTab: 'zh',
+      newsTab: 'zh',
+
+      // Modal instances
+      _productModal: null,
+      _newsModal: null,
+      _caseModal: null,
+    };
+  },
+
+  computed: {
+    tabLabel() {
+      const m = { dashboard: '仪表盘', products: '产品管理', news: '新闻管理', cases: '方案管理', settings: '网站设置' };
+      return m[this.tab] || '';
+    },
+    stats() {
+      return [
+        { key: 'products', icon: 'bi bi-box-seam', label: '产品', count: this.productData.products.length, color: '#3b82f6' },
+        { key: 'news', icon: 'bi bi-newspaper', label: '新闻', count: this.newsData.articles.length, color: '#06b6d4' },
+        { key: 'cases', icon: 'bi bi-building', label: '方案', count: this.casesData.solutions.length, color: '#8b5cf6' },
+        { key: 'settings', icon: 'bi bi-gear', label: '设置', count: '-', color: '#64748b' },
+      ];
+    },
+    filteredProducts() {
+      let list = this.productData.products;
+      if (this.prodFilter) list = list.filter(p => p.classId === this.prodFilter);
+      if (this.prodSearch) {
+        const q = this.prodSearch.toLowerCase();
+        list = list.filter(p => p.name.toLowerCase().includes(q) || (p.duibi || '').includes(q));
+      }
+      return list;
+    },
+    filteredNews() {
+      let list = this.newsData.articles;
+      if (this.newsFilter) list = list.filter(a => a.classId === this.newsFilter);
+      return list;
+    },
+  },
+
+  async mounted() {
+    if (this.token) {
+      const valid = await this._verifyToken();
+      if (!valid) { this.token = ''; localStorage.removeItem('gh_token'); return; }
+      await this.refreshAll();
+    }
+  },
+
+  methods: {
+    // ==================== HELPERS ====================
+    _emptyProduct() {
+      return { oid: null, name: '', classId: 9, duibi: '', cpu: '', neicun: '', ssd: '', jiekou: '', isHot: false, yiwaibao: '', lifekit: '', duibiEn: '', yiwaibaoEn: '', lifekitEn: '', slug: '' };
+    },
+    _emptyNews() {
+      return { oid: null, title: '', classId: 1, description: '', date: new Date().toISOString().slice(0,10), hits: 0, img: '', isHot: false, body: '', titleEn: '', descriptionEn: '', bodyEn: '' };
+    },
+    _emptyCase() {
+      return { oid: null, name: '', nameEn: '', duibi: '', duibiEn: '', icon: '', body: '', thumb: '', relatedProducts: [] };
+    },
+
+    _b64Encode(str) {
+      const bytes = new TextEncoder().encode(str);
+      let binary = '';
+      bytes.forEach(b => binary += String.fromCharCode(b));
+      return btoa(binary);
+    },
+    _b64Decode(b64) {
+      const binary = atob(b64);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      return new TextDecoder().decode(bytes);
+    },
+
+    async _githubAPI(path, method = 'GET', body = null) {
+      const opts = {
+        method,
+        headers: { 'Authorization': `token ${this.token}`, 'Accept': 'application/vnd.github.v3+json' },
+      };
+      if (body) opts.body = JSON.stringify(body);
+      const resp = await fetch(`https://api.github.com/repos/easybase1704/easybase/contents/${path}`, opts);
+      if (!resp.ok) throw new Error(`GitHub API ${resp.status}: ${(await resp.json()).message}`);
+      return resp.json();
+    },
+
+    async _loadJSON(path) {
+      const file = await this._githubAPI(path);
+      this._shas[path] = file.sha;
+      return JSON.parse(this._b64Decode(file.content));
+    },
+
+    async _saveJSON(path, data, msg) {
+      const content = this._b64Encode(JSON.stringify(data, null, 2));
+      const sha = this._shas[path];
+      const body = { message: msg || `Update ${path} via admin`, content, branch: 'master' };
+      if (sha) body.sha = sha;
+      const result = await this._githubAPI(path, 'PUT', body);
+      this._shas[path] = result.content.sha;
+      return result;
+    },
+
+    async _verifyToken() {
+      try {
+        await this._githubAPI('src/_data/site-base.json');
+        return true;
+      } catch (e) {
+        return false;
+      }
+    },
+
+    // ==================== AUTH ====================
+    async login() {
+      this.loginError = '';
+      if (!this.inputToken.trim()) { this.loginError = '请输入 Token'; return; }
+      this.loggingIn = true;
+      this.token = this.inputToken.trim();
+      const valid = await this._verifyToken();
+      if (valid) {
+        localStorage.setItem('gh_token', this.token);
+        this.inputToken = '';
+        this.toast('登录成功', 'success');
+        await this.refreshAll();
+      } else {
+        this.token = '';
+        this.loginError = 'Token 无效或无权限访问仓库';
+      }
+      this.loggingIn = false;
+    },
+
+    logout() {
+      this.token = '';
+      localStorage.removeItem('gh_token');
+    },
+
+    // ==================== NAVIGATION ====================
+    switchTab(tab) {
+      this.tab = tab;
+      if (tab === 'settings' && this.siteData.name !== undefined) {
+        this.siteForm = JSON.parse(JSON.stringify(this.siteData));
+      }
+    },
+
+    // ==================== DATA ====================
+    async refreshAll() {
+      this.loading = true;
+      this.loadingMsg = '正在从 GitHub 拉取数据...';
+      try {
+        const [prod, news, cases, site] = await Promise.all([
+          this._loadJSON('src/_data/products.json'),
+          this._loadJSON('src/_data/news.json'),
+          this._loadJSON('src/_data/cases.json'),
+          this._loadJSON('src/_data/site-base.json'),
+        ]);
+        this.productData = prod;
+        this.newsData = news;
+        this.casesData = cases;
+        this.siteData = site;
+        this.siteForm = JSON.parse(JSON.stringify(site));
+        this.toast('数据刷新完成', 'success');
+      } catch (e) {
+        this.toast('数据加载失败: ' + e.message, 'danger');
+      }
+      this.loading = false;
+    },
+
+    // ==================== CATEGORY HELPERS ====================
+    getCategoryLabel(classId) {
+      for (const cat of this.productData.categories) {
+        for (const sub of cat.sub) {
+          if (sub.id === classId) return cat.name + ' → ' + sub.name;
+        }
+      }
+      return '未知';
+    },
+    getNewsCatLabel(classId) {
+      const cat = this.newsData.categories.find(c => c.id === classId);
+      return cat ? cat.name : '未知';
+    },
+
+    // ==================== PRODUCTS ====================
+    addProduct() {
+      const maxOid = this.productData.products.reduce((max, p) => Math.max(max, p.oid || 0), 0);
+      this.editingProduct = this._emptyProduct();
+      this.editingProduct.oid = maxOid + 1;
+      this.prodTab = 'zh';
+      this._showModal('productModal');
+    },
+    editProduct(p) {
+      this.editingProduct = JSON.parse(JSON.stringify(p));
+      this.prodTab = 'zh';
+      this._showModal('productModal');
+    },
+    async saveProduct() {
+      const p = this.editingProduct;
+      const products = JSON.parse(JSON.stringify(this.productData.products));
+      const idx = products.findIndex(x => x.oid === p.oid);
+      if (idx >= 0) {
+        products[idx] = JSON.parse(JSON.stringify(p));
+      } else {
+        products.push(JSON.parse(JSON.stringify(p)));
+      }
+      // Auto-generate slug
+      if (!p.slug) {
+        p.slug = p.name.toLowerCase().replace(/[\/\s]+/g, '-').replace(/[^a-z0-9\-]/g, '').replace(/-+/g, '-').replace(/^-|-$/g, '');
+      }
+      await this._writeProducts(products, `${idx >= 0 ? '编辑' : '新增'}产品 ${p.name}`);
+      this.productData.products = products;
+      this._hideModal('productModal');
+      this.toast(`产品 "${p.name}" 已保存`, 'success');
+    },
+    async deleteProduct(p) {
+      if (!confirm(`确定删除产品 "${p.name}"？此操作不可恢复。`)) return;
+      const products = this.productData.products.filter(x => x.oid !== p.oid);
+      await this._writeProducts(products, `删除产品 ${p.name}`);
+      this.productData.products = products;
+      this.toast(`产品 "${p.name}" 已删除`, 'warning');
+    },
+    async _writeProducts(products, msg) {
+      const data = { ...this.productData, products };
+      await this._saveJSON('src/_data/products.json', data, msg);
+    },
+
+    // ==================== NEWS ====================
+    addNews() {
+      const maxOid = this.newsData.articles.reduce((max, a) => Math.max(max, a.oid || 0), 0);
+      this.editingNews = this._emptyNews();
+      this.editingNews.oid = maxOid + 1;
+      this.newsTab = 'zh';
+      this._showModal('newsModal');
+    },
+    editNews(a) {
+      this.editingNews = JSON.parse(JSON.stringify(a));
+      this.newsTab = 'zh';
+      this._showModal('newsModal');
+    },
+    async saveNews() {
+      const a = this.editingNews;
+      const articles = JSON.parse(JSON.stringify(this.newsData.articles));
+      const idx = articles.findIndex(x => x.oid === a.oid);
+      if (idx >= 0) articles[idx] = JSON.parse(JSON.stringify(a));
+      else articles.push(JSON.parse(JSON.stringify(a)));
+      const data = { ...this.newsData, articles };
+      await this._saveJSON('src/_data/news.json', data, `${idx >= 0 ? '编辑' : '新增'}新闻 ${a.title}`);
+      this.newsData.articles = articles;
+      this._hideModal('newsModal');
+      this.toast(`新闻 "${a.title}" 已保存`, 'success');
+    },
+    async deleteNews(a) {
+      if (!confirm(`确定删除新闻 "${a.title}"？`)) return;
+      const articles = this.newsData.articles.filter(x => x.oid !== a.oid);
+      const data = { ...this.newsData, articles };
+      await this._saveJSON('src/_data/news.json', data, `删除新闻 ${a.title}`);
+      this.newsData.articles = articles;
+      this.toast(`新闻 "${a.title}" 已删除`, 'warning');
+    },
+
+    // ==================== CASES ====================
+    addCase() {
+      const maxOid = this.casesData.solutions.reduce((max, c) => Math.max(max, c.oid || 0), 0);
+      this.editingCase = this._emptyCase();
+      this.editingCase.oid = maxOid + 1;
+      this._showModal('caseModal');
+    },
+    editCase(c) {
+      this.editingCase = JSON.parse(JSON.stringify(c));
+      this._showModal('caseModal');
+    },
+    async saveCase() {
+      const c = this.editingCase;
+      const solutions = JSON.parse(JSON.stringify(this.casesData.solutions));
+      const idx = solutions.findIndex(x => x.oid === c.oid);
+      if (idx >= 0) solutions[idx] = JSON.parse(JSON.stringify(c));
+      else solutions.push(JSON.parse(JSON.stringify(c)));
+      const data = { solutions };
+      await this._saveJSON('src/_data/cases.json', data, `${idx >= 0 ? '编辑' : '新增'}方案 ${c.name}`);
+      this.casesData.solutions = solutions;
+      this._hideModal('caseModal');
+      this.toast(`方案 "${c.name}" 已保存`, 'success');
+    },
+    async deleteCase(c) {
+      if (!confirm(`确定删除方案 "${c.name}"？`)) return;
+      const solutions = this.casesData.solutions.filter(x => x.oid !== c.oid);
+      const data = { solutions };
+      await this._saveJSON('src/_data/cases.json', data, `删除方案 ${c.name}`);
+      this.casesData.solutions = solutions;
+      this.toast(`方案 "${c.name}" 已删除`, 'warning');
+    },
+
+    // ==================== SETTINGS ====================
+    async saveSettings() {
+      await this._saveJSON('src/_data/site-base.json', this.siteForm, '更新网站设置');
+      this.siteData = JSON.parse(JSON.stringify(this.siteForm));
+      this.toast('网站设置已保存', 'success');
+    },
+
+    // ==================== UI HELPERS ====================
+    toast(msg, type = 'info') {
+      this.toasts.push({ msg, type });
+      setTimeout(() => { if (this.toasts.length) this.toasts.shift(); }, 3000);
+    },
+    _showModal(id) {
+      const el = document.getElementById(id);
+      const modal = bootstrap.Modal.getOrCreateInstance(el);
+      modal.show();
+    },
+    _hideModal(id) {
+      const modal = bootstrap.Modal.getInstance(document.getElementById(id));
+      if (modal) modal.hide();
+    },
+  }
+}).mount('#app');
+</script>
 </body>
 </html>

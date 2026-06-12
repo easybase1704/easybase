@@ -11,5 +11,8 @@
     "@vitalets/google-translate-api": "^9.2.1",
     "puppeteer-core": "^25.1.0",
     "translate": "^3.0.1"
+  },
+  "devDependencies": {
+    "docx": "^9.7.1"
   }
 }
