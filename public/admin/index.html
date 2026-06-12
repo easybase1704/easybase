@@ -101,6 +101,9 @@ body { font-size: 14px; background: #f5f6fa; }
 </head>
 <body>
 
+<div id="diag-banner" style="position:fixed;top:0;left:0;right:0;background:#fff3cd;color:#664d03;padding:10px 16px;font-size:13px;z-index:99999;text-align:center;font-family:monospace;border-bottom:2px solid #ffc107;">
+  🔍 后台管理系统诊断中... <span id="diag-status">正在加载资源</span>
+</div>
 <div id="app">
   <!-- Login Screen -->
   <div v-if="!token" class="login-page">
@@ -582,9 +585,42 @@ body { font-size: 14px; background: #f5f6fa; }
   </div>
 </div>
 
+<!-- 诊断脚本 -->
+<script>
+(function() {
+  var diag = document.getElementById('diag-status');
+  if (diag) diag.textContent = '资源文件已加载，正在初始化 Vue...';
+
+  // 捕获全局错误
+  window._diagErrors = [];
+  window.addEventListener('error', function(e) {
+    var msg = (e.target ? e.target.tagName + ':' + (e.target.src || e.target.href) : '') + ' ' + e.message;
+    window._diagErrors.push(msg);
+    if (window._diagErrors.length <= 3 && document.getElementById('diag-banner')) {
+      var d = document.getElementById('diag-status');
+      if (d) d.textContent = '❌ 资源加载失败: ' + msg;
+      document.getElementById('diag-banner').style.background = '#f8d7da';
+      document.getElementById('diag-banner').style.color = '#842029';
+      document.getElementById('diag-banner').style.borderColor = '#f1aeb5';
+    }
+  }, true);
+
+  window.addEventListener('unhandledrejection', function(e) {
+    window._diagErrors.push('Promise rejection: ' + (e.reason ? e.reason.message || e.reason : ''));
+  });
+})();
+</script>
 <script src="vendor/bootstrap.bundle.min.js"></script>
 <script src="vendor/vue.global.prod.js"></script>
 <script>
+(function() {
+  var diag = document.getElementById('diag-status');
+  if (typeof Vue === 'undefined') {
+    if (diag) diag.textContent = '❌ Vue.js 加载失败！请刷新页面或检查网络';
+  } else {
+    if (diag) diag.textContent = '✅ Vue.js ' + Vue.version + ' 已加载，正在挂载...';
+  }
+})();
 const { createApp } = Vue;
 
 createApp({
@@ -675,6 +711,10 @@ createApp({
   },
 
   async mounted() {
+    // 隐藏诊断横幅
+    const banner = document.getElementById('diag-banner');
+    if (banner) banner.style.display = 'none';
+
     if (this.token) {
       const result = await this._verifyToken();
       if (!result.ok) { this.token = ''; localStorage.removeItem('gh_token'); this.loginError = result.error; return; }
