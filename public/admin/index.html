@@ -1197,21 +1197,21 @@ createApp({
     // 亮点「转为列表」：粘贴文字后点一下，每行变 ◆ 项目符号
     convertLifekitToBullets(tab) {
       const quill = this._prodQuills && this._prodQuills[tab] ? this._prodQuills[tab].lifekit : null;
-      if (!quill) return;
-      // 用 Quill 原生 API 获取纯文本，按行拆分
-      const text = quill.getText();
-      const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
-      if (!lines.length) { this.toast('⚠️ 没有可转换的文字', 'warning'); return; }
-      // 用 Delta 构建列表（Quill 原生方式，不拼 HTML，避免渲染异常）
-      const delta = [];
-      lines.forEach(line => {
-        delta.push({ insert: line, attributes: { list: 'bullet' } });
-        delta.push({ insert: '\n' });
-      });
-      quill.setContents(delta);
-      // 同步到 model
-      this._prodQuillToModel();
-      this.toast('✅ 已转为 ' + lines.length + ' 条列表', 'success');
+      if (!quill) { this.toast('⚠️ 编辑器未就绪，请刷新重试', 'warning'); return; }
+      try {
+        const text = quill.getText();
+        const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+        if (!lines.length) { this.toast('⚠️ 没有可转换的文字', 'warning'); return; }
+        const Delta = Quill.import('delta');
+        quill.setContents(
+          lines.reduce((d, line) => d.insert(line, { list: 'bullet' }).insert('\n'), new Delta())
+        );
+        this._prodQuillToModel();
+        this.toast('✅ 已转为 ' + lines.length + ' 条列表', 'success');
+      } catch (e) {
+        this.toast('❌ 转换失败: ' + e.message, 'danger');
+        console.error('convertLifekitToBullets:', e);
+      }
     },
     _prodQuillToModel() {
       const quills = this._prodQuills;
