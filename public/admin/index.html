@@ -1224,8 +1224,8 @@ createApp({
       };
       Array.from(div.childNodes).forEach(walk);
       if (!lines.length) { this.toast('⚠️ 没有可转换的文字', 'warning'); return; }
-      // 构造项目符号列表
-      const listHTML = '<ol>' + lines.map(l => '<li data-list="bullet"><span class="ql-ui" contenteditable="false"></span>' + l + '</li>').join('') + '</ol>';
+      // 构造项目符号列表（干净 ul，Quill 自己会加内部标记）
+      const listHTML = '<ul>' + lines.map(l => '<li>' + l + '</li>').join('') + '</ul>';
       quill.clipboard.dangerouslyPasteHTML(listHTML);
       // 同步到 model
       this._prodQuillToModel();
