@@ -22,6 +22,11 @@ body { font-size: 14px; background: #f5f6fa; }
 /* Quill overrides */
 .ql-editor { min-height: 250px; font-size: 14px; }
 .ql-editor p { margin-bottom: 8px; }
+/* Quill 列表：用橙色 ◆ 替代默认黑点，匹配前端样式 */
+.ql-editor li[data-list=bullet] > .ql-ui:before {
+  content: '◆';
+  color: #F56C2D;
+}
 /* 规格表预览样式 */
 .spec-preview { border:1px solid #dee2e6;border-radius:4px;padding:12px;background:#fff;max-height:400px;overflow:auto;font-size:13px; }
 .spec-preview table { width:100%;border-collapse:collapse;color:#333; }
@@ -1202,10 +1207,8 @@ createApp({
         const text = quill.getText();
         const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
         if (!lines.length) { this.toast('⚠️ 没有可转换的文字', 'warning'); return; }
-        const Delta = Quill.import('delta');
-        quill.setContents(
-          lines.reduce((d, line) => d.insert(line, { list: 'bullet' }).insert('\n'), new Delta())
-        );
+        const listHTML = '<ul><li>' + lines.join('</li><li>') + '</li></ul>';
+        quill.clipboard.dangerouslyPasteHTML(listHTML);
         this._prodQuillToModel();
         this.toast('✅ 已转为 ' + lines.length + ' 条列表', 'success');
       } catch (e) {
