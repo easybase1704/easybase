@@ -1208,13 +1208,10 @@ createApp({
         const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
         if (!lines.length) { this.toast('⚠️ 没有可转换的文字', 'warning'); return; }
         const listHTML = '<ul><li>' + lines.join('</li><li>') + '</li></ul>';
-        // blur 清除选区 → setSelection 全选 → dangerouslyPasteHTML 替换
-        // 全部走 'silent' 抑制事件链，绕过 Quill 2.x 选区 null bug
-        quill.blur();
-        const len = quill.getLength();
-        if (len > 1) quill.setSelection(0, len - 1, 'silent');
-        quill.clipboard.dangerouslyPasteHTML(listHTML, 'silent');
-        this._prodQuillToModel();
+        // 先写 model，再设 DOM（绕开 Quill 2.x 选区 null bug）
+        const lifekitField = tab === 'zh' ? 'lifekit' : 'lifekitEn';
+        this.editingProduct[lifekitField] = listHTML;
+        quill.root.innerHTML = listHTML;
         this.toast('✅ 已转为 ' + lines.length + ' 条列表', 'success');
       } catch (e) {
         this.toast('❌ 转换失败: ' + e.message, 'danger');
