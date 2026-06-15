@@ -1,28 +1,52 @@
-name: Deploy to ECS
+name: Deploy to Pages + ECS
 
 on:
   push:
     branches: [master]
   workflow_dispatch:
 
-concurrency:
-  group: "ecs-deploy"
-  cancel-in-progress: false
-
 jobs:
-  build-and-deploy:
+  # GitHub Pages：国内备用，始终可用
+  pages:
+    name: GitHub Pages
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    concurrency:
+      group: "pages"
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-
       - run: npm ci
       - run: npm run build
+        env:
+          BASE_PATH: /easybase
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - uses: actions/deploy-pages@v4
 
+  # ECS：主站，需 Secrets 配置完毕后才生效
+  ecs:
+    name: ECS
+    runs-on: ubuntu-latest
+    concurrency:
+      group: "ecs-deploy"
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
       - name: Deploy to ECS via SCP
         uses: appleboy/scp-action@v0.1.7
         with:
