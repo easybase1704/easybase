@@ -1208,6 +1208,9 @@ createApp({
         const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
         if (!lines.length) { this.toast('⚠️ 没有可转换的文字', 'warning'); return; }
         const listHTML = '<ul><li>' + lines.join('</li><li>') + '</li></ul>';
+        // 先全选，再粘贴替换（不选中的话 dangerouslyPasteHTML 会追加而非替换）
+        const len = quill.getLength();
+        if (len > 1) quill.setSelection(0, len - 1);
         quill.clipboard.dangerouslyPasteHTML(listHTML);
         this._prodQuillToModel();
         this.toast('✅ 已转为 ' + lines.length + ' 条列表', 'success');
