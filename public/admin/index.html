@@ -1204,14 +1204,16 @@ createApp({
       const quill = this._prodQuills && this._prodQuills[tab] ? this._prodQuills[tab].lifekit : null;
       if (!quill) { this.toast('⚠️ 编辑器未就绪，请刷新重试', 'warning'); return; }
       try {
-        const text = quill.getText();
+        // 从 DOM 直接取文字，避免 Quill 2.x getText() 的 bug
+        const text = (quill.root && quill.root.innerText) || '';
+        console.log('[convert] raw text:', JSON.stringify(text.substring(0, 100)));
         const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+        console.log('[convert] lines:', lines.length);
         if (!lines.length) { this.toast('⚠️ 没有可转换的文字', 'warning'); return; }
         const listHTML = '<ul><li>' + lines.join('</li><li>') + '</li></ul>';
-        // 先全选，再粘贴替换（不选中的话 dangerouslyPasteHTML 会追加而非替换）
-        const len = quill.getLength();
-        if (len > 1) quill.setSelection(0, len - 1);
+        console.log('[convert] listHTML:', listHTML.substring(0, 120));
         quill.clipboard.dangerouslyPasteHTML(listHTML);
+        console.log('[convert] paste done');
         this._prodQuillToModel();
         this.toast('✅ 已转为 ' + lines.length + ' 条列表', 'success');
       } catch (e) {
