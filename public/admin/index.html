@@ -1227,6 +1227,28 @@ createApp({
         console.log('[Quill] lifekit html to load:', html.substring(0, 80));
         if (html.trim()) { q.clipboard.dangerouslyPasteHTML(html); console.log('[Quill] lifekit loaded'); }
         else console.log('[Quill] lifekit empty, skipping');
+        // 粘贴处理：纯文本每行自动变项目符号
+        q.root.addEventListener('paste', function(e) {
+          const plain = (e.clipboardData || window.clipboardData).getData('text/plain');
+          const rich = (e.clipboardData || window.clipboardData).getData('text/html');
+          if (rich || !plain.trim()) return; // 有富文本格式则走 Quill 默认处理
+          e.preventDefault();
+          e.stopPropagation();
+          const lines = plain.split('\n').filter(function(l) { return l.trim(); });
+          if (!lines.length) return;
+          // 删除当前选中范围的内容
+          var sel = q.getSelection();
+          if (sel && sel.length > 0) q.deleteText(sel.index, sel.length);
+          var pos = sel ? sel.index : q.getLength() - 1;
+          lines.forEach(function(line, i) {
+            q.insertText(pos, line.trim());
+            q.formatLine(pos, 1, 'list', 'bullet');
+            pos += line.trim().length + 1;
+            if (i < lines.length - 1) q.insertText(pos - 1, '\n');
+          });
+          // 光标移到末尾
+          q.setSelection(pos, 0);
+        });
         this._prodQuills[tab].lifekit = q;
       }
     },
