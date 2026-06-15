@@ -1227,7 +1227,7 @@ createApp({
         console.log('[Quill] lifekit html to load:', html.substring(0, 80));
         if (html.trim()) { q.clipboard.dangerouslyPasteHTML(html); console.log('[Quill] lifekit loaded'); }
         else console.log('[Quill] lifekit empty, skipping');
-        // 粘贴处理：纯文本每行自动变项目符号
+        // 粘贴处理：纯文本每行自动变项目符号（capture 阶段抢在 Quill 之前）
         q.root.addEventListener('paste', function(e) {
           const plain = (e.clipboardData || window.clipboardData).getData('text/plain');
           const rich = (e.clipboardData || window.clipboardData).getData('text/html');
@@ -1248,7 +1248,7 @@ createApp({
           });
           // 光标移到末尾
           q.setSelection(pos, 0);
-        });
+        }, true); // capture: true → 抢在 Quill 之前拦截
         this._prodQuills[tab].lifekit = q;
       }
     },
