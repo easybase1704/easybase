@@ -1198,35 +1198,17 @@ createApp({
     convertLifekitToBullets(tab) {
       const quill = this._prodQuills && this._prodQuills[tab] ? this._prodQuills[tab].lifekit : null;
       if (!quill) return;
-      const html = quill.root.innerHTML;
-      const div = document.createElement('div');
-      div.innerHTML = html;
-      // 提取所有文本行（p、div、纯文本节点）
-      const lines = [];
-      const walk = function(node) {
-        if (node.nodeType === 3) { // TextNode
-          const t = node.textContent.trim();
-          if (t) lines.push(t);
-        } else if (node.nodeType === 1) {
-          const tag = node.tagName;
-          if (tag === 'P' || tag === 'DIV' || tag === 'BR') {
-            const t = node.textContent.trim();
-            if (t) lines.push(t);
-          } else if (tag === 'OL' || tag === 'UL') {
-            node.querySelectorAll('li').forEach(li => {
-              const t = li.textContent.trim();
-              if (t) lines.push(t);
-            });
-          } else {
-            Array.from(node.childNodes).forEach(walk);
-          }
-        }
-      };
-      Array.from(div.childNodes).forEach(walk);
+      // 用 Quill 原生 API 获取纯文本，按行拆分
+      const text = quill.getText();
+      const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
       if (!lines.length) { this.toast('⚠️ 没有可转换的文字', 'warning'); return; }
-      // 构造项目符号列表（干净 ul，Quill 自己会加内部标记）
-      const listHTML = '<ul>' + lines.map(l => '<li>' + l + '</li>').join('') + '</ul>';
-      quill.clipboard.dangerouslyPasteHTML(listHTML);
+      // 用 Delta 构建列表（Quill 原生方式，不拼 HTML，避免渲染异常）
+      const delta = [];
+      lines.forEach(line => {
+        delta.push({ insert: line, attributes: { list: 'bullet' } });
+        delta.push({ insert: '\n' });
+      });
+      quill.setContents(delta);
       // 同步到 model
       this._prodQuillToModel();
       this.toast('✅ 已转为 ' + lines.length + ' 条列表', 'success');
