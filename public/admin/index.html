@@ -447,7 +447,9 @@ body { font-size: 14px; background: #f5f6fa; }
             <div class="mb-2"><label class="form-label small mb-1">内存 (neicun)</label><input v-model="editingProduct.neicun" class="form-control form-control-sm"></div>
             <div class="mb-2"><label class="form-label small mb-1">存储 (ssd)</label><input v-model="editingProduct.ssd" class="form-control form-control-sm"></div>
             <div class="mb-2"><label class="form-label small mb-1">扩展接口 (jiekou)</label><input v-model="editingProduct.jiekou" class="form-control form-control-sm"></div>
-            <div class="mb-2"><label class="form-label small mb-1 fw-bold">亮点 (lifekit)</label>
+            <div class="mb-2"><label class="form-label small mb-1 fw-bold">亮点 (lifekit)
+              <a href="#" class="small fw-normal ms-2 text-primary" @click.prevent="convertLifekitToBullets('zh')">🔘 转为列表</a>
+            </label>
               <div class="news-editor-wrap"><div ref="prodLifekitZh"></div></div>
             </div>
             <div class="mb-2"><label class="form-label small mb-1 fw-bold">规格表 (yiwaibao)
@@ -474,7 +476,9 @@ body { font-size: 14px; background: #f5f6fa; }
           <!-- English Fields -->
           <div v-show="prodTab === 'en' && !prodSrcMode">
             <div class="mb-2"><label class="form-label small mb-1">简要介绍 (duibiEn)</label><input v-model="editingProduct.duibiEn" class="form-control form-control-sm"></div>
-            <div class="mb-2"><label class="form-label small mb-1 fw-bold">亮点 (lifekitEn)</label>
+            <div class="mb-2"><label class="form-label small mb-1 fw-bold">亮点 (lifekitEn)
+              <a href="#" class="small fw-normal ms-2 text-primary" @click.prevent="convertLifekitToBullets('en')">🔘 转为列表</a>
+            </label>
               <div class="news-editor-wrap"><div ref="prodLifekitEn"></div></div>
             </div>
             <div class="mb-2"><label class="form-label small mb-1 fw-bold">规格表 (yiwaibaoEn)
@@ -1190,6 +1194,43 @@ createApp({
       this.prodTab = tab;
       setTimeout(() => this._initProdQuill(), 200);
     },
+    // 亮点「转为列表」：粘贴文字后点一下，每行变 ◆ 项目符号
+    convertLifekitToBullets(tab) {
+      const quill = this._prodQuills && this._prodQuills[tab] ? this._prodQuills[tab].lifekit : null;
+      if (!quill) return;
+      const html = quill.root.innerHTML;
+      const div = document.createElement('div');
+      div.innerHTML = html;
+      // 提取所有文本行（p、div、纯文本节点）
+      const lines = [];
+      const walk = function(node) {
+        if (node.nodeType === 3) { // TextNode
+          const t = node.textContent.trim();
+          if (t) lines.push(t);
+        } else if (node.nodeType === 1) {
+          const tag = node.tagName;
+          if (tag === 'P' || tag === 'DIV' || tag === 'BR') {
+            const t = node.textContent.trim();
+            if (t) lines.push(t);
+          } else if (tag === 'OL' || tag === 'UL') {
+            node.querySelectorAll('li').forEach(li => {
+              const t = li.textContent.trim();
+              if (t) lines.push(t);
+            });
+          } else {
+            Array.from(node.childNodes).forEach(walk);
+          }
+        }
+      };
+      Array.from(div.childNodes).forEach(walk);
+      if (!lines.length) { this.toast('⚠️ 没有可转换的文字', 'warning'); return; }
+      // 构造项目符号列表
+      const listHTML = '<ol>' + lines.map(l => '<li data-list="bullet"><span class="ql-ui" contenteditable="false"></span>' + l + '</li>').join('') + '</ol>';
+      quill.clipboard.dangerouslyPasteHTML(listHTML);
+      // 同步到 model
+      this._prodQuillToModel();
+      this.toast('✅ 已转为 ' + lines.length + ' 条列表', 'success');
+    },
     _prodQuillToModel() {
       const quills = this._prodQuills;
       if (!quills) return;
@@ -1227,30 +1268,6 @@ createApp({
         console.log('[Quill] lifekit html to load:', html.substring(0, 80));
         if (html.trim()) { q.clipboard.dangerouslyPasteHTML(html); console.log('[Quill] lifekit loaded'); }
         else console.log('[Quill] lifekit empty, skipping');
-        // 粘贴处理：纯文本每行自动变项目符号（capture + setTimeout 彻底绕过 Quill）
-        q.root.addEventListener('paste', function(e) {
-          const plain = (e.clipboardData || window.clipboardData).getData('text/plain');
-          const rich = (e.clipboardData || window.clipboardData).getData('text/html');
-          if (rich || !plain.trim()) return; // 有富文本格式则走 Quill 默认处理
-          e.preventDefault();
-          e.stopImmediatePropagation();
-          const lines = plain.split('\n').filter(function(l) { return l.trim(); });
-          if (!lines.length) return;
-          const sel = q.getSelection();
-          const pos = sel ? sel.index : q.getLength() - 1;
-          // setTimeout 确保 Quill 的 paste 周期完全结束后再操作
-          setTimeout(function() {
-            if (sel && sel.length > 0) q.deleteText(sel.index, sel.length);
-            var cursor = pos;
-            lines.forEach(function(line, i) {
-              q.insertText(cursor, line.trim());
-              q.formatLine(cursor, 1, 'list', 'bullet');
-              cursor += line.trim().length + 1;
-              if (i < lines.length - 1) q.insertText(cursor - 1, '\n');
-            });
-            q.setSelection(cursor, 0);
-          }, 0);
-        }, true); // capture: true → 抢在 Quill 之前拦截
         this._prodQuills[tab].lifekit = q;
       }
     },
