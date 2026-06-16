@@ -49,6 +49,55 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Hero slider
+  const slider = document.getElementById('heroSlider');
+  if (slider) {
+    const slides = slider.querySelectorAll('.hero-slider__slide');
+    const dots = slider.querySelectorAll('.hero-slider__dot');
+    const prevBtn = slider.querySelector('.hero-slider__arrow--prev');
+    const nextBtn = slider.querySelector('.hero-slider__arrow--next');
+    let current = 0;
+    let timer = null;
+    const total = slides.length;
+
+    function goTo(index) {
+      slides[current].classList.remove('active');
+      dots[current].classList.remove('active');
+      current = (index + total) % total;
+      slides[current].classList.add('active');
+      dots[current].classList.add('active');
+    }
+
+    function next() { goTo(current + 1); }
+    function prev() { goTo(current - 1); }
+
+    function startAuto() {
+      stopAuto();
+      timer = setInterval(next, 4000);
+    }
+
+    function stopAuto() {
+      if (timer) { clearInterval(timer); timer = null; }
+    }
+
+    prevBtn.addEventListener('click', () => { prev(); startAuto(); });
+    nextBtn.addEventListener('click', () => { next(); startAuto(); });
+
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => { goTo(parseInt(dot.dataset.index)); startAuto(); });
+    });
+
+    // Touch swipe
+    let touchStartX = 0;
+    slider.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+    slider.addEventListener('touchend', e => {
+      const diff = touchStartX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50) { diff > 0 ? next() : prev(); startAuto(); }
+    });
+
+    startAuto();
+  }
+
   // Lazy load images
   if ('IntersectionObserver' in window) {
     const observer = new IntersectionObserver((entries) => {

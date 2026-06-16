@@ -13,18 +13,39 @@ eleventyComputed:
 {% set langCode = lang.code %}
 {% set t = i18n[langCode] %}
 
-<!-- Hero -->
-<div class="page-hero">
-  <img src="{{ site.basePath }}/images/banner-home-1.webp" alt="原基科技" class="page-hero__bg" loading="eager">
-  <div class="page-hero__overlay">
-    <div class="container">
-      <h1 class="page-hero__title">{{ site.slogan if langCode == 'zh' else site.sloganEn }}</h1>
-      <p class="page-hero__subtitle">{{ t.sloganSub | safe if langCode == 'zh' else t.sloganSubEn | safe }}</p>
-      <div style="margin-top:var(--space-lg)">
-        <a href="{{ site.basePath }}/{{ lang.prefix }}products/" class="btn btn--primary">{{ t.browseProducts }}</a>
-        <a href="{{ site.basePath }}/{{ lang.prefix }}about/#contact" class="btn btn--outline" style="border-color:rgba(255,255,255,0.5);color:#fff">{{ t.contactUs }}</a>
+<!-- Hero Slider -->
+<div class="hero-slider" id="heroSlider">
+  {% set banners = [
+    { src: site.basePath + "/images/banner-home-1.webp", alt: "原基科技" },
+    { src: site.basePath + "/images/banner-home-2.webp", alt: "原基科技" },
+    { src: site.basePath + "/images/banner-home-3.webp", alt: "原基科技" }
+  ] %}
+  {% for b in banners %}
+  <div class="hero-slider__slide{% if loop.first %} active{% endif %}">
+    <img src="{{ b.src }}" alt="{{ b.alt }}" class="hero-slider__img" loading="{{ 'eager' if loop.first else 'lazy' }}">
+  </div>
+  {% endfor %}
+
+  <div class="hero-slider__overlay">
+    <div class="container hero-slider__inner">
+      <div class="hero-slider__text">
+        <h1 class="hero-slider__title">{{ site.slogan if langCode == 'zh' else site.sloganEn }}</h1>
+        <p class="hero-slider__subtitle">{{ t.sloganSub | safe if langCode == 'zh' else t.sloganSubEn | safe }}</p>
+      </div>
+      <div class="hero-slider__actions">
+        <a href="{{ site.basePath }}/{{ lang.prefix }}products/" class="btn btn--primary btn--lg">{{ t.browseProducts }}</a>
+        <a href="{{ site.basePath }}/{{ lang.prefix }}about/#contact" class="btn btn--outline-light btn--lg">{{ t.contactUs }}</a>
       </div>
     </div>
+  </div>
+
+  <button class="hero-slider__arrow hero-slider__arrow--prev" aria-label="上一张">&#10094;</button>
+  <button class="hero-slider__arrow hero-slider__arrow--next" aria-label="下一张">&#10095;</button>
+
+  <div class="hero-slider__dots">
+    {% for b in banners %}
+    <button class="hero-slider__dot{% if loop.first %} active{% endif %}" data-index="{{ loop.index0 }}" aria-label="第{{ loop.index }}张"></button>
+    {% endfor %}
   </div>
 </div>
 
@@ -56,11 +77,11 @@ eleventyComputed:
 
     <div class="grid grid--4">
       {% for sol in cases.solutions %}
-      <a href="{{ site.basePath }}/{{ lang.prefix }}cases/#case-{{ sol.oid }}" class="card">
-        <div class="card__body">
-          <h3 class="card__title">{{ sol.nameEn if langCode == 'en' else sol.name }}</h3>
-          <p class="card__text">{{ (sol.duibi | truncate(80)) if langCode == 'zh' else (sol.nameEn) }}</p>
+      <a href="{{ site.basePath }}/{{ lang.prefix }}cases/#case-{{ sol.oid }}" class="solution-card">
+        <div class="solution-card__thumb">
+          <img src="{{ site.basePath }}{{ sol.thumb }}" alt="{{ sol.nameEn if langCode == 'en' else sol.name }}" loading="lazy">
         </div>
+        <h3 class="solution-card__name">{{ sol.nameEn if langCode == 'en' else sol.name }}</h3>
       </a>
       {% endfor %}
     </div>
@@ -121,11 +142,12 @@ eleventyComputed:
 </section>
 
 <style>
-.hero__actions {
+.hero-slider__actions {
   display: flex;
+  flex-direction: column;
   gap: var(--space-md);
-  justify-content: center;
-  margin-top: var(--space-2xl);
+  align-items: stretch;
+  min-width: 180px;
 }
 
 .category-card {
@@ -172,5 +194,47 @@ eleventyComputed:
 .category-card__sub {
   font-size: var(--text-xs);
   color: var(--color-text-secondary);
+}
+
+/* Solutions card */
+.solution-card {
+  display: block;
+  background: var(--color-bg);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  text-decoration: none;
+  border: 1px solid var(--color-border-light);
+  transition: all var(--transition-base);
+}
+
+.solution-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-primary);
+}
+
+.solution-card__thumb {
+  width: 100%;
+  aspect-ratio: 16/10;
+  overflow: hidden;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md);
+}
+
+.solution-card__thumb img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.solution-card__name {
+  text-align: center;
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  color: var(--color-text);
+  padding: var(--space-md) var(--space-sm);
 }
 </style>
