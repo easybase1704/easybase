@@ -28,10 +28,6 @@ eleventyComputed:
 
   <div class="hero-slider__overlay">
     <div class="container hero-slider__inner">
-      <div class="hero-slider__text">
-        <h1 class="hero-slider__title">{{ site.slogan if langCode == 'zh' else site.sloganEn }}</h1>
-        <p class="hero-slider__subtitle">{{ t.sloganSub | safe if langCode == 'zh' else t.sloganSubEn | safe }}</p>
-      </div>
       <div class="hero-slider__actions">
         <a href="{{ site.basePath }}/{{ lang.prefix }}products/" class="btn btn--primary btn--lg">{{ t.browseProducts }}</a>
         <a href="{{ site.basePath }}/{{ lang.prefix }}about/#contact" class="btn btn--outline-light btn--lg">{{ t.contactUs }}</a>
