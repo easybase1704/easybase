@@ -584,7 +584,7 @@ img {
   .footer__grid { grid-template-columns: repeat(3, 1fr); }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1023px) {
   :root {
     --text-6xl: 2rem;
     --text-4xl: 1.5rem;
@@ -811,7 +811,7 @@ img {
   .hero-slider__subtitle { font-size: var(--text-base); }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1023px) {
   .hero-slider { height: 260px; }
   .hero-slider__overlay { padding: var(--space-sm); }
   .hero-slider__actions { gap: var(--space-sm); }
@@ -859,7 +859,7 @@ img {
   text-shadow: 0 1px 4px rgba(0,0,0,0.3);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1023px) {
   .page-hero, .page-hero__bg { max-height: 150px; height: 150px; }
   .page-hero__title { font-size: var(--text-2xl); }
   .page-hero__subtitle { font-size: var(--text-sm); }
