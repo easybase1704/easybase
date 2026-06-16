@@ -24,16 +24,16 @@ eleventyComputed:
 </div>
 
 <section class="section">
-
+  <div class="container">
     <div class="grid grid--3">
       {% for sol in cases.solutions %}
       <a href="{{ site.basePath }}/{{ lang.prefix }}cases/{{ sol | caseSlug }}/" class="card case-card product-card" id="case-{{ sol.oid }}">
         <div class="case-thumb">
           <img src="{{ site.basePath }}{{ sol.thumb }}" alt="{{ sol.name }}" loading="lazy">
         </div>
-        <div class="card__body" style="padding:var(--space-lg) var(--space-xl)">
-          <h3 class="card__title" style="margin-top:0;font-size:var(--text-lg)">{{ sol.nameEn if langCode == 'en' else sol.name }}</h3>
-          <p class="card__text" style="margin-top:var(--space-sm);font-size:var(--text-sm);line-height:1.6">
+        <div class="card__body">
+          <h3 class="card__title">{{ sol.nameEn if langCode == 'en' else sol.name }}</h3>
+          <p class="card__text">
             {% if langCode == 'en' and sol.duibiEn %}{{ sol.duibiEn }}{% else %}{{ sol.duibi }}{% endif %}
           </p>
         </div>
