@@ -51,7 +51,7 @@
     "trademarkText2": "本网站所提及的其他公司名称、产品名称、品牌和标识均为其各自所有者的商标或注册商标。未经深圳市原基科技有限公司或相关权利人书面许可，任何单位和个人不得以任何方式使用上述商标。",
     "trademarkText3": "本网站所载内容（包括但不限于文字、图片、音频、视频、图表、标识、版面设计等）均受《中华人民共和国著作权法》及相关法律法规保护。未经书面许可，不得转载、摘编或使用。",
     "historyItems": [
-      { "year": "2022", "text": "公司成立，落户深圳光明区云智科园，推出首款云终端产品" },
+      { "year": "2021", "text": "公司成立，落户深圳光明区云智科园，推出首款云终端产品" },
       { "year": "2023", "text": "产品线扩展至边缘计算、工业控制领域，推出多款国产平台产品" },
       { "year": "2024", "text": "与英特尔联合举办智算产品发布会，产品线扩展至AI服务器" },
       { "year": "2025", "text": "推出飞腾D3000、兆芯KX-7000等新一代国产平台产品" },
@@ -121,7 +121,7 @@
     "trademarkText2": "Other company names, product names, brands and logos mentioned on this website are trademarks or registered trademarks of their respective owners. Unauthorized use of the above trademarks is prohibited without written permission.",
     "trademarkText3": "All content on this website (including but not limited to text, images, audio, video, charts, logos, layouts) is protected by copyright laws. Reproduction or use without written permission is prohibited.",
     "historyItems": [
-      { "year": "2022", "text": "Company founded in Yunzhi Science Park, Shenzhen. Launched first cloud terminal product." },
+      { "year": "2021", "text": "Company founded in Yunzhi Science Park, Shenzhen. Launched first cloud terminal product." },
       { "year": "2023", "text": "Expanded into edge computing and industrial control. Released multiple domestic platform products." },
       { "year": "2024", "text": "Co-hosted AI computing product launch with Intel. Entered the AI server market." },
       { "year": "2025", "text": "Released next-gen domestic platform products: Phytium D3000, Zhaoxin KX-7000." },
