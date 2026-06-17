@@ -621,6 +621,10 @@ img {
   .nav__link { font-size: var(--text-lg); padding: var(--space-md); width: 100%; }
 
   /* Mobile dropdown — show first 4 + view all */
+  .nav__dropdown-link {
+    font-size: var(--text-base);
+    padding: var(--space-sm) var(--space-md);
+  }
   .nav__dropdown-link--extra { display: none; }
   .nav__dropdown-link--all { display: block; }
   .nav__item--dropdown .nav__dropdown {
@@ -631,12 +635,9 @@ img {
     visibility: visible;
     transform: none;
     max-height: 0;
-    overflow: hidden;
-    transition: max-height var(--transition-base);
     padding: 0 var(--space-md);
   }
   .nav__item--dropdown.open .nav__dropdown { max-height: 600px; padding: var(--space-xs) var(--space-md); }
-}
 
 /* ========== Hero Slider 轮播 ========== */
 .hero-slider {

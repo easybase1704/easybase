@@ -28,11 +28,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Mobile dropdown toggle
+  // Mobile dropdown — keep toggle for compatibility
   document.querySelectorAll('.nav__item--dropdown > .nav__link').forEach(dropLink => {
     dropLink.addEventListener('click', function(e) {
       if (window.innerWidth <= 1023) {
-        e.preventDefault();
         this.parentElement.classList.toggle('open');
       }
     });
