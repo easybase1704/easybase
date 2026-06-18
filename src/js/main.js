@@ -28,15 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Mobile dropdown — keep toggle for compatibility
-  document.querySelectorAll('.nav__item--dropdown > .nav__link').forEach(dropLink => {
-    dropLink.addEventListener('click', function(e) {
-      if (window.innerWidth <= 1023) {
-        this.parentElement.classList.toggle('open');
-      }
-    });
-  });
-
   // Smooth scroll for anchor links
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
