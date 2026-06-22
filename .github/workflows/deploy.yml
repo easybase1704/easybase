@@ -1,32 +1,43 @@
-name: Deploy to GitHub Pages
+name: Deploy to ECS
 
 on:
   push:
-    branches: [master]
-  workflow_dispatch:
+    branches: [main, master]
 
 jobs:
-  pages:
-    name: GitHub Pages
+  deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    concurrency:
-      group: "pages"
-      cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-      - run: npm ci
-      - run: npm run build
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site
+        run: BASE_PATH= npx @11ty/eleventy --output=_site-deploy
+
+      - name: Package build
+        run: tar czf _site-deploy.tar.gz -C _site-deploy .
+
+      - name: Upload & extract on server
         env:
-          BASE_PATH: /easybase
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
-      - uses: actions/deploy-pages@v4
+          SSH_KEY: ${{ secrets.ECS_SSH_KEY }}
+          SSH_HOST: ${{ secrets.ECS_HOST }}
+          SSH_USER: ${{ secrets.ECS_USER }}
+          WEB_ROOT: ${{ secrets.ECS_WEB_ROOT }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
+
+          # 上传压缩包
+          scp _site-deploy.tar.gz $SSH_USER@$SSH_HOST:$WEB_ROOT
+
+          # 在服务器解压（需配合 Windows tar 或先解压到临时目录）
+          ssh $SSH_USER@$SSH_HOST "cd $WEB_ROOT && tar xzf _site-deploy.tar.gz && del _site-deploy.tar.gz"
