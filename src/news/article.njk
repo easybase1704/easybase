@@ -27,7 +27,6 @@ eleventyComputed:
     <article class="article-detail">
       <div class="article-detail__meta">
         <span class="tag">{{ article.date }}</span>
-        <span style="font-size:var(--text-sm);color:var(--color-text-tertiary)">👁️ {{ article.hits }} {% if langCode == 'zh' %}次阅读{% else %}views{% endif %}</span>
       </div>
 
       <h1 class="article-detail__title">{% if langCode == 'en' and article.titleEn %}{{ article.titleEn }}{% else %}{{ article.title }}{% endif %}</h1>
