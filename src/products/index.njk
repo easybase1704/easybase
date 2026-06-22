@@ -68,7 +68,7 @@ eleventyComputed:
               </div>
               <div class="card__body">
                 <h3 class="card__title">{{ p.name }}</h3>
-                <p class="card__text">{{ p.duibi or p.name }}</p>
+                <p class="card__text">{{ p.duibiEn if langCode == 'en' and p.duibiEn else (p.duibi or p.name) }}</p>
               </div>
             </a>
             {% endif %}

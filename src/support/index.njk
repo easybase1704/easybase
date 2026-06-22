@@ -26,25 +26,6 @@ eleventyComputed:
 <section class="section">
   <div class="container">
 
-    <!-- Downloads -->
-    <div class="support-section" style="margin-bottom:var(--space-3xl)">
-      <h3>📥 {{ t.download }}</h3>
-      <p class="text-secondary mb-3">{% if langCode == 'zh' %}产品驱动、固件、用户手册下载{% else %}Product drivers, firmware & user manuals{% endif %}</p>
-
-      <div class="grid grid--2">
-        <div class="card" style="padding:var(--space-xl)">
-          <h4>BV10 Series</h4>
-          <p class="text-secondary" style="margin:var(--space-sm) 0">{% if langCode == 'zh' %}V1.0 驱动及手册{% else %}V1.0 Drivers & Manual{% endif %}</p>
-          <a href="#" class="btn btn--outline" style="margin-top:var(--space-md)">{% if langCode == 'zh' %}下载{% else %}Download{% endif %}</a>
-        </div>
-        <div class="card" style="padding:var(--space-xl)">
-          <h4>B25 Series</h4>
-          <p class="text-secondary" style="margin:var(--space-sm) 0">{% if langCode == 'zh' %}V2.0 驱动及手册{% else %}V2.0 Drivers & Manual{% endif %}</p>
-          <a href="#" class="btn btn--outline" style="margin-top:var(--space-md)">{% if langCode == 'zh' %}下载{% else %}Download{% endif %}</a>
-        </div>
-      </div>
-    </div>
-
     <!-- Custom Service -->
     <div class="support-section">
       <h3>🔧 {{ t.customService }}</h3>
@@ -149,16 +130,6 @@ eleventyComputed:
 }
 
 @media (max-width: 768px) {
-  .support-banner__text {
-    left: var(--space-lg);
-    right: var(--space-lg);
-  }
-  .support-banner__text strong {
-    font-size: var(--text-lg);
-  }
-  .support-banner__text p {
-    font-size: var(--text-sm);
-    line-height: 1.5;
-  }
+  .support-banner { display: none; }
 }
 </style>
