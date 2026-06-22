@@ -870,7 +870,7 @@ img {
 }
 
 @media (max-width: 1023px) {
-  .page-hero { max-height: none; }  .page-hero__bg { height: auto; min-height: 180px; object-fit: contain; background: #1a1a2e; }
+  .page-hero { max-height: none; }  .page-hero__bg { height: auto; min-height: 180px; object-fit: contain; background: #1a1a2e; }  .page-hero__overlay { display: none; }
   .page-hero__title { font-size: var(--text-2xl); }
   .page-hero__subtitle { font-size: var(--text-sm); }
 }

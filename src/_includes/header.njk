@@ -39,19 +39,9 @@
         </div>
       </li>
 
-      <!-- 新闻 下拉 -->
-      <li class="nav__item nav__item--dropdown">
-        <a href="{{ site.basePath }}/{{ 'en/' if langCode == 'en' }}news/" class="nav__link {% if activePage == 'news' %}active{% endif %}">{{ t.news }} ▾</a>
-        <div class="nav__dropdown">
-          <div class="nav__dropdown-inner">
-            {% for article in news.articles | sort(attribute='date') | reverse %}
-            {% if loop.index <= 4 %}
-            <a href="{{ site.basePath }}/{{ 'en/' if langCode == 'en' }}news/#article-{{ article.oid }}" class="nav__dropdown-link">{{ article.title | truncate(20) }}</a>
-            {% endif %}
-            {% endfor %}
-            <a href="{{ site.basePath }}/{{ 'en/' if langCode == 'en' }}news/" class="nav__dropdown-link nav__dropdown-link--all">{% if langCode == 'zh' %}查看全部新闻 →{% else %}View All News →{% endif %}</a>
-          </div>
-        </div>
+      <!-- 新闻 -->
+      <li class="nav__item">
+        <a href="{{ site.basePath }}/{{ 'en/' if langCode == 'en' }}news/" class="nav__link {% if activePage == 'news' %}active{% endif %}">{{ t.news }}</a>
       </li>
 
       <li class="nav__item">
