@@ -1,0 +1,21 @@
+name: Sync to Gitee
+
+on:
+  push:
+    branches: [main, master]
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync to Gitee
+        env:
+          GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
+        run: |
+          git remote add gitee https://ruan-biao:${GITEE_TOKEN}@gitee.com/ruan-biao/easybase.git
+          git push gitee --all --force
+          git push gitee --tags --force
