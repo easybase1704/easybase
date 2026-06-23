@@ -18,6 +18,20 @@
   ],
   "articles": [
     {
+      "oid": 6,
+      "title": "云终端加速落地：2026年教育信息化迎来规模化部署浪潮",
+      "classId": 2,
+      "description": "2026年以来，国内教育信息化建设明显提速。从山东到广东，从高校到乡村中小学，以\"云电脑+瘦终端\"为代表的新型教学终端正在取代传统PC，成为智慧校园建设的重要基础设施。",
+      "date": "2026-06-23",
+      "hits": 0,
+      "img": "/images/news/news-6-thumb.webp",
+      "isHot": false,
+      "body": "<p>2026年以来，国内教育信息化建设明显提速。从山东到广东，从高校到乡村中小学，以\"云电脑+瘦终端\"为代表的新型教学终端正在取代传统PC，成为智慧校园建设的重要基础设施。</p><p style=\"text-align:center\"><img src=\"/images/news/news-6-body-01.webp\" alt=\"智慧教室云终端应用场景\"/></p><h3>大规模部署已成常态</h3><p>今年6月，中国移动在山东高校首个\"云电脑\"电教室正式落地淄博师范高等专科学校，80台云终端实现\"开机即上云，20秒进桌面\"。同期，广东电信为平远县24所中小学一次性部署1048台天翼云电脑，高标准通过国家义务教育质量监测压力测试。两地项目均采用\"云端算力+本地终端\"架构，运维效率显著提升，学校无需配备专职IT人员。</p><h3>从\"有电脑\"到\"用好电脑\"的跨越</h3><p>传统PC教室长期面临三大痛点：硬件老化快、运维成本高、资源利用率低。云终端的规模应用改变了这一局面。通过将计算和存储集中到云端，终端设备本身仅需极低的硬件配置即可流畅运行各类教学软件，设备生命周期从3年延长至5-7年。同时，云桌面支持AI教学辅助、3D设计、编程实训等高水平课程，为人工智能赋能教育提供了坚实的算力基础。</p><p style=\"text-align:center\"><img src=\"/images/news/news-6-body-02.webp\" alt=\"云计算数据中心概念\"/></p><h3>城乡教育均衡的技术抓手</h3><p>值得关注的是，云电脑正在成为弥合城乡数字鸿沟的关键工具。平远县作为山区县，通过云电脑部署，乡村学生得以接入与城区学校完全相同的云端教学资源，真正实现了教育优质均衡发展。襄阳市更是一次性投入7196台云终端，覆盖全部86所中小学校，采用\"轻资产租赁模式\"，年度付费、运营商维护，极大降低了学校的一次性投入压力。</p><h3>原基科技持续深耕教育场景</h3><p>作为国内领先的云终端与边缘计算设备制造商，原基科技多年来持续深耕教育行业。公司E系列、BV系列云终端产品已在全国多所院校规模化部署，产品以稳定可靠、易于管理、低功耗长寿命等特性获得用户广泛认可。面向教育信息化2.0的新需求，原基科技将持续优化产品体验，助力智慧校园建设迈向新台阶。</p>",
+      "titleEn": "Cloud Terminals Accelerate Deployment: Education IT Ushers in Large-Scale Rollout in 2026",
+      "descriptionEn": "Since 2026, China education informatization has accelerated significantly, with cloud terminals replacing traditional PCs as key infrastructure for smart campuses.",
+      "bodyEn": "<p>Since 2026, China education informatization has accelerated significantly. From Shandong to Guangdong, from universities to rural schools, cloud terminal-based teaching solutions are replacing traditional PCs as key infrastructure for smart campuses.</p><p style=\"text-align:center\"><img src=\"/images/news/news-6-body-01.webp\" alt=\"Smart Classroom Cloud Terminal\"/></p><h3>Large-Scale Deployment Becomes the Norm</h3><p>In June 2026, China Mobile deployed its first \"cloud computer\" lab at Zibo Normal College in Shandong, with 80 cloud terminals achieving \"instant boot, 20-second desktop access.\" Meanwhile, China Telecom deployed 1,048 cloud computers across 24 primary and middle schools in Pingyuan County, Guangdong, passing the national compulsory education quality monitoring stress test with high standards.</p><h3>From \"Having Computers\" to \"Using Computers Well\"</h3><p>Traditional PC labs face three major challenges: rapid hardware aging, high maintenance costs, and low resource utilization. Cloud terminals change this by centralizing computing and storage in the cloud, allowing terminal devices to run on minimal hardware while extending product lifecycles from 3 to 5-7 years.</p><p style=\"text-align:center\"><img src=\"/images/news/news-6-body-02.webp\" alt=\"Cloud Computing Data Center\"/></p><h3>Bridging the Urban-Rural Education Gap</h3><p>Cloud computers are becoming a key tool for bridging the urban-rural digital divide. As a mountainous county, Pingyuan now provides rural students with the same cloud-based teaching resources as urban schools. Xiangyang City invested in 7,196 cloud terminals across all 86 primary and secondary schools, adopting a light-asset leasing model that significantly reduces upfront costs.</p><h3>Easy Base Technology Deepens Education Focus</h3><p>As a leading manufacturer of cloud terminals and edge computing devices, Easy Base Technology continues to serve the education sector. The company's E-series and BV-series cloud terminal products have been deployed nationwide, known for their reliability, ease of management, and low power consumption. Looking ahead, Easy Base will continue to optimize products to support the next generation of smart campus development.</p>"
+    },
+    {
       "oid": 5,
       "title": "原基科技闪耀第64届中国高等教育博览会",
       "classId": 1,
