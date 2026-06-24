@@ -8,6 +8,7 @@ pagination:
 permalink: /{{ lang.prefix }}index.html
 eleventyComputed:
   title: "{{ 'Home' if lang.code == 'en' else '首页' }}"
+  description: "{{ 'EasyBase Technology — Industrial Computer, Cloud Terminal, Edge Computing Manufacturer' if lang.code == 'en' else '原基科技 — 工控机 · 云终端 · 边缘计算设备制造商，提供X86及国产平台全系列产品' }}"
 ---
 
 {% set langCode = lang.code %}

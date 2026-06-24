@@ -8,6 +8,7 @@ pagination:
 permalink: /{{ lang.prefix }}products/index.html
 eleventyComputed:
   title: "{{ 'Products' if lang.code == 'en' else '产品中心' }}"
+  description: "{{ 'EasyBase offers 70+ products across 7 lines: Cloud Terminals, Desktops, All-in-Ones, Mini PCs, Edge Computing, Servers and Industrial Motherboards' if lang.code == 'en' else '原基科技7大产品线70+款产品：云终端、台式计算机、一体机、迷你主机、边缘计算、服务器、工业主板' }}"
 ---
 
 {% set langCode = lang.code %}

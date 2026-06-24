@@ -8,6 +8,7 @@ permalink: /{{ article.langPrefix }}news/{{ article | articleSlug }}/index.html
 activePage: news
 eleventyComputed:
   title: "{{ article.title }}"
+  description: "{{ article.descriptionEn if article.langCode == 'en' and article.descriptionEn else article.description }}"
   date: "2026-06-10"
 ---
 

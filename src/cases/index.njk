@@ -8,6 +8,7 @@ pagination:
 permalink: /{{ lang.prefix }}cases/index.html
 eleventyComputed:
   title: "{{ 'Solutions' if lang.code == 'en' else '行业方案' }}"
+  description: "{{ 'EasyBase delivers end-to-end desktop virtualization solutions across 8 industries including Education, Healthcare, Finance, and Government' if lang.code == 'en' else '原基科技覆盖智慧教育、医疗、金融、政府办公等8大行业，提供端到端桌面虚拟化解决方案' }}"
 ---
 
 {% set langCode = lang.code %}

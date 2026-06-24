@@ -8,6 +8,7 @@ pagination:
 permalink: /{{ lang.prefix }}support/index.html
 eleventyComputed:
   title: "{{ 'Support' if lang.code == 'en' else '技术支持' }}"
+  description: "{{ 'EasyBase Technology support center — product manuals, driver downloads, FAQ, and after-sales service' if lang.code == 'en' else '原基科技技术支持中心 — 产品手册、驱动下载、常见问题与售后服务' }}"
 ---
 
 {% set langCode = lang.code %}

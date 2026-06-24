@@ -8,6 +8,7 @@ permalink: /{{ p.langPrefix }}products/{{ p.name | productSlug }}/index.html
 activePage: products
 eleventyComputed:
   title: "{{ p.name }}"
+  description: "{{ p.duibiEn if p.langCode == 'en' and p.duibiEn else p.duibi }}"
   date: "2026-06-10"
 ---
 

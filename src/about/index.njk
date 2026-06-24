@@ -8,6 +8,7 @@ pagination:
 permalink: /{{ lang.prefix }}about/index.html
 eleventyComputed:
   title: "{{ 'About Us' if lang.code == 'en' else '关于我们' }}"
+  description: "{{ 'EasyBase Technology is a professional manufacturer of industrial computers, cloud terminals, and edge computing devices in Shenzhen, China' if lang.code == 'en' else '深圳市原基科技有限公司 — 专业的工控机、云终端、边缘计算设备制造商' }}"
 ---
 
 {% set langCode = lang.code %}

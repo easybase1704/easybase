@@ -8,6 +8,7 @@ permalink: /{{ sol.langPrefix }}cases/{{ sol | caseSlug }}/index.html
 activePage: cases
 eleventyComputed:
   title: "{{ sol.name }}"
+  description: "{{ sol.duibiEn if sol.langCode == 'en' and sol.duibiEn else sol.duibi }}"
   date: "2026-06-10"
 ---
 

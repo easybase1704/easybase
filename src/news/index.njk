@@ -8,6 +8,7 @@ pagination:
 permalink: /{{ lang.prefix }}news/index.html
 eleventyComputed:
   title: "{{ 'News' if lang.code == 'en' else '新闻资讯' }}"
+  description: "{{ 'Stay updated with EasyBase Technology — company news, industry insights, and product updates' if lang.code == 'en' else '了解原基科技最新动态、行业新闻及产品资讯' }}"
 ---
 
 {% set langCode = lang.code %}
