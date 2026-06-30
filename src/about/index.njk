@@ -149,7 +149,10 @@ eleventyComputed:
           <p style="margin-top:var(--space-sm);color:var(--color-text-secondary)">🕐 {{ t.hoursLabel }}</p>
         </div>
         <div class="contact-box__qr">
-          <img src="{{ site.basePath }}/images/about/qrcode.webp" alt="公众号二维码" loading="lazy">
+          <picture>
+            <source srcset="{{ site.basePath }}/images/about/qrcode.webp" type="image/webp">
+            <img src="{{ site.basePath }}/images/about/qrcode.png" alt="公众号二维码" loading="lazy">
+          </picture>
           <p class="text-secondary" style="font-size:var(--text-xs);margin-top:var(--space-xs)">{{ t.qrText }}</p>
         </div>
       </div>
