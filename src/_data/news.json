@@ -18,6 +18,20 @@
   ],
   "articles": [
     {
+      "oid": 8,
+      "title": "桌面焕新，一体成机——原基科技23.8寸国产商务一体机P23853",
+      "classId": 3,
+      "description": "传统\"主机+显示器\"的台式方案正被一体机取代。原基科技23.8寸国产兆芯平台商务一体机P23853，以简洁桌面与国产自主优势，为政企办公与智慧教学提供新选择。",
+      "date": "2026-08-17",
+      "hits": 0,
+      "img": "/images/news/news-8-thumb.webp",
+      "isHot": true,
+      "body": "<p>在办公与教学场景中，\"主机+显示器+线缆\"的传统台式方案，正被集成度更高的一体机取代。一体机将主机内置于屏幕，一台设备即可完成显示、计算、联网，无需独立机箱与繁杂连线，桌面空间彻底释放，部署维护也更简单。</p><p>作为深耕桌面终端领域的整机厂商，原基科技（EasyBase）23.8英寸国产商务一体机P23853，面向政企办公、智慧教室、服务窗口等场景打造，以\"一台设备打天下\"的简洁体验，成为许多单位升级办公设备的优选。</p><p style=\"text-align:center\"><img src=\"/images/news/news-8-body-01.webp\" alt=\"原基科技P23853 23.8寸国产商务一体机正面\"/></p><p>P23853搭载国产兆芯平台处理器（6780A八核2.7GHz/6540M四核2.1GHz双版本），支持双通道DDR4内存最大32GB与M.2 NVMe固态硬盘，办公多任务流畅无卡顿。23.8英寸1080P全高清大屏配HDMI+VGA双显，内置双2W喇叭，会议教学无需外接音箱即可清晰发声。</p><p style=\"text-align:center\"><img src=\"/images/news/news-8-body-02.webp\" alt=\"P23853背面设计与接口布局\"/></p><p>接口方面，提供千兆网口、多路USB，支持M.2无线+蓝牙（内置天线），具备网络唤醒、来电自启等管理功能，配肯辛通锁孔，兼顾安全与易维护。银白配色简洁耐看，可融入现代办公环境。</p><p style=\"text-align:center\"><img src=\"/images/news/news-8-body-03.webp\" alt=\"P23853侧面细节\"/></p><p style=\"text-align:center\"><img src=\"/images/news/news-8-body-04.webp\" alt=\"P23853侧视端口特写\"/></p><p>P23853基于国产兆芯平台，积极响应政企与教育行业信创国产化采购趋势，已通过CE/FCC/CCC认证，品质稳定可靠。</p><p>从云终端、迷你主机到一体机，原基科技持续完善桌面终端产品矩阵，以稳定可靠的硬件与专业服务，助力更多用户桌面办公焕新升级。</p>",
+      "titleEn": "Desktop Renewal with All-in-One: Easy Base 23.8\" Domestic Business All-in-One P23853",
+      "descriptionEn": "Replacing the traditional host-plus-monitor desktop, Easy Base introduces the 23.8-inch P23853 business all-in-one powered by the domestic Zhaoxin platform for offices and smart classrooms.",
+      "bodyEn": "<p>In offices and classrooms, the traditional \"tower PC + monitor + cables\" setup is being replaced by all-in-one computers. Integrating the host into the display, an all-in-one handles display, computing, and networking in a single device, freeing up desk space and simplifying deployment and maintenance.</p><p>Easy Base Technology's 23.8-inch domestic business all-in-one P23853 is designed for government offices, smart classrooms, and service windows as a mainstay in the company's desktop lineup.</p><p style=\"text-align:center\"><img src=\"/images/news/news-8-body-01.webp\" alt=\"Easy Base P23853 All-in-One\"/></p><p>P23853 is powered by the domestic Zhaoxin platform, available with a 6780A (8-core 2.7GHz) or 6540M (quad-core 2.1GHz) processor. With dual-channel DDR4 memory (up to 32GB), M.2 NVMe SSD expansion, a 1920×1080 FHD display with HDMI + VGA output, and built-in dual 2W speakers, it delivers a smooth and clear experience for documents, reports, and teaching demos.</p><p style=\"text-align:center\"><img src=\"/images/news/news-8-body-02.webp\" alt=\"P23853 Rear View\"/></p><p>For expansion and security, P23853 offers a gigabit Ethernet port, multiple USB ports, an optional wireless + Bluetooth module with built-in antenna, plus management features such as Wake-on-LAN and auto power-on. A Kensington lock slot keeps the device safe, while the silver-white design blends into any modern office.</p><p style=\"text-align:center\"><img src=\"/images/news/news-8-body-03.webp\" alt=\"P23853 Side View\"/></p><p style=\"text-align:center\"><img src=\"/images/news/news-8-body-04.webp\" alt=\"P23853 I/O Ports\"/></p><p>Built on the domestic Zhaoxin platform, P23853 also responds to the growing demand for domestic-procurement solutions, certified with CE/FCC/CCC for stable, reliable quality.</p><p>From cloud terminals and mini PCs to business all-in-ones, Easy Base continues to expand its desktop product matrix, helping users upgrade their desktop experience.</p>"
+    },
+    {
       "oid": 7,
       "title": "算力下沉，终端赋能——原基科技GS-R21C机架式服务器助力AI+教育新基建",
       "classId": 3,
