@@ -18,6 +18,20 @@
   ],
   "articles": [
     {
+      "oid": 11,
+      "title": "云终端教室方案：长沙教装展上的教室换代",
+      "classId": 2,
+      "description": "第 88 届中国教育装备展示会 10 月 30 日至 11 月 1 日在长沙举行，原基科技在 W1 展厅 W1134 展出服务器、云终端、AI BOX、存储四条产品线。",
+      "date": "2026-11-02",
+      "hits": 0,
+      "img": "/images/news/news-11-thumb.webp",
+      "isHot": true,
+      "body": "<p>第 88 届中国教育装备展示会 10 月 30 日在长沙国际会展中心开展，11 月 1 日撤展。原基科技的展位在 W1 展厅 W1134，三天里坐下来聊的，多是教育局、学校和做集成的工程商。</p><p style=\"text-align:center\"><img src=\"/images/news/news-11-body-01.webp\" alt=\"第88届中国教育装备展示会展馆外景\"/></p><p>今年展会的主题是「人工智能引领教育装备高质量发展」，展馆里到处是 AI 课堂和智慧黑板。但落到采购清单上，问题往往很朴素：教室里那台机器，换成什么样以后才不添麻烦。</p><p style=\"text-align:center\"><img src=\"/images/news/news-11-body-02.webp\" alt=\"教育装备展示会现场人流\"/></p><h3>展台上摆的不止一台机器</h3><p>这次摆出来的是四条产品线：服务器、云终端、AI BOX、存储。</p><p>四条放在一起，是因为教室里那台机器从来不是孤立的。终端要连后端服务器，虚拟桌面跑在服务器上；教学数据要落地，得有人管存储；边缘侧要做推理，才轮到 AI BOX。单看一台终端的报价没有意义，得看整套跑起来要几台机器、几个人维护。</p><p style=\"text-align:center\"><img src=\"/images/news/news-11-body-03.webp\" alt=\"原基科技展位全景\"/></p><h3>教室里的终端在换代</h3><p>传统做法是一间机房几十台台式机，装系统一趟一趟跑，坏了抬走去修。云终端的思路是把算力收到机房服务器，教室那头只留一台一升左右的小机器，接上显示器就能用，可以桌面摆放，也可以挂在显示器背后。</p><p>好处是运维集中：学生的数据不落在本地，一台坏了拿备机顶上就行，不用抬着主机跑一趟。代价是前期要把后端规划清楚——服务器配置、网络带宽、教学软件的兼容性，哪一样没算到，都会在验收那天还回来。</p><p><strong>终端换不换，先看后端扛不扛得住</strong></p><h3>展会看的是方案，回去要算的是自己的机房</h3><p>展会上看到的是别人已经跑通的方案。回到学校，得对着自己的条件重新过一遍：现有机房的服务器还剩多少算力，交换机撑不撑得住几十路虚拟桌面，常用的那几套教学软件在哪种架构下最稳，以及最实际的一条——以后谁来维护。</p><p>这几件事不清楚，换什么设备都谈不上合适。</p><p style=\"text-align:center\"><img src=\"/images/news/news-11-body-04.webp\" alt=\"原基科技展位现场交流\"/></p><h3>回学校再拍板</h3><p>硬件采购很少有一步到位的选项。展会三天能看清的是行业往哪走，看不清的是自己那间机房还能撑几年。把现有设备的型号、数量、用了几年盘一遍，再决定今年动几间教室，比在展位上现场拍板靠谱。</p>",
+      "titleEn": "Cloud Terminals in Classrooms: Notes from the 88th China Educational Equipment Exhibition",
+      "descriptionEn": "EasyBase exhibited four product lines at the 88th China Educational Equipment Exhibition in Changsha. What a classroom refresh depends on is the backend behind every terminal.",
+      "bodyEn": "<p>The 88th China Educational Equipment Exhibition opened in Changsha on October 30 and closed on November 1. EasyBase exhibited at Booth W1134, Hall W1, where most conversations were with education bureaus, schools and system integrators.</p><p>The theme this year was AI-driven high-quality development of educational equipment, but purchasing decisions still come down to a simple question: what kind of machine in the classroom will cause the least trouble later.</p><h3>More than a terminal on the table</h3><p>Four product lines were shown together — servers, cloud terminals, AI boxes and storage — because a classroom terminal is never standalone: virtual desktops run on servers, teaching data has to land in storage, and edge inference needs its own box.</p><h3>What a refresh actually depends on</h3><p>Moving from roomfuls of desktops to cloud terminals concentrates computing power in the server room, leaving a one-liter machine in the classroom. Maintenance becomes centralized, but the burden shifts to the backend: server capacity, network bandwidth and software compatibility all have to be planned up front.</p><p>An exhibition shows what has already worked for others. Back at school, the answer depends on the existing server room, the switch, the software in use, and who will maintain it all.</p>"
+    },
+    {
       "oid": 10,
       "title": "招投标参数怎么写：让每一条都能被第三方验证",
       "classId": 2,
